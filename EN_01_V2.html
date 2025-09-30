@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>國一英文第一課練習題庫</title>
+    <!-- 手機適應 viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         /* 主題色與樣式變數 */
         :root {
@@ -200,6 +202,18 @@
             font-weight: 600;
         }
 
+        /* 導覽列活動狀態樣式：為當前頁面添加下底線 */
+        #navbar a.active {
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 4px;
+        }
+
+        /* 導覽列當前頁面樣式：使用下底線區隔當前與其他選項 */
+        #navbar a.active {
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 4px;
+        }
+
         /* 錯誤詳情 Modal */
         .modal {
             display: none; /* Hidden by default */
@@ -240,7 +254,9 @@
 
 <!-- 導覽列，用於切換測驗與歷史紀錄 -->
 <nav id="navbar" style="text-align:center; margin-bottom:20px;">
-    <a id="quizTab" href="#" style="margin-right:20px; font-weight:bold; color:#2c3e50; text-decoration:none;">開始測驗</a>
+    <!-- 導覽列：選課程 → 返回 index.html；練習選單 → 顯示段落選擇；歷史紀錄 → 顯示測驗紀錄 -->
+    <a href="index.html" style="margin-right:20px; font-weight:bold; color:#2c3e50; text-decoration:none;">選課程</a>
+    <a id="quizTab" href="#" style="margin-right:20px; font-weight:bold; color:#2c3e50; text-decoration:none;">練習選單</a>
     <a id="historyTab" href="#" style="font-weight:bold; color:#2c3e50; text-decoration:none;">歷史紀錄</a>
 </nav>
 
@@ -943,6 +959,9 @@
         historySection.style.display = 'block';
         sectionSection.style.display = 'none';
         renderHistory();
+        // 更新導覽列的活動狀態
+        historyTab.classList.add('active');
+        quizTab.classList.remove('active');
     }
 
     // 顯示段落選擇區域
@@ -950,6 +969,9 @@
         quizSection.style.display = 'none';
         historySection.style.display = 'none';
         sectionSection.style.display = 'block';
+        // 更新導覽列的活動狀態：顯示練習選單當前頁
+        quizTab.classList.add('active');
+        historyTab.classList.remove('active');
     }
 
     // 顯示錯誤詳情至模態視窗
