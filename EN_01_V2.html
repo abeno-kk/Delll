@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>國一英文第一課練習題庫</title>
+    <style>
+        /* 主題色與樣式變數 */
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #50e3c2;
+            --accent-color: #f5a623;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+            --neutral-color: #2980b9;
+            --warning-color: #f39c12;
+            --bg-color: #f6f8fa;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* 通用容器 */
+        .quiz-container {
+            max-width: 800px;
+            background-color: #ffffff;
+            margin: 20px auto;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            position: relative;
+            /* 頂部彩線增添色彩，提升扁平化層次感 */
+            border-top: 6px solid var(--primary-color);
+        }
+
+        /* 導覽列 */
+        #navbar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #navbar a {
+            margin: 0 15px;
+            font-weight: 600;
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        #navbar a:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        #timer {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.85em;
+            color: #666;
+        }
+        #progress {
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .question {
+            font-size: 1.15em;
+            margin-bottom: 15px;
+        }
+        .section-label {
+            font-size: 0.85em;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+        .options li {
+            margin-bottom: 10px;
+        }
+        .options input[type="radio"] {
+            margin-right: 6px;
+        }
+        .navigation {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.2s ease;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #submitBtn {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        #submitBtn:hover:not(:disabled) {
+            background-color: #357ab7;
+        }
+        #nextBtn {
+            background-color: var(--success-color);
+            color: #fff;
+        }
+        #nextBtn:hover:not(:disabled) {
+            background-color: #239a5a;
+        }
+        #restartBtn {
+            background-color: var(--danger-color);
+            color: #fff;
+            width: 100%;
+            margin-top: 25px;
+        }
+        #restartBtn:hover {
+            background-color: #c0392b;
+        }
+        #result {
+            text-align: center;
+            font-size: 1.1em;
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+        #wrong-list {
+            margin-top: 15px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        #wrong-list h3 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--danger-color);
+        }
+        #wrong-list ul {
+            list-style-type: disc;
+            padding-left: 18px;
+        }
+
+        /* 段落選擇按鈕區佈局 */
+        .section-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .section-btn {
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
+        }
+        .section-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        /* 各按鈕的色系 */
+        .btn-purple { background-color: #8e44ad; }
+        .btn-red    { background-color: #e74c3c; }
+        .btn-green  { background-color: #16a085; }
+        .btn-blue   { background-color: #2980b9; }
+        .btn-orange { background-color: #f39c12; }
+
+        /* 歷史紀錄表格樣式 */
+        #historyContainer table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #historyContainer th, #historyContainer td {
+            padding: 10px;
+            border: 1px solid #e1e4e8;
+            text-align: center;
+        }
+        #historyContainer th {
+            background-color: #f5f7fa;
+            font-weight: 600;
+        }
+
+        /* 錯誤詳情 Modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 80px auto;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .modal-content h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        .modal-close {
+            float: right;
+            font-size: 1.4em;
+            cursor: pointer;
+            color: #999;
+        }
+        .modal-close:hover {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<h1>國一英文第一課練習題庫</h1>
+
+<!-- 導覽列，用於切換測驗與歷史紀錄 -->
+<nav id="navbar" style="text-align:center; margin-bottom:20px;">
+    <a id="quizTab" href="#" style="margin-right:20px; font-weight:bold; color:#2c3e50; text-decoration:none;">開始測驗</a>
+    <a id="historyTab" href="#" style="font-weight:bold; color:#2c3e50; text-decoration:none;">歷史紀錄</a>
+</nav>
+
+<!-- 段落選擇區塊 -->
+<div class="quiz-container" id="section-section">
+    <h2 style="text-align:center;">選擇段落開始測驗</h2>
+    <!-- 測驗選項區：整合段落與練習類別。每一份測驗題目皆會隨機抽取，避免死記固定順序 -->
+    <div class="section-buttons">
+        <!-- 第一行：綜合段落、閱讀理解、文章練習 -->
+        <button class="section-btn btn-purple" data-section="combined">綜合段落</button>
+        <button class="section-btn btn-red" data-section="4">閱讀理解</button>
+        <button class="section-btn btn-green" data-section="article">文章練習</button>
+        <!-- 第二行：形容詞用法、單字練習 -->
+        <button class="section-btn btn-blue" data-section="5">形容詞用法</button>
+        <button class="section-btn btn-orange" data-section="vocab">單字練習</button>
+    </div>
+</div>
+
+<!-- 測驗區塊 -->
+<div class="quiz-container" id="quiz-section" style="display:none;">
+    <!-- 閱讀文章顯示區 -->
+    <div id="articleContainer" style="display:none; margin-bottom:20px; background-color:#f9f9f9; border-radius:5px; padding:15px;"></div>
+    <div id="timer">已用時間：00:00</div>
+    <div id="progress">第 1 / 20 題</div>
+    <div id="quiz">
+        <div class="question" id="question"></div>
+        <ul class="options" id="options"></ul>
+    </div>
+    <div class="navigation">
+        <button id="submitBtn">確認答案</button>
+        <button id="nextBtn" style="display:none;">下一題</button>
+    </div>
+    <div id="result"></div>
+    <div id="wrong-list" style="display:none;"></div>
+    <button id="restartBtn" style="display:none;">重新開始</button>
+</div>
+
+<!-- 歷史紀錄區塊 -->
+<div class="quiz-container" id="history-section" style="display:none;">
+    <h2 style="text-align:center;">歷史紀錄</h2>
+    <div id="historyContainer" style="margin-top:20px;"></div>
+</div>
+
+    <!-- 錯誤詳情模態視窗：用於顯示每次測驗的錯誤題目和正確答案 -->
+    <div id="wrongModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="modal-close">×</span>
+            <div id="wrongDetails"></div>
+        </div>
+    </div>
+
+<script>
+    // 題目資料：包含題目、選項及正確答案索引
+    // 段落題庫：每個段落包含約 15 題，依課文內容分類
+    const sectionQuestions = {
+        '1': [
+            { question: "什麼問候語在早上使用？", options: ["Good morning", "Good afternoon", "Good evening", "Good night"], correct: 0 },
+            { question: "Nice to meet you. 這句話用於什麼時候？", options: ["第一次見面", "道別時", "打電話", "介紹他人"], correct: 0 },
+            { question: "自我介紹時，哪一句正確？", options: ["I am Tom.", "He am Tom.", "Me Tom.", "They am Tom."], correct: 0 },
+            { question: "填空：Hello, ___ name is Linda.", options: ["my", "me", "I", "mine"], correct: 0 },
+            { question: "哪一句適合晚安時說再見？", options: ["Good night", "Good morning", "Good afternoon", "Hello"], correct: 0 },
+            { question: "面對『Hi, I'm Sam.』你要如何回應？", options: ["Hi, I'm Tom.", "I'm 12.", "Good morning.", "Who is he?"], correct: 0 },
+            { question: "下列哪一句使用 Hello 正確？", options: ["Hello, Gary", "Hello, is Mary", "Good Hello", "Hello big."], correct: 0 },
+            { question: "哪一句是用來詢問年齡？", options: ["How old are you?", "Who are you?", "How are you?", "Where are you?"], correct: 0 },
+            { question: "Look at that handsome boy. 此句中 that 的詞性是？", options: ["限定詞/形容詞", "動詞", "冠詞", "名詞"], correct: 0 },
+            { question: "填空：____ your name?", options: ["What's", "Who's", "Where's", "How's"], correct: 0 },
+            { question: "Who is 的縮寫是？", options: ["whos", "who's", "who is'", "whos'"], correct: 1 },
+            { question: "Good afternoon 用於何時？", options: ["早上", "下午", "晚上", "深夜"], correct: 1 },
+            { question: "課本中哪一句是詢問職業？", options: ["Is he a student?", "How old is he?", "Who is he?", "Where is he?"], correct: 0 },
+            { question: "問句 Who's that man? 是在詢問什麼？", options: ["這個人的身分", "這個人的年齡", "他的職業", "他的衣服顏色"], correct: 0 },
+            { question: "句子 My name is Peggy. 中 my 意為？", options: ["我的", "妳的", "他的", "你的"], correct: 0 }
+        ],
+        '2': [
+            { question: "My mom's brother is my _____.", options: ["uncle", "aunt", "cousin", "brother"], correct: 0 },
+            { question: "My father's mother is my ______.", options: ["grandmother", "grandfather", "aunt", "mother"], correct: 0 },
+            { question: "男警察是 policeman，那女警察是？", options: ["policewoman", "police officer", "nurse", "singer"], correct: 0 },
+            { question: "housewife 是指？", options: ["在家照顧家庭的人", "在辦公室工作的人", "作家", "警察"], correct: 0 },
+            { question: "woman 的複數為？", options: ["women", "womans", "womens", "woment"], correct: 0 },
+            { question: "談到家庭整體時哪一句正確？", options: ["My family is large.", "My family are large.", "My families is large.", "My family am large."], correct: 0 },
+            { question: "office worker 是什麼職業？", options: ["在辦公室工作的人", "歌手", "警察", "護士"], correct: 0 },
+            { question: "下列哪一個是男性親屬？", options: ["uncle", "aunt", "cousin", "sister"], correct: 0 },
+            { question: "she 的所有格是？", options: ["her", "she", "hers", "their"], correct: 0 },
+            { question: "Are they your parents? 的正確回答為？", options: ["Yes, they are.", "Yes, they is.", "Yes, they isn't.", "Yes, they be."], correct: 0 },
+            { question: "He is a doctor. 句中的職業為？", options: ["doctor", "He", "is", "a"], correct: 0 },
+            { question: "下列哪個複數形式正確？", options: ["baby–babies", "family–familys", "child–childs", "cousin–cousins"], correct: 0 },
+            { question: "My cousin is my uncle's son. cousin 是指？", options: ["堂/表兄弟姊妹", "哥哥", "爸爸", "男朋友"], correct: 0 },
+            { question: "下列哪一個不是職業？", options: ["aunt", "singer", "police officer", "nurse"], correct: 0 },
+            { question: "強調每位家庭成員時哪一句正確？", options: ["My family are fine.", "My family is fine.", "My families is fine.", "My family am fine."], correct: 0 }
+        ],
+        '3': [
+            { question: "填空：This is ___ orange.", options: ["an", "a", "the", "one"], correct: 0 },
+            { question: "I am not 的縮寫為？", options: ["I'm not", "I amn't", "I isn't", "I'mn't"], correct: 0 },
+            { question: "下列哪個 Yes/No 問句正確？", options: ["Is Alice a teacher?", "Is a teacher Alice?", "Alice is a teacher?", "Is Alice teacher?"], correct: 0 },
+            { question: "Are you happy? 的肯定簡答為？", options: ["Yes, I am.", "Yes, I'm.", "Yes, you am.", "Yes, I is."], correct: 0 },
+            { question: "you are not 的縮寫為？", options: ["you're not", "you aren't", "以上皆是", "you not"], correct: 2 },
+            { question: "Isn't he your friend? 若是你的朋友，回答？", options: ["Yes, he is.", "No, he is.", "Yes, he isn't.", "No, he isn't."], correct: 0 },
+            { question: "He is not tall. 的縮寫為 He ____ tall.", options: ["isn't", "aren't", "doesn't", "am not"], correct: 0 },
+            { question: "It's an old table. 選出正確冠詞。", options: ["an", "a", "the", "one"], correct: 0 },
+            { question: "下列哪一個是主格代名詞？", options: ["I", "my", "her", "their"], correct: 0 },
+            { question: "將 They are not at school. 改為肯定疑問句？", options: ["Are they at school?", "Are they not at school?", "Isn't they at school?", "They are at school?"], correct: 0 },
+            { question: "Isn't he tall? 若他不高，回答？", options: ["No, he isn't.", "Yes, he is.", "Yes, he isn't.", "No, he is."], correct: 0 },
+            { question: "No, she ____ a singer.", options: ["is not", "are not", "am not", "does not"], correct: 0 },
+            { question: "使用 an 是因為 egg 以？開頭。", options: ["母音音素", "子音音素", "複數", "不定詞"], correct: 0 },
+            { question: "下列哪句否定句正確？", options: ["He is not a teacher.", "He am not a teacher.", "He is not teacher.", "He is no teacher."], correct: 0 },
+            { question: "It is my pencil. 哪個字表示所有關係？", options: ["my", "it", "pencil", "is"], correct: 0 }
+        ],
+
+        // 新增段落 5：形容詞用法與句型練習
+        '5': [
+            { question: "哪一個單字可以表示『顏色』？", options: ["black", "teacher", "run", "book"], correct: 0 },
+            { question: "哪一個單字可以表示『尺寸/大小』？", options: ["small", "sing", "family", "morning"], correct: 0 },
+            { question: "下列哪一句正確使用 be 動詞加形容詞？", options: ["The car is yellow.", "The car yellow is.", "Car is the yellow.", "The car are yellow."], correct: 0 },
+            { question: "選出正確的否定句：", options: ["He is not thin.", "He not is thin.", "He is thin not.", "He are not thin."], correct: 0 },
+            { question: "ugly 的反義詞是？", options: ["beautiful", "old", "young", "sorry"], correct: 0 },
+            { question: "哪一個形容詞表示情緒？", options: ["happy", "tall", "blue", "car"], correct: 0 },
+            { question: "下列哪一句正確使用 a/an + 形容詞 + 名詞？", options: ["It's a big bed.", "It's big bed.", "It's bed big.", "It's a bed big."], correct: 0 },
+            { question: "It's an old table. 句中使用 an 是因為 old 以 ______ 開頭？", options: ["母音音素", "子音音素", "鼻音", "輔音字母"], correct: 0 },
+            { question: "哪一個單字屬於數量形容詞？", options: ["two", "red", "tall", "sorry"], correct: 0 },
+            { question: "『抱歉』的英文形容詞為？", options: ["sorry", "fine", "welcome", "handsome"], correct: 0 },
+            { question: "old 這個形容詞主要描述？", options: ["年紀/年老", "顏色", "職業", "動作"], correct: 0 },
+            { question: "哪一組兩個單字都屬於尺寸或大小相關的形容詞？", options: ["long, short", "happy, sad", "black, blue", "beautiful, handsome"], correct: 0 },
+            { question: "在句子 Ann is a tall girl. 中，形容詞是？", options: ["tall", "Ann", "is", "girl"], correct: 0 },
+            { question: "下面哪一句是否定句含 be 動詞加 not 再加形容詞？", options: ["He is not tall.", "He not tall is.", "He is tall not.", "He are not tall."], correct: 0 },
+            { question: "下列哪個形容詞不屬於『新舊/年齡』類？", options: ["beautiful", "new", "old", "young"], correct: 0 }
+        ]
+    };
+
+    // 閱讀理解文章庫，每個文章含標題、內文與對應問題
+    const readingPassages = [
+        {
+            title: 'At school',
+            text: `Jamie: Good morning, Yuki.\nYuki: Good morning, Jamie.\nJamie: Look at that handsome boy.\nYuki: Who is he?\nJamie: He's my classmate. His name is Zac.\nYuki: And the young woman? Who is she?\nJamie: She's my aunt. Her name is Sophie. She's a nurse.\nYuki: She's very tall.\nJamie: She's beautiful, too.`,
+            questions: [
+                { question: 'Who is the handsome boy?', options: ['Jamie\'s classmate Zac', 'Yuki\'s brother', 'Jamie\'s uncle', 'The young woman\'s son'], correct: 0 },
+                { question: 'What is the young woman\'s relationship to Jamie?', options: ['Aunt', 'Sister', 'Cousin', 'Mother'], correct: 0 },
+                { question: 'What is the young woman\'s job?', options: ['Nurse', 'Police officer', 'Teacher', 'Singer'], correct: 0 },
+                { question: 'What does Yuki say about the woman?', options: ['She is very tall', 'She is very beautiful', 'She is short', 'She is handsome'], correct: 0 }
+            ]
+        },
+        {
+            title: 'In the classroom',
+            text: `Zac: Hi, I\'m Zac Hugo. Nice to meet you.\nJamie: I\'m Jamie Parker. Nice to meet you, too.\nZac: Is this your brother?\nJamie: No, he\'s my friend. His name is Max.\nZac: Is Max a student?\nJamie: No, he\'s not a student. He\'s a doctor.\nZac: How old is he?\nJamie: He\'s twenty-nine years old.`,
+            questions: [
+                { question: 'What is Jamie\'s last name?', options: ['Parker', 'Hugo', 'Smith', 'Brown'], correct: 0 },
+                { question: 'Who is Max?', options: ['Jamie\'s friend', 'Jamie\'s brother', 'Jamie\'s father', 'Zac\'s classmate'], correct: 0 },
+                { question: 'What is Max\'s job?', options: ['Doctor', 'Student', 'Police officer', 'Singer'], correct: 0 },
+                { question: 'How old is Max?', options: ['Twenty-nine', 'Thirty-five', 'Twenty-two', 'Twenty'], correct: 0 },
+                { question: 'How do Zac and Jamie greet each other?', options: ['Hi / Nice to meet you', 'Good night', 'Good morning', 'Bye'], correct: 0 }
+            ]
+        },
+        {
+            title: 'My Dear Family',
+            text: `Hi, I\'m Jamie, and this is my dear family. We are a family of five. My mom is an office worker. She\'s thirty-five years old. My dad is a teacher. He\'s thirty-five, too. My sister is an elementary school student, and I\'m a junior high school student. She\'s ten, and I\'m thirteen. My baby brother, Dan, is one year old. My family is very dear to me.`,
+            questions: [
+                { question: 'How many people are in Jamie\'s family?', options: ['Five', 'Four', 'Six', 'Three'], correct: 0 },
+                { question: 'What is Jamie\'s father\'s job?', options: ['Teacher', 'Office worker', 'Doctor', 'Police officer'], correct: 0 },
+                { question: 'How old is Jamie\'s mom?', options: ['Thirty-five', 'Thirty-nine', 'Thirty-two', 'Forty'], correct: 0 },
+                { question: 'What grade is Jamie\'s sister in?', options: ['Elementary school', 'Junior high school', 'High school', 'Kindergarten'], correct: 0 },
+                { question: 'How old is Jamie?', options: ['Thirteen', 'Ten', 'Eleven', 'Nine'], correct: 0 },
+                { question: 'What is the name of Jamie\'s baby brother?', options: ['Dan', 'Max', 'Zac', 'Ian'], correct: 0 }
+            ]
+        }
+    ];
+
+    // 自訂文章練習：根據第一課單字與文法撰寫的短文，每次隨機顯示一篇
+    const articleExercises = [
+        {
+            title: 'Self Introduction',
+            text: `Hello, I'm Tom. Nice to meet you. This is my friend Anna. She is a singer. Anna is tall and beautiful. She is twenty years old. We are in the same class.`,
+            questions: [
+                { question: "Who is Tom's friend?", options: ['Anna', 'Amy', 'Lucy', 'Sophie'], correct: 0 },
+                { question: "What is Anna's job?", options: ['Singer', 'Writer', 'Teacher', 'Police officer'], correct: 0 },
+                { question: "How old is Anna?", options: ['Twenty', 'Thirty-five', 'Ten', 'Twelve'], correct: 0 },
+                { question: "What can you say about Anna?", options: ['Tall and beautiful', 'Short and ugly', 'Young and thin', 'Old and fat'], correct: 0 },
+                { question: "Where are Tom and Anna?", options: ['In the same class', 'At the zoo', 'At home', 'In the library'], correct: 0 }
+            ]
+        },
+        {
+            title: 'My Family',
+            text: `My name is Amy, and this is my family. My father is a police officer. He is thirty-five years old. My mother is a housewife. She is thirty-two. I have a brother, David. He is an elementary school student. He is eight. We are a family of four.`,
+            questions: [
+                { question: "What is Amy's father's job?", options: ['Police officer', 'Teacher', 'Writer', 'Singer'], correct: 0 },
+                { question: "How old is Amy's mother?", options: ['Thirty-two', 'Thirty-five', 'Twenty-nine', 'Forty'], correct: 0 },
+                { question: "What is David's job?", options: ['Student', 'Doctor', 'Singer', 'Office worker'], correct: 0 },
+                { question: "How old is David?", options: ['Eight', 'Ten', 'Thirteen', 'Thirty'], correct: 0 },
+                { question: "How many people are in Amy's family?", options: ['Four', 'Three', 'Five', 'Six'], correct: 0 }
+            ]
+        },
+        {
+            title: 'Meeting My Cousin',
+            text: `Good morning! I'm Leo. Nice to meet you. This is my cousin, Lucy. She is fifteen years old. Lucy is a junior high school student. She is tall and friendly. Our uncle, Mr. Brown, is a writer. He is not young. He is fifty years old.`,
+            questions: [
+                { question: "Who is Lucy?", options: ['Leo\'s cousin', 'Leo\'s sister', 'Leo\'s friend', 'Leo\'s aunt'], correct: 0 },
+                { question: "How old is Lucy?", options: ['Fifteen', 'Twenty-nine', 'Ten', 'Thirty-five'], correct: 0 },
+                { question: "What is Lucy's job?", options: ['Student', 'Singer', 'Writer', 'Police officer'], correct: 0 },
+                { question: "Who is Mr. Brown?", options: ['Leo\'s uncle', 'Lucy\'s father', 'Leo\'s friend', 'Lucy\'s brother'], correct: 0 },
+                { question: "What is Mr. Brown's job?", options: ['Writer', 'Singer', 'Doctor', 'Teacher'], correct: 0 },
+                { question: "How old is Mr. Brown?", options: ['Fifty', 'Thirty-five', 'Twenty', 'Forty-two'], correct: 0 }
+            ]
+        },
+        {
+            title: 'My Classmate',
+            text: `Look at that handsome boy. He is my classmate. His name is Jack. Jack is twelve years old. He is tall and thin. He is a good singer. His mother is a doctor, and his father is an office worker.`,
+            questions: [
+                { question: "Who is the handsome boy?", options: ['Jack', 'Tom', 'Leo', 'Max'], correct: 0 },
+                { question: "How old is Jack?", options: ['Twelve', 'Ten', 'Eight', 'Twenty'], correct: 0 },
+                { question: "What does Jack look like?", options: ['Tall and thin', 'Short and fat', 'Young and handsome', 'Old and fat'], correct: 0 },
+                { question: "What is Jack's talent?", options: ['Singing', 'Writing', 'Teaching', 'Cooking'], correct: 0 },
+                { question: "What is Jack's father's job?", options: ['Office worker', 'Doctor', 'Singer', 'Writer'], correct: 0 }
+            ]
+        }
+    ];
+
+    // 記錄上一輪文章練習所選的文章索引，用於避免連續選到相同文章
+    let lastArticleIndex = null;
+
+    // 第一課單字列表：中文提示及對應英文，供孩子書寫英文拼字
+    const vocabList = [
+        { chinese: '英俊的', english: 'handsome' },
+        { chinese: '同學', english: 'classmate' },
+        { chinese: '女人', english: 'woman' },
+        { chinese: '年輕的', english: 'young' },
+        { chinese: '非常/很', english: 'very' },
+        { chinese: '美麗的', english: 'beautiful' },
+        { chinese: '堂表兄弟姊妹', english: 'cousin' },
+        { chinese: '歌手', english: 'singer' },
+        { chinese: '上班族', english: 'office worker' },
+        { chinese: '家庭主婦', english: 'housewife' },
+        { chinese: '警察', english: 'police officer' },
+        { chinese: '作家', english: 'writer' },
+        { chinese: '叔叔/舅舅', english: 'uncle' },
+        { chinese: '嬸嬸/姑媽', english: 'aunt' },
+        { chinese: '丈夫', english: 'husband' },
+        { chinese: '妻子', english: 'wife' },
+        { chinese: '兒子', english: 'son' },
+        { chinese: '女兒', english: 'daughter' },
+        { chinese: '家人；家庭', english: 'family' },
+        { chinese: '嬰兒', english: 'baby' }
+    ];
+
+    // 當前題目列表
+    let questions = [];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let seconds = 0;
+    // 記錄計時起始時間（毫秒）
+    let startTime = 0;
+    // 計時器識別碼，每次啟動計時前需清除舊的計時器
+    let timerInterval = null;
+    const wrongAnswers = [];
+    let currentSection = null;
+
+    // 單字練習相關變數
+    let vocabIndex = 0; // 當前單字索引
+    const vocabResponses = []; // 用於儲存使用者在檢核頁面勾選的結果
+
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const submitBtn = document.getElementById('submitBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+    const restartBtn = document.getElementById('restartBtn');
+    const timerEl = document.getElementById('timer');
+    const progressEl = document.getElementById('progress');
+    const wrongListContainer = document.getElementById('wrong-list');
+    const historyContainer = document.getElementById('historyContainer');
+    const quizSection = document.getElementById('quiz-section');
+    const historySection = document.getElementById('history-section');
+    const sectionSection = document.getElementById('section-section');
+    const articleContainer = document.getElementById('articleContainer');
+    const quizTab = document.getElementById('quizTab');
+    const historyTab = document.getElementById('historyTab');
+
+    function loadQuestion(index) {
+        // 清空結果區域
+        resultEl.textContent = '';
+        // 顯示題目
+        const q = questions[index];
+        // 若題目屬於綜合段落，顯示原段落標籤
+        let sectionLabelHTML = '';
+        if (q.sectionSource) {
+            sectionLabelHTML = `<div class="section-label">段落 ${q.sectionSource}</div>`;
+        }
+        questionEl.innerHTML = sectionLabelHTML + `${index + 1}. ${q.question}`;
+        // 生成選項
+        optionsEl.innerHTML = '';
+        q.options.forEach((option, i) => {
+            const li = document.createElement('li');
+            const label = document.createElement('label');
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.name = 'option';
+            input.value = i;
+            label.appendChild(input);
+            label.appendChild(document.createTextNode(option));
+            li.appendChild(label);
+            optionsEl.appendChild(li);
+        });
+        // 按鈕狀態
+        submitBtn.disabled = false;
+        nextBtn.style.display = 'none';
+
+        // 更新進度顯示
+        progressEl.textContent = `第 ${index + 1} / ${questions.length} 題`;
+    }
+
+    function checkAnswer() {
+        const selected = document.querySelector('input[name="option"]:checked');
+        if (!selected) {
+            alert('請選擇一個答案！');
+            return;
+        }
+        const answer = parseInt(selected.value);
+        const correct = questions[currentQuestion].correct;
+        if (answer === correct) {
+            score++;
+            resultEl.style.color = '#2ecc71';
+            resultEl.textContent = '回答正確！';
+        } else {
+            resultEl.style.color = '#e74c3c';
+            const correctText = questions[currentQuestion].options[correct];
+            resultEl.textContent = `答錯了！正確答案是：${correctText}`;
+
+            // 記錄錯誤題目
+            wrongAnswers.push({
+                question: questions[currentQuestion].question,
+                correctAnswer: correctText,
+                userAnswer: questions[currentQuestion].options[answer]
+            });
+        }
+        submitBtn.disabled = true;
+        // 若還有下一題顯示下一題按鈕，否則顯示重試按鈕
+        if (currentQuestion < questions.length - 1) {
+            nextBtn.style.display = 'inline-block';
+        } else {
+            showFinalResult();
+        }
+    }
+
+    function nextQuestion() {
+        // 針對單字練習，使用不同的下一題邏輯
+        if (currentSection === 'vocab') {
+            nextVocab();
+        } else {
+            currentQuestion++;
+            loadQuestion(currentQuestion);
+        }
+    }
+
+    // ===== 單字練習流程函式 =====
+    function startVocabulary() {
+        currentSection = 'vocab';
+        // 初始化索引與計數
+        vocabIndex = 0;
+        vocabResponses.length = 0;
+        currentQuestion = 0;
+        score = 0;
+        seconds = 0;
+        wrongAnswers.length = 0;
+        // 顯示測驗區域
+        showQuiz();
+        articleContainer.style.display = 'none';
+        // 設定按鈕顯示：只需要下一題按鈕
+        submitBtn.style.display = 'none';
+        nextBtn.style.display = 'inline-block';
+        nextBtn.disabled = false;
+        // 顯示題目與進度
+        loadVocab(vocabIndex);
+        // 顯示計時與進度
+        timerEl.style.display = '';
+        progressEl.style.display = '';
+        // 開始計時
+        startTimer();
+    }
+
+    function loadVocab(index) {
+        // 清理畫面
+        resultEl.textContent = '';
+        wrongListContainer.style.display = 'none';
+        // 顯示中文題目
+        const item = vocabList[index];
+        questionEl.style.display = '';
+        optionsEl.style.display = 'none';
+        questionEl.textContent = `${index + 1}. ${item.chinese}`;
+        // 更新進度
+        progressEl.textContent = `第 ${index + 1} / ${vocabList.length} 題`;
+    }
+
+    function nextVocab() {
+        vocabIndex++;
+        if (vocabIndex < vocabList.length) {
+            loadVocab(vocabIndex);
+        } else {
+            // 完成所有單字後，顯示檢核頁面
+            showVocabReview();
+        }
+    }
+
+    function showVocabReview() {
+        // 停止計時並取得時間
+        stopTimer();
+        const totalTime = formatTime(seconds);
+        // 隱藏題目與按鈕
+        questionEl.style.display = 'none';
+        optionsEl.style.display = 'none';
+        submitBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+        // 顯示檢核表
+        const reviewDiv = document.createElement('div');
+        reviewDiv.id = 'vocabReview';
+        reviewDiv.style.marginTop = '20px';
+        let html = `<p>您已完成所有單字，請勾選您覺得回答正確的項目：</p>`;
+        html += `<table style="width:100%; border-collapse:collapse;">
+            <thead>
+                <tr style="background-color:#f5f5f5;">
+                    <th style="padding:8px; border:1px solid #ddd;">中文</th>
+                    <th style="padding:8px; border:1px solid #ddd;">英文</th>
+                    <th style="padding:8px; border:1px solid #ddd;">我答對</th>
+                </tr>
+            </thead>
+            <tbody>`;
+        vocabList.forEach((item, idx) => {
+            html += `<tr>
+                <td style="padding:8px; border:1px solid #ddd;">${item.chinese}</td>
+                <td style="padding:8px; border:1px solid #ddd;">${item.english}</td>
+                <td style="padding:8px; border:1px solid #ddd; text-align:center;"><input type="checkbox" data-index="${idx}" /></td>
+            </tr>`;
+        });
+        html += '</tbody></table>';
+        // 送出自評按鈕
+        html += '<button id="submitVocabBtn" style="margin-top:15px; padding:10px 25px; background-color:#3498db; color:#fff; border:none; border-radius:5px; cursor:pointer;">送出自評</button>';
+        html += `<p style="margin-top:10px; color:#34495e;">總完成時間：${totalTime}</p>`;
+        reviewDiv.innerHTML = html;
+        // 清空結果區域並插入
+        resultEl.innerHTML = '';
+        resultEl.appendChild(reviewDiv);
+        // 隱藏進度與計時顯示
+        progressEl.style.display = 'none';
+        timerEl.style.display = 'none';
+        // 設定提交按鈕事件
+        document.getElementById('submitVocabBtn').addEventListener('click', submitVocabReview);
+    }
+
+    function submitVocabReview() {
+        // 取得所有勾選結果
+        const checkboxes = document.querySelectorAll('#vocabReview input[type="checkbox"]');
+        let correctCount = 0;
+        const wrongVocab = [];
+        checkboxes.forEach(cb => {
+            const idx = parseInt(cb.getAttribute('data-index'));
+            if (cb.checked) {
+                correctCount++;
+            } else {
+                wrongVocab.push(vocabList[idx]);
+            }
+        });
+        const total = vocabList.length;
+        const wrongCount = total - correctCount;
+        // 在畫面顯示自評成績
+        resultEl.innerHTML = `<p>您答對了 ${correctCount} 題，共 ${total} 題。</p>`;
+        // 顯示錯誤列表
+        if (wrongVocab.length > 0) {
+            let wrongHtml = '<div id="wrongVocabList" style="background-color:#f9f9f9; border-radius:5px; padding:15px; margin-top:10px;"><h3>需要複習的單字：</h3><ul>';
+            wrongVocab.forEach(item => {
+                wrongHtml += `<li>${item.chinese} - ${item.english}</li>`;
+            });
+            wrongHtml += '</ul></div>';
+            resultEl.innerHTML += wrongHtml;
+        }
+        // 保存結果至歷史紀錄
+        const timestamp = new Date().toLocaleString('zh-TW');
+        const scorePercent = total ? Math.round((correctCount / total) * 100) : 0;
+        const record = {
+            timestamp: timestamp,
+            section: '單字',
+            totalTime: formatTime(seconds),
+            correct: correctCount,
+            total: total,
+            wrongCount: wrongCount,
+            scorePercent: scorePercent,
+            wrongList: wrongVocab.map(item => {
+                return { chinese: item.chinese, english: item.english };
+            })
+        };
+        saveResult(record);
+        // 將錯誤單字加入錯題庫
+        if (wrongVocab.length > 0) {
+            const wrongHistory = JSON.parse(localStorage.getItem('wrongHistory') || '[]');
+            wrongVocab.forEach(item => {
+                wrongHistory.push({ section: '單字', chinese: item.chinese, english: item.english });
+            });
+            localStorage.setItem('wrongHistory', JSON.stringify(wrongHistory));
+        }
+        // 顯示重新開始按鈕
+        restartBtn.style.display = 'block';
+        restartBtn.addEventListener('click', function() {
+            showSectionSelection();
+        }, { once: true });
+    }
+
+    function showFinalResult() {
+        // 隱藏題目和按鈕
+        questionEl.style.display = 'none';
+        optionsEl.style.display = 'none';
+        submitBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+        // 停止計時
+        stopTimer();
+        // 顯示分數與時間
+        const totalTime = formatTime(seconds);
+        resultEl.style.color = '#34495e';
+        resultEl.innerHTML = `您答對了 ${score} 題，共 ${questions.length} 題。<br/>總完成時間：${totalTime}`;
+
+        // 顯示錯誤題目列表
+        if (wrongAnswers.length > 0) {
+            wrongListContainer.style.display = 'block';
+            wrongListContainer.innerHTML = '<h3>需要複習的題目：</h3>';
+            const ul = document.createElement('ul');
+            wrongAnswers.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.question} → 正確答案：${item.correctAnswer}`;
+                ul.appendChild(li);
+            });
+            wrongListContainer.appendChild(ul);
+        } else {
+            wrongListContainer.style.display = 'block';
+            wrongListContainer.innerHTML = '<h3>全部答對，太棒了！</h3>';
+        }
+
+        // 隱藏進度與計時器
+        progressEl.style.display = 'none';
+        timerEl.style.display = 'none';
+        // 隱藏文章
+        articleContainer.style.display = 'none';
+        // 顯示重新開始按鈕
+        restartBtn.style.display = 'block';
+
+        // 儲存結果至歷史紀錄
+        const scorePercent = questions.length ? Math.round((score / questions.length) * 100) : 0;
+        const recordData = {
+            timestamp: new Date().toLocaleString('zh-Hant', { hour12: false }),
+            totalTime: totalTime,
+            correct: score,
+            total: questions.length,
+            wrongCount: wrongAnswers.length,
+            section: currentSection,
+            scorePercent: scorePercent,
+            wrongList: wrongAnswers.slice()
+        };
+        saveResult(recordData);
+        // 將錯誤題目加入錯題庫，方便日後複習
+        if (wrongAnswers.length > 0) {
+            const wrongHistory = JSON.parse(localStorage.getItem('wrongHistory') || '[]');
+            wrongAnswers.forEach(item => {
+                wrongHistory.push({ section: currentSection, question: item.question, correctAnswer: item.correctAnswer, userAnswer: item.userAnswer });
+            });
+            localStorage.setItem('wrongHistory', JSON.stringify(wrongHistory));
+        }
+    }
+
+    function restartQuiz() {
+        // 停止上一個計時器，避免疊加導致時間跑太快
+        stopTimer();
+        currentQuestion = 0;
+        score = 0;
+        seconds = 0;
+        wrongAnswers.length = 0;
+        questionEl.style.display = '';
+        optionsEl.style.display = '';
+        submitBtn.style.display = '';
+        // 重置進度與計時器
+        progressEl.style.display = '';
+        timerEl.style.display = '';
+        // 隱藏重新開始按鈕與錯誤列表
+        restartBtn.style.display = 'none';
+        wrongListContainer.style.display = 'none';
+        // 洗牌題目順序
+        shuffleArray(questions);
+        // 開始計時
+        startTimer();
+        loadQuestion(currentQuestion);
+    }
+
+    // 事件監聽
+    submitBtn.addEventListener('click', checkAnswer);
+    nextBtn.addEventListener('click', nextQuestion);
+    restartBtn.addEventListener('click', restartQuiz);
+
+    // 初始化第一題
+    // 開始計時
+    function startTimer() {
+        // 若已有舊的計時器運作，先清除避免疊加
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+        // 記錄起始時間
+        startTime = Date.now();
+        timerEl.textContent = '已用時間：00:00';
+        // 使用 setInterval 每秒更新顯示的已用時間
+        timerInterval = setInterval(() => {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            timerEl.textContent = '已用時間：' + formatTime(elapsed);
+        }, 1000);
+    }
+    function stopTimer() {
+        // 停止計時器並計算結束時的秒數
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+        if (startTime) {
+            seconds = Math.floor((Date.now() - startTime) / 1000);
+        }
+    }
+    function formatTime(sec) {
+        const m = Math.floor(sec / 60).toString().padStart(2, '0');
+        const s = (sec % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+    }
+
+    // 初始化頁面：顯示段落選擇
+    showSectionSelection();
+
+    // 洗牌函式：每次測驗開始前重新排列題目順序
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+    }
+
+    // 亂數排列單一題目的選項，並調整正確答案索引
+    function shuffleOptionsForQuestion(q) {
+        if (!q.options || q.options.length === 0) return;
+        const pairs = q.options.map((opt, idx) => ({ opt: opt, isCorrect: idx === q.correct }));
+        shuffleArray(pairs);
+        q.options = pairs.map(p => p.opt);
+        q.correct = pairs.findIndex(p => p.isCorrect);
+    }
+
+    // 儲存結果至 localStorage
+    function saveResult(record) {
+        const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
+        history.push(record);
+        localStorage.setItem('quizHistory', JSON.stringify(history));
+    }
+
+    // 渲染歷史紀錄
+    function renderHistory() {
+        const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
+        if (history.length === 0) {
+            historyContainer.innerHTML = '<p>尚無紀錄，完成測驗後即可在此查看成績。</p>';
+            return;
+        }
+        // 建立表格
+        let html = '<table>';
+        html += '<thead><tr><th>日期時間</th><th>段落</th><th>完成時間</th><th>分數</th><th>正確/總題數</th><th>錯誤題數</th><th>錯誤詳情</th></tr></thead>';
+        html += '<tbody>';
+        history.forEach((record, idx) => {
+            const scoreDisplay = record.scorePercent !== undefined ? record.scorePercent + '%' : `${record.correct} / ${record.total}`;
+            html += `<tr>`;
+            html += `<td>${record.timestamp}</td>`;
+            html += `<td>${record.section}</td>`;
+            html += `<td>${record.totalTime}</td>`;
+            html += `<td>${scoreDisplay}</td>`;
+            html += `<td>${record.correct} / ${record.total}</td>`;
+            html += `<td>${record.wrongCount}</td>`;
+            html += `<td>`;
+            if (record.wrongList && record.wrongList.length > 0) {
+                html += `<button class="view-wrong" data-index="${idx}" style="padding:5px 10px; border-radius:4px; background-color:var(--accent-color); color:#fff; border:none; cursor:pointer;">查看</button>`;
+            } else {
+                html += '-';
+            }
+            html += `</td>`;
+            html += `</tr>`;
+        });
+        html += '</tbody></table>';
+        historyContainer.innerHTML = html;
+        // 為每個查看按鈕添加事件監聽
+        const viewBtns = historyContainer.querySelectorAll('.view-wrong');
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const index = parseInt(this.getAttribute('data-index'));
+                showWrongDetails(index);
+            });
+        });
+    }
+
+    // 顯示測驗區域
+    function showQuiz() {
+        quizSection.style.display = 'block';
+        historySection.style.display = 'none';
+        sectionSection.style.display = 'none';
+    }
+    // 顯示歷史紀錄區域
+    function showHistory() {
+        quizSection.style.display = 'none';
+        historySection.style.display = 'block';
+        sectionSection.style.display = 'none';
+        renderHistory();
+    }
+
+    // 顯示段落選擇區域
+    function showSectionSelection() {
+        quizSection.style.display = 'none';
+        historySection.style.display = 'none';
+        sectionSection.style.display = 'block';
+    }
+
+    // 顯示錯誤詳情至模態視窗
+    function showWrongDetails(index) {
+        const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
+        const record = history[index];
+        const modal = document.getElementById('wrongModal');
+        const detailsDiv = document.getElementById('wrongDetails');
+        if (!record || !record.wrongList || record.wrongList.length === 0) {
+            detailsDiv.innerHTML = '<p>沒有錯誤題目。</p>';
+        } else {
+            let html = '<h3>錯誤題目清單</h3><ul style="padding-left:18px;">';
+            record.wrongList.forEach(item => {
+                if (item.question) {
+                    // 一般題目包含 question 和 correctAnswer
+                    html += `<li><strong>題目：</strong>${item.question}<br/><strong>你的答案：</strong>${item.userAnswer}<br/><strong>正確答案：</strong>${item.correctAnswer}</li>`;
+                } else if (item.chinese) {
+                    // 單字題目包含中文/英文
+                    html += `<li><strong>${item.chinese}</strong> ➔ 正解：${item.english}</li>`;
+                }
+            });
+            html += '</ul>';
+            detailsDiv.innerHTML = html;
+        }
+        modal.style.display = 'block';
+    }
+
+    // 關閉錯誤詳情模態視窗
+    function closeWrongModal() {
+        const modal = document.getElementById('wrongModal');
+        modal.style.display = 'none';
+    }
+    // 綁定關閉按鈕
+    document.getElementById('closeModal').addEventListener('click', closeWrongModal);
+    // 點擊遮罩區域也關閉
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('wrongModal');
+        if (event.target === modal) {
+            closeWrongModal();
+        }
+    });
+
+    // 開始指定段落的測驗
+    function startSection(sectionId) {
+        // 將當前段落記錄下來，這個值會在儲存歷史紀錄時使用
+        currentSection = sectionId;
+        // 若先前有計時器在運行，先行停止，避免多個計時器累加導致秒數過快
+        stopTimer();
+        seconds = 0;
+        // v o c a b ：單字練習，直接呼叫專用函式後返回
+        if (sectionId === 'vocab') {
+            startVocabulary();
+            return;
+        }
+        // 自訂文章練習：隨機挑選一篇文章並顯示，問題來源為文章內建問題
+        if (sectionId === 'article') {
+            currentSection = '文章練習';
+            // 為避免連續抽到相同文章，若有多篇文章則直到抽取不同索引為止
+            let idx;
+            if (articleExercises.length > 1) {
+                do {
+                    idx = Math.floor(Math.random() * articleExercises.length);
+                } while (idx === lastArticleIndex);
+            } else {
+                idx = 0;
+            }
+            lastArticleIndex = idx;
+            const passage = articleExercises[idx];
+            questions = passage.questions.slice();
+            const htmlText = passage.text.replace(/\n/g, '<br/>');
+            articleContainer.innerHTML = `<h3>${passage.title}</h3><p>${htmlText}</p>`;
+            articleContainer.style.display = 'block';
+        } else if (sectionId === '4') {
+            // 閱讀理解：隨機挑選課本文章
+            const passage = readingPassages[Math.floor(Math.random() * readingPassages.length)];
+            questions = passage.questions.slice();
+            const htmlText = passage.text.replace(/\n/g, '<br/>');
+            articleContainer.innerHTML = `<h3>${passage.title}</h3><p>${htmlText}</p>`;
+            articleContainer.style.display = 'block';
+        } else {
+            // 其餘為一般選擇題段落，從預先定義的 sectionQuestions 取得題目
+            if (sectionId === 'combined') {
+                // 綜合段落：從段落 1、2、3 各隨機抽取 10 題合併，並標記來源段落
+                currentSection = '綜合段落';
+                const combinedList = [];
+                ['1', '2', '3'].forEach(sec => {
+                    const list = sectionQuestions[sec] ? sectionQuestions[sec].slice() : [];
+                    shuffleArray(list);
+                    const selected = list.slice(0, 10);
+                    selected.forEach(q => {
+                        const copied = Object.assign({}, q);
+                        copied.sectionSource = sec;
+                        combinedList.push(copied);
+                    });
+                });
+                questions = combinedList;
+            } else {
+                questions = (sectionQuestions[sectionId] || []).slice();
+            }
+            // 綜合或普通段落不顯示文章區塊
+            articleContainer.style.display = 'none';
+        }
+        // 若為段落 1、2、3，只取隨機 10 題
+        if (['1','2','3'].includes(sectionId)) {
+            // 先打亂順序後抽取前 10 題
+            shuffleArray(questions);
+            if (questions.length > 10) {
+                questions = questions.slice(0, 10);
+            }
+        }
+        // 對題目亂序處理，避免固定順序導致死背
+        shuffleArray(questions);
+        // 隨機排列每題的選項位置，讓正確答案不總在第一個
+        questions.forEach(q => shuffleOptionsForQuestion(q));
+        // 重置測驗狀態與計分計時器
+        currentQuestion = 0;
+        score = 0;
+        seconds = 0;
+        wrongAnswers.length = 0;
+        // 顯示測驗介面並開始計時
+        showQuiz();
+        startTimer();
+        progressEl.style.display = '';
+        timerEl.style.display = '';
+        restartBtn.style.display = 'none';
+        questionEl.style.display = '';
+        optionsEl.style.display = '';
+        submitBtn.style.display = '';
+        loadQuestion(currentQuestion);
+    }
+
+    // 導覽列事件
+    quizTab.addEventListener('click', function(e) {
+        e.preventDefault();
+        showSectionSelection();
+    });
+    historyTab.addEventListener('click', function(e) {
+        e.preventDefault();
+        showHistory();
+    });
+
+    // 段落按鈕事件
+    const sectionButtons = document.querySelectorAll('.section-btn');
+    sectionButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const sectionId = this.getAttribute('data-section');
+            startSection(sectionId);
+        });
+    });
+</script>
+</body>
+</html>
