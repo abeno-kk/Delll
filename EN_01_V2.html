@@ -180,12 +180,24 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
+        /* 分類區塊樣式 */
+        .section-group {
+            margin-bottom: 25px;
+        }
+        .section-group h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
         /* 各按鈕的色系 */
         .btn-purple { background-color: #8e44ad; }
         .btn-red    { background-color: #e74c3c; }
         .btn-green  { background-color: #16a085; }
         .btn-blue   { background-color: #2980b9; }
         .btn-orange { background-color: #f39c12; }
+        /* 額外色系：teal 用於補充單元 */
+        .btn-teal   { background-color: #1abc9c; }
 
         /* 歷史紀錄表格樣式 */
         #historyContainer table {
@@ -262,21 +274,48 @@
 
 <!-- 段落選擇區塊 -->
 <div class="quiz-container" id="section-section">
-    <h2 style="text-align:center;">選擇段落開始測驗</h2>
-    <!-- 測驗選項區：整合段落與練習類別。每一份測驗題目皆會隨機抽取，避免死記固定順序 -->
-    <div class="section-buttons">
-        <!-- 第一行：綜合段落、閱讀理解、文章練習 -->
-        <button class="section-btn btn-purple" data-section="combined">綜合段落</button>
-        <button class="section-btn btn-red" data-section="4">閱讀理解</button>
-        <button class="section-btn btn-green" data-section="article">文章練習</button>
-        <!-- 第二行：形容詞用法、單字練習 -->
-        <button class="section-btn btn-blue" data-section="5">形容詞用法</button>
-        <button class="section-btn btn-orange" data-section="vocab">單字練習</button>
+    <h2 style="text-align:center;">選擇練習分類開始測驗</h2>
+    <!-- 分類：課文練習 -->
+    <div class="section-group">
+        <h3>課文練習</h3>
+        <div class="section-buttons">
+            <button class="section-btn btn-purple" data-section="combined">綜合段落</button>
+            <button class="section-btn btn-red" data-section="4">閱讀理解</button>
+            <button class="section-btn btn-green" data-section="article">文章練習</button>
+            <button class="section-btn btn-blue" data-section="reading2">閱讀補充</button>
+        </div>
+    </div>
+    <!-- 分類：單字練習 -->
+    <div class="section-group">
+        <h3>單字練習</h3>
+        <div class="section-buttons">
+            <button class="section-btn btn-orange" data-section="vocab">單字練習</button>
+            <button class="section-btn btn-purple" data-section="theme">主題單字</button>
+        </div>
+    </div>
+    <!-- 分類：文法練習 -->
+    <div class="section-group">
+        <h3>文法練習</h3>
+        <div class="section-buttons">
+            <button class="section-btn btn-blue" data-section="5">形容詞用法</button>
+            <button class="section-btn btn-red" data-section="grammar">介系詞與問句</button>
+            <button class="section-btn btn-green" data-section="plural">複數規則</button>
+        </div>
+    </div>
+    <!-- 分類：理解與發音 -->
+    <div class="section-group">
+        <h3>理解與發音</h3>
+        <div class="section-buttons">
+            <button class="section-btn btn-orange" data-section="dialogue">對話理解</button>
+            <button class="section-btn btn-teal" data-section="sounds">音標字母</button>
+        </div>
     </div>
 </div>
 
 <!-- 測驗區塊 -->
 <div class="quiz-container" id="quiz-section" style="display:none;">
+    <!-- 顯示當前練習階段名稱 -->
+    <h2 id="sectionTitle" style="text-align:center; margin-top:0; margin-bottom:15px; color: var(--primary-color);"></h2>
     <!-- 閱讀文章顯示區 -->
     <div id="articleContainer" style="display:none; margin-bottom:20px; background-color:#f9f9f9; border-radius:5px; padding:15px;"></div>
     <div id="timer">已用時間：00:00</div>
@@ -291,6 +330,8 @@
     </div>
     <div id="result"></div>
     <div id="wrong-list" style="display:none;"></div>
+    <!-- 下一個練習階段按鈕，預設隱藏 -->
+    <button id="nextSectionBtn" style="display:none; width:100%; margin-top:15px; background-color: var(--secondary-color); color:#fff; padding:12px; border:none; border-radius:6px; font-size:1em; cursor:pointer;"></button>
     <button id="restartBtn" style="display:none;">重新開始</button>
 </div>
 
@@ -381,8 +422,123 @@
             { question: "在句子 Ann is a tall girl. 中，形容詞是？", options: ["tall", "Ann", "is", "girl"], correct: 0 },
             { question: "下面哪一句是否定句含 be 動詞加 not 再加形容詞？", options: ["He is not tall.", "He not tall is.", "He is tall not.", "He are not tall."], correct: 0 },
             { question: "下列哪個形容詞不屬於『新舊/年齡』類？", options: ["beautiful", "new", "old", "young"], correct: 0 }
+        ],
+        // 補充單元：主題單字、介系詞與問句、複數規則、閱讀補充、對話理解、音標字母
+        'theme': [
+            { question: '以下哪個單字意思是「禮物」？', options: ['gift','cookie','pencil box','pen'], correct: 0 },
+            { question: '以下哪個單字意思是「漫畫書」？', options: ['comic book','notebook','marker','cookie'], correct: 0 },
+            { question: '以下哪個單字意思是「浴室」？', options: ['bathroom','bedroom','kitchen','living room'], correct: 0 },
+            { question: '以下哪個單字意思是「餐廳」？', options: ['dining room','living room','bedroom','kitchen'], correct: 0 },
+            { question: '以下哪個單字意思是「彩色筆」？', options: ['marker','notebook','gift','pencil box'], correct: 0 },
+            { question: '「餅乾」的英文是？', options: ['cookie','gift','pen','brush'], correct: 0 },
+            { question: '哪一項不是房間？', options: ['pen','kitchen','bedroom','living room'], correct: 0 },
+            { question: '以下哪一個是甜點？', options: ['cookie','marker','comic book','pencil box'], correct: 0 },
+            { question: '哪一個字與其他三個不屬於同一類？', options: ['kitchen','gift','cookie','comic book'], correct: 0 },
+            { question: '以下哪個單字意思是「客廳」？', options: ['living room','dining room','bathroom','pencil box'], correct: 0 }
+        ],
+        'grammar': [
+            { question: '「在……之間」的英文是？', options: ['between','next to','in front of','behind'], correct: 0 },
+            { question: '「在……下面」的英文是？', options: ['under','on','behind','near'], correct: 0 },
+            { question: '「在……旁邊」的英文是？', options: ['next to','between','under','in front of'], correct: 0 },
+            { question: '「在……前面」的英文是？', options: ['in front of','behind','next to','near'], correct: 0 },
+            { question: '「在……後面」的英文是？', options: ['behind','in front of','between','on'], correct: 0 },
+            { question: '以下哪個問句用於詢問複數物品？', options: ['Where are your brothers?','Where is your brothers?','Where are your father?','Where is the book?'], correct: 0 },
+            { question: '以下哪個問句用於詢問單數物品？', options: ['Where is your father?','Where are your brothers?','Where are they?','Where is books?'], correct: 0 },
+            { question: '「這些是什麼？」的英文是？', options: ['What are these?','What is this?','What is that?','What are those?'], correct: 0 },
+            { question: '選出正確的句子：', options: ['The pencil is in the box.','The pencil is on the box.','The pencil is between the box.','The pencil is next to the box.'], correct: 0 },
+            { question: '「在……附近」的英文是？', options: ['near','behind','between','in front of'], correct: 0 }
+        ],
+        'plural': [
+            { question: 'baby 的複數是哪一個？', options: ['babies','babys','babyies','baby'], correct: 0 },
+            { question: 'mouse 的複數是哪一個？', options: ['mice','mouses','mouse','mices'], correct: 0 },
+            { question: 'person 的複數是哪一個？', options: ['people','persons','peoples','person'], correct: 0 },
+            { question: 'pencil 的複數是哪一個？', options: ['pencils','penciles','pencileses','pencil'], correct: 0 },
+            { question: 'woman 的複數是哪一個？', options: ['women','womans','womes','womens'], correct: 0 },
+            { question: '哪一個複數變化正確？', options: ['box → boxes','brush → brushs','wife → wifes','watch → watchs'], correct: 0 },
+            { question: '以下哪句正確？', options: ['These are oranges.','These is oranges.','This is oranges.','Those are orange.'], correct: 0 },
+            { question: 'erasure 的複數是？', options: ['erasers','erasres','eraser','eraserses'], correct: 0 },
+            { question: '這些是鉛筆。英文是？', options: ['These are pencils.','These is pencils.','Those are pencils.','They are pencil.'], correct: 0 },
+            { question: 'baby 的複數拼法是？', options: ['babies','babyes','babys','babyes'], correct: 0 }
+        ],
+        'reading2': [
+            { question: 'Where is the Keret House located?', options: ['Poland','France','Germany','Italy'], correct: 0 },
+            { question: 'What shape is the Keret House?', options: ['long and thin','short and wide','round','square'], correct: 0 },
+            { question: 'Where are the bathroom, kitchen and dining room?', options: ['Right next to each other','Above the bedroom','Outside','Far apart'], correct: 0 },
+            { question: 'Where is the bedroom located?', options: ['Above the other rooms','Below the kitchen','Next to the bathroom','In the basement'], correct: 0 },
+            { question: 'The Keret House is ______ for one person.', options: ['enough','too big','not enough','too small'], correct: 0 },
+            { question: 'Which word from the passage means "special"?', options: ['special','inside','right','each other'], correct: 0 },
+            { question: 'Which word means "彼此；互相"？', options: ['each other','person','enough','above'], correct: 0 },
+            { question: 'Which word means "在…上方"？', options: ['above','inside','right','enough'], correct: 0 },
+            { question: 'What is the Keret House NOT?', options: ['big','long','thin','special'], correct: 0 },
+            { question: 'What does "enough" mean?', options: ['足夠的','特別的','彼此的','在…上方'], correct: 0 }
+        ],
+        'dialogue': [
+            { question: 'Where are Jamie and Zac talking?', options: ['At Zac\'s house','At Jamie\'s house','At school','At the park'], correct: 0 },
+            { question: 'What color are the living room walls?', options: ['purple','gray','green','brown'], correct: 0 },
+            { question: 'What is Zac\'s mom\'s favorite color?', options: ['purple','blue','gray','red'], correct: 0 },
+            { question: 'Which room is gray?', options: ['kitchen','living room','dining room','bedroom'], correct: 0 },
+            { question: 'How does Jamie greet Zac\'s parents?', options: ['Nice to meet you.','Hello, I\'m Jamie.','Good morning.','How are you?'], correct: 0 },
+            { question: 'Zac\'s parents are ______.', options: ['Mr. and Mrs. Hugo','Mr. and Mrs. Parker','Mr. and Mrs. Smith','Mr. and Mrs. Lee'], correct: 0 },
+            { question: 'What is on the sofa in the second dialogue?', options: ['Zac\'s mice','Jamie\'s book','Cookies','A pencil box'], correct: 0 },
+            { question: 'Where is Mickey the mouse?', options: ['Under the sofa','In the box','In the kitchen','In the living room'], correct: 0 },
+            { question: 'Zac says he\'s hungry. What does Jamie say?', options: ['He really is.','He\'s tired.','He\'s my favorite.','He\'s funny.'], correct: 0 },
+            { question: '在對話中，purple 指的是什麼？', options: ['color','kitchen','parents','gray'], correct: 0 }
+        ],
+        'sounds': [
+            { question: 'Which word has the vowel sound [ʌ]?', options: ['fun','on','box','not'], correct: 0 },
+            { question: 'Which word has the vowel sound [a]?', options: ['on','us','fun','lucky'], correct: 0 },
+            { question: 'Which consonant sound does "zero" begin with?', options: ['[z]','[s]','[h]','[w]'], correct: 0 },
+            { question: 'Which consonant sound does "hat" begin with?', options: ['[h]','[s]','[z]','[w]'], correct: 0 },
+            { question: 'Which of the following words starts with the [m] sound?', options: ['mom','fun','year','lucky'], correct: 0 },
+            { question: 'Which word begins with the [n] sound?', options: ['name','pen','year','meet'], correct: 0 },
+            { question: 'Which consonant sound does "watch" begin with?', options: ['[w]','[m]','[n]','[s]'], correct: 0 },
+            { question: 'Which vowel sound does "on" contain?', options: ['[a]','[ʌ]','[i]','[u]'], correct: 0 },
+            { question: 'Which word ends with the [z] sound?', options: ['buzz','six','kiss','box'], correct: 0 },
+            { question: 'Which word begins with the [l] sound?', options: ['lion','meet','year','yummy'], correct: 0 }
         ]
     };
+
+    // 練習階段名稱對照：用於顯示標題與引導下一階段
+    const sectionNames = {
+        'combined': '綜合段落',
+        '4': '閱讀理解',
+        'article': '文章練習',
+        'reading2': '閱讀補充',
+        'vocab': '單字練習',
+        'theme': '主題單字',
+        'grammar': '介系詞與問句',
+        'plural': '複數規則',
+        'dialogue': '對話理解',
+        'sounds': '音標字母'
+    };
+    // 練習階段順序：用於自動前往下一階段
+    const sectionOrder = ['combined','4','article','reading2','vocab','theme','grammar','plural','dialogue','sounds'];
+    const sectionTitleEl = document.getElementById('sectionTitle');
+    const nextSectionBtn = document.getElementById('nextSectionBtn');
+
+    // 用於追蹤當前練習的原始段落 ID（非中文名稱），方便決定下一階段
+    let currentSectionId = '';
+
+    // 設定練習標題
+    function setSectionTitle(sectionId) {
+        sectionTitleEl.textContent = sectionNames[sectionId] || '';
+    }
+
+    // 準備下一階段按鈕
+    function prepareNextSection(currentId) {
+        // 找到當前索引
+        const idx = sectionOrder.indexOf(currentId);
+        if (idx >= 0 && idx < sectionOrder.length - 1) {
+            const nextId = sectionOrder[idx + 1];
+            const nextName = sectionNames[nextId] || '';
+            nextSectionBtn.textContent = `前往下一階段：${nextName}`;
+            nextSectionBtn.dataset.section = nextId;
+            nextSectionBtn.style.display = 'block';
+        } else {
+            // 無下一階段，隱藏
+            nextSectionBtn.style.display = 'none';
+        }
+    }
 
     // 閱讀理解文章庫，每個文章含標題、內文與對應問題
     const readingPassages = [
@@ -565,6 +721,11 @@
     }
 
     function checkAnswer() {
+        // 若當前為進階單字練習，改用專用檢查邏輯，避免與一般選擇題流程混用
+        if (currentSection === '單字練習' && typeof checkAdvancedAnswer === 'function') {
+            checkAdvancedAnswer();
+            return;
+        }
         const selected = document.querySelector('input[name="option"]:checked');
         if (!selected) {
             alert('請選擇一個答案！');
@@ -758,6 +919,341 @@
         }, { once: true });
     }
 
+    /*
+     * 進階單字練習功能：
+     * 每回合固定 10 題，題型隨機包括：
+     * 1. 中文→英文輸入題 (C2E)
+     * 2. 英文→中文單選題 (E2C)
+     * 3. 英文字母打亂還原 (SCRAMBLE)
+     * 4. 例句填空 (CLOZE)
+     * 抽題時依據使用者錯題統計提高出現機率，避免重複單字。
+     */
+
+    // 單字資料：每個單字包含 id、英文、中文、詞性、例句和難度
+    const vocabData = [
+        { id: 'handsome', en: 'handsome', zh: '英俊的', pos: 'adj', example: 'He is a handsome boy.', difficulty: 1 },
+        { id: 'classmate', en: 'classmate', zh: '同學', pos: 'n', example: 'She is my classmate.', difficulty: 1 },
+        { id: 'woman', en: 'woman', zh: '女人', pos: 'n', example: 'That woman is tall.', difficulty: 1 },
+        { id: 'young', en: 'young', zh: '年輕的', pos: 'adj', example: 'He is young.', difficulty: 1 },
+        { id: 'beautiful', en: 'beautiful', zh: '美麗的', pos: 'adj', example: 'She is a beautiful singer.', difficulty: 1 },
+        { id: 'cousin', en: 'cousin', zh: '堂表兄弟姊妹', pos: 'n', example: 'My cousin is coming.', difficulty: 1 },
+        { id: 'singer', en: 'singer', zh: '歌手', pos: 'n', example: 'She is a singer.', difficulty: 1 },
+        { id: 'office_worker', en: 'office worker', zh: '上班族', pos: 'n', example: 'My father is an office worker.', difficulty: 1 },
+        { id: 'housewife', en: 'housewife', zh: '家庭主婦', pos: 'n', example: 'My mother is a housewife.', difficulty: 1 },
+        { id: 'police_officer', en: 'police officer', zh: '警察', pos: 'n', example: 'He is a police officer.', difficulty: 1 },
+        { id: 'writer', en: 'writer', zh: '作家', pos: 'n', example: 'My uncle is a writer.', difficulty: 1 },
+        { id: 'uncle', en: 'uncle', zh: '叔叔/舅舅', pos: 'n', example: 'My uncle is tall.', difficulty: 1 },
+        { id: 'aunt', en: 'aunt', zh: '嬸嬸/姑媽', pos: 'n', example: 'My aunt is nice.', difficulty: 1 },
+        { id: 'husband', en: 'husband', zh: '丈夫', pos: 'n', example: 'My husband is kind.', difficulty: 1 },
+        { id: 'wife', en: 'wife', zh: '妻子', pos: 'n', example: 'She is my wife.', difficulty: 1 },
+        { id: 'son', en: 'son', zh: '兒子', pos: 'n', example: 'This is my son.', difficulty: 1 },
+        { id: 'daughter', en: 'daughter', zh: '女兒', pos: 'n', example: 'She is my daughter.', difficulty: 1 },
+        { id: 'family', en: 'family', zh: '家人；家庭', pos: 'n', example: 'I love my family.', difficulty: 1 },
+        { id: 'baby', en: 'baby', zh: '嬰兒', pos: 'n', example: 'The baby is cute.', difficulty: 1 },
+        { id: 'gift', en: 'gift', zh: '禮物', pos: 'n', example: 'This is a gift for you.', difficulty: 1 },
+        { id: 'comic_book', en: 'comic book', zh: '漫畫書', pos: 'n', example: 'He likes comic books.', difficulty: 1 },
+        { id: 'bathroom', en: 'bathroom', zh: '浴室', pos: 'n', example: 'The bathroom is clean.', difficulty: 1 },
+        { id: 'dining_room', en: 'dining room', zh: '餐廳', pos: 'n', example: 'We eat in the dining room.', difficulty: 1 },
+        { id: 'kitchen', en: 'kitchen', zh: '廚房', pos: 'n', example: 'My mom is in the kitchen.', difficulty: 1 },
+        { id: 'marker', en: 'marker', zh: '彩色筆', pos: 'n', example: 'I write with a marker.', difficulty: 1 },
+        { id: 'cookie', en: 'cookie', zh: '餅乾', pos: 'n', example: 'I eat a cookie.', difficulty: 1 },
+        { id: 'living_room', en: 'living room', zh: '客廳', pos: 'n', example: 'We watch TV in the living room.', difficulty: 1 }
+    ];
+
+    // 讀取指定使用者的統計資料
+    function loadVocabStats() {
+        const userKey = 'vocabStats_' + (localStorage.getItem('userName') || 'guest');
+        return JSON.parse(localStorage.getItem(userKey) || '{}');
+    }
+    // 保存統計資料
+    function saveVocabStats(stats) {
+        const userKey = 'vocabStats_' + (localStorage.getItem('userName') || 'guest');
+        localStorage.setItem(userKey, JSON.stringify(stats));
+    }
+    // 計算加權並選擇 count 個不同的單字
+    function selectWeightedWords(count) {
+        const stats = loadVocabStats();
+        const now = Date.now();
+        const chosen = [];
+        while (chosen.length < count) {
+            // 計算總權重
+            let total = 0;
+            vocabData.forEach(w => {
+                if (chosen.includes(w.id)) return;
+                const st = stats[w.id] || { correct: 0, wrong: 0, streak: 0, lastSeenAt: 0 };
+                let weight = 1;
+                if (st.wrong - st.correct >= 2) weight += 1;
+                if (st.streak <= -2) weight += 1;
+                if (now - (st.lastSeenAt || 0) > 7 * 24 * 3600 * 1000) weight += 0.5;
+                w._weight = weight;
+                total += weight;
+            });
+            let rnd = Math.random() * total;
+            for (const w of vocabData) {
+                if (chosen.includes(w.id)) continue;
+                const st = stats[w.id] || { correct: 0, wrong: 0, streak: 0, lastSeenAt: 0 };
+                let weight = w._weight || 1;
+                if (rnd < weight) {
+                    chosen.push(w.id);
+                    break;
+                }
+                rnd -= weight;
+            }
+        }
+        return chosen.map(id => vocabData.find(w => w.id === id));
+    }
+    // 隨機打亂字母，保留空白
+    function scramble(word) {
+        const chars = word.split('');
+        // 將字母（非空白）抽出重排
+        const letters = chars.filter(c => c !== ' ');
+        // 洗牌
+        for (let i = letters.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [letters[i], letters[j]] = [letters[j], letters[i]];
+        }
+        // 合併回字串
+        let idx = 0;
+        return chars.map(c => {
+            if (c === ' ') return ' ';
+            return letters[idx++];
+        }).join('');
+    }
+    // 準備 10 題的練習題
+    function prepareVocabQuestions() {
+        const words = selectWeightedWords(10);
+        // 生成題型列表：確保四種題型平均出現，並有隨機性
+        const types = ['C2E','E2C','SCRAMBLE','CLOZE','C2E','E2C','SCRAMBLE','CLOZE'];
+        // 兩個隨機題型
+        const extra = ['C2E','E2C','SCRAMBLE','CLOZE'];
+        types.push(extra[Math.floor(Math.random() * extra.length)]);
+        types.push(extra[Math.floor(Math.random() * extra.length)]);
+        // 打亂題型順序
+        for (let i = types.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [types[i], types[j]] = [types[j], types[i]];
+        }
+        const questionsArr = [];
+        words.forEach((word, idx) => {
+            const type = types[idx];
+            let q = { word: word, type: type };
+            if (type === 'C2E') {
+                q.questionText = word.zh;
+                q.answer = word.en;
+            } else if (type === 'E2C') {
+                q.questionText = word.en;
+                // 建立選項：正確中文及 3 個擾動
+                const distractors = [];
+                const candidates = vocabData.filter(w => w.id !== word.id);
+                // 選擇與同詞性或難度相近的三個
+                while (distractors.length < 3 && candidates.length > 0) {
+                    const idx2 = Math.floor(Math.random() * candidates.length);
+                    const cand = candidates.splice(idx2, 1)[0];
+                    distractors.push(cand.zh);
+                }
+                const options = [word.zh, ...distractors];
+                // 洗牌
+                for (let i = options.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [options[i], options[j]] = [options[j], options[i]];
+                }
+                q.options = options;
+                q.correctIndex = options.indexOf(word.zh);
+            } else if (type === 'SCRAMBLE') {
+                // 打亂字母，並附上中文提示與說明，減少猜測困難
+                const scrambled = scramble(word.en);
+                q.questionText = `請組合成正確的英文單字：${scrambled}（中文：${word.zh}）`;
+                q.answer = word.en;
+            } else if (type === 'CLOZE') {
+                // 例句填空：將單字替換為底線，並標註中文意思以提示填入的單字
+                const regex = new RegExp(word.en.replace(/([.*+?^${}()|[\]\\])/g, '\\$1'), 'gi');
+                const blank = '_'.repeat(word.en.length);
+                const sentence = word.example.replace(regex, blank);
+                q.questionText = `${sentence}（填入單字的中文：${word.zh}）`;
+                q.answer = word.en;
+            }
+            questionsArr.push(q);
+        });
+        return questionsArr;
+    }
+    // 進階單字練習啟動
+    let advQuestions = [];
+    let advIndex = 0;
+    let advStats = {};
+    function startAdvancedVocab() {
+        currentSection = '單字練習';
+        currentSectionId = 'vocab';
+        stopTimer();
+        seconds = 0;
+        // 載入或初始化統計
+        advStats = loadVocabStats();
+        advQuestions = prepareVocabQuestions();
+        advIndex = 0;
+        score = 0;
+        wrongAnswers.length = 0;
+        // 顯示介面
+        showQuiz();
+        articleContainer.style.display = 'none';
+        submitBtn.style.display = 'inline-block';
+        nextBtn.style.display = 'none';
+        // 開始計時
+        startTimer();
+        loadAdvancedQuestion();
+
+        // 設定標題並隱藏下一階段按鈕
+        setSectionTitle('vocab');
+        nextSectionBtn.style.display = 'none';
+        nextSectionBtn.dataset.section = '';
+    }
+    function loadAdvancedQuestion() {
+        // 清理畫面
+        resultEl.textContent = '';
+        wrongListContainer.style.display = 'none';
+        const q = advQuestions[advIndex];
+        // 更新進度
+        progressEl.textContent = `第 ${advIndex + 1} / ${advQuestions.length} 題`;
+        // 顯示題目
+        if (q.type === 'E2C') {
+            // 選擇題
+            questionEl.style.display = '';
+            optionsEl.style.display = '';
+            questionEl.textContent = q.questionText;
+            optionsEl.innerHTML = '';
+            q.options.forEach((opt, i) => {
+                const li = document.createElement('li');
+                const label = document.createElement('label');
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'option';
+                input.value = i;
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(opt));
+                li.appendChild(label);
+                optionsEl.appendChild(li);
+            });
+        } else {
+            // 輸入題
+            questionEl.style.display = '';
+            optionsEl.style.display = '';
+            questionEl.textContent = q.questionText;
+            optionsEl.innerHTML = '<input type="text" id="advInput" style="width:70%; padding:6px; font-size:1em;">';
+        }
+    }
+    function checkAdvancedAnswer() {
+        const q = advQuestions[advIndex];
+        let userAnswer;
+        if (q.type === 'E2C') {
+            const selected = document.querySelector('input[name="option"]:checked');
+            if (!selected) {
+                alert('請選擇答案');
+                return;
+            }
+            userAnswer = parseInt(selected.value);
+            if (userAnswer === q.correctIndex) {
+                // 答對
+                score++;
+                updateWordStats(q.word.id, true);
+                resultEl.style.color = '#2ecc71';
+                resultEl.textContent = '回答正確！';
+            } else {
+                // 答錯
+                updateWordStats(q.word.id, false);
+                resultEl.style.color = '#e74c3c';
+                resultEl.innerHTML = `答錯了！正確答案是：${q.options[q.correctIndex]}<br/>例句：${q.word.example}`;
+                wrongAnswers.push({ question: q.questionText, correctAnswer: q.options[q.correctIndex] });
+            }
+        } else {
+            userAnswer = document.getElementById('advInput').value.trim();
+            if (userAnswer === '') {
+                alert('請輸入答案');
+                return;
+            }
+            if (userAnswer.toLowerCase() === q.answer.toLowerCase()) {
+                score++;
+                updateWordStats(q.word.id, true);
+                resultEl.style.color = '#2ecc71';
+                resultEl.textContent = '回答正確！';
+            } else {
+                updateWordStats(q.word.id, false);
+                resultEl.style.color = '#e74c3c';
+                resultEl.innerHTML = `答錯了！正確答案是：${q.answer}<br/>例句：${q.word.example}`;
+                wrongAnswers.push({ question: q.questionText, correctAnswer: q.answer });
+            }
+        }
+        // 顯示下一題或結束
+        submitBtn.disabled = true;
+        setTimeout(() => {
+            submitBtn.disabled = false;
+            advIndex++;
+            if (advIndex < advQuestions.length) {
+                loadAdvancedQuestion();
+            } else {
+                finishAdvancedVocab();
+            }
+        }, 1200);
+    }
+    function updateWordStats(wordId, isCorrect) {
+        const now = Date.now();
+        if (!advStats[wordId]) advStats[wordId] = { correct: 0, wrong: 0, streak: 0, lastSeenAt: 0 };
+        const st = advStats[wordId];
+        if (isCorrect) {
+            st.correct++;
+            st.streak = st.streak >= 0 ? st.streak + 1 : 1;
+        } else {
+            st.wrong++;
+            st.streak = st.streak <= 0 ? st.streak - 1 : -1;
+        }
+        st.lastSeenAt = now;
+    }
+    function finishAdvancedVocab() {
+        stopTimer();
+        // 更新統計到 localStorage
+        saveVocabStats(advStats);
+        // 顯示結果
+        questionEl.style.display = 'none';
+        optionsEl.style.display = 'none';
+        submitBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+        const totalTime = formatTime(seconds);
+        resultEl.style.color = '#34495e';
+        resultEl.innerHTML = `您答對了 ${score} 題，共 ${advQuestions.length} 題。<br/>總完成時間：${totalTime}`;
+        // 顯示錯誤題目列表
+        if (wrongAnswers.length > 0) {
+            wrongListContainer.style.display = 'block';
+            wrongListContainer.innerHTML = '<h3>需要複習的單字：</h3>';
+            const ul = document.createElement('ul');
+            wrongAnswers.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.question} → 正確答案：${item.correctAnswer}`;
+                ul.appendChild(li);
+            });
+            wrongListContainer.appendChild(ul);
+        } else {
+            wrongListContainer.style.display = 'block';
+            wrongListContainer.innerHTML = '<h3>全部答對，太棒了！</h3>';
+        }
+        progressEl.style.display = 'none';
+        timerEl.style.display = 'none';
+        // 保存結果至歷史紀錄
+        const record = {
+            timestamp: new Date().toLocaleString('zh-TW'),
+            section: '單字練習',
+            totalTime: totalTime,
+            correct: score,
+            total: advQuestions.length,
+            wrongCount: advQuestions.length - score,
+            scorePercent: Math.round((score / advQuestions.length) * 100),
+            wrongList: wrongAnswers.map(item => ({ question: item.question, correctAnswer: item.correctAnswer }))
+        };
+        saveResult(record);
+        // 顯示重新開始
+        restartBtn.style.display = 'block';
+        restartBtn.onclick = () => { showSectionSelection(); };
+
+        // 準備前往下一階段的按鈕
+        prepareNextSection('vocab');
+    }
+
     function showFinalResult() {
         // 隱藏題目和按鈕
         questionEl.style.display = 'none';
@@ -816,6 +1312,9 @@
             });
             localStorage.setItem('wrongHistory', JSON.stringify(wrongHistory));
         }
+
+        // 準備下一階段按鈕
+        prepareNextSection(currentSectionId);
     }
 
     function restartQuiz() {
@@ -845,6 +1344,16 @@
     submitBtn.addEventListener('click', checkAnswer);
     nextBtn.addEventListener('click', nextQuestion);
     restartBtn.addEventListener('click', restartQuiz);
+
+    // 下一階段按鈕事件：讀取 data-section 屬性並開始相應測驗
+    nextSectionBtn.addEventListener('click', function() {
+        const target = this.dataset.section;
+        if (target) {
+            // 隱藏按鈕避免重複點擊
+            this.style.display = 'none';
+            startSection(target);
+        }
+    });
 
     // 初始化第一題
     // 開始計時
@@ -962,6 +1471,11 @@
         // 更新導覽列的活動狀態
         historyTab.classList.add('active');
         quizTab.classList.remove('active');
+
+        // 清空標題與下一階段按鈕
+        sectionTitleEl.textContent = '';
+        nextSectionBtn.style.display = 'none';
+        nextSectionBtn.dataset.section = '';
     }
 
     // 顯示段落選擇區域
@@ -972,6 +1486,11 @@
         // 更新導覽列的活動狀態：顯示練習選單當前頁
         quizTab.classList.add('active');
         historyTab.classList.remove('active');
+
+        // 清除標題並隱藏下一階段按鈕
+        sectionTitleEl.textContent = '';
+        nextSectionBtn.style.display = 'none';
+        nextSectionBtn.dataset.section = '';
     }
 
     // 顯示錯誤詳情至模態視窗
@@ -1016,14 +1535,20 @@
 
     // 開始指定段落的測驗
     function startSection(sectionId) {
-        // 將當前段落記錄下來，這個值會在儲存歷史紀錄時使用
+        // 將當前段落記錄下來：中文名稱與原始 ID
         currentSection = sectionId;
+        currentSectionId = sectionId;
+        // 開始每個練習前，設定標題並隱藏下一階段按鈕
+        setSectionTitle(sectionId);
+        nextSectionBtn.style.display = 'none';
+        nextSectionBtn.dataset.section = '';
         // 若先前有計時器在運行，先行停止，避免多個計時器累加導致秒數過快
         stopTimer();
         seconds = 0;
-        // v o c a b ：單字練習，直接呼叫專用函式後返回
+        // vocab：單字練習，使用進階單字練習流程並提前返回
         if (sectionId === 'vocab') {
-            startVocabulary();
+            // 使用改良版的單字練習，具有多種題型與加權抽題邏輯
+            startAdvancedVocab();
             return;
         }
         // 自訂文章練習：隨機挑選一篇文章並顯示，問題來源為文章內建問題
@@ -1051,6 +1576,24 @@
             const htmlText = passage.text.replace(/\n/g, '<br/>');
             articleContainer.innerHTML = `<h3>${passage.title}</h3><p>${htmlText}</p>`;
             articleContainer.style.display = 'block';
+        } else if (sectionId === 'theme') {
+            // 主題單字單元
+            currentSection = '主題單字';
+        } else if (sectionId === 'grammar') {
+            // 介系詞與問句單元
+            currentSection = '介系詞與問句';
+        } else if (sectionId === 'plural') {
+            // 複數規則單元
+            currentSection = '複數規則';
+        } else if (sectionId === 'reading2') {
+            // 補充閱讀理解單元
+            currentSection = '閱讀補充';
+        } else if (sectionId === 'dialogue') {
+            // 對話理解單元
+            currentSection = '對話理解';
+        } else if (sectionId === 'sounds') {
+            // 音標字母單元
+            currentSection = '音標字母';
         } else {
             // 其餘為一般選擇題段落，從預先定義的 sectionQuestions 取得題目
             if (sectionId === 'combined') {
