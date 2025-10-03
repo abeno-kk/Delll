@@ -275,41 +275,16 @@
 <!-- 段落選擇區塊 -->
 <div class="quiz-container" id="section-section">
     <h2 style="text-align:center;">選擇練習分類開始測驗</h2>
-    <!-- 分類：課文練習 -->
-    <div class="section-group">
-        <h3>課文練習</h3>
-        <div class="section-buttons">
-            <button class="section-btn btn-purple" data-section="combined">綜合段落</button>
-            <button class="section-btn btn-red" data-section="4">閱讀理解</button>
-            <button class="section-btn btn-green" data-section="article">文章練習</button>
-            <button class="section-btn btn-blue" data-section="reading2">閱讀補充</button>
-        </div>
-    </div>
+    <!-- 保留單字練習，移除課文練習區 -->
     <!-- 分類：單字練習 -->
     <div class="section-group">
         <h3>單字練習</h3>
         <div class="section-buttons">
             <button class="section-btn btn-orange" data-section="vocab">單字練習</button>
-            <button class="section-btn btn-purple" data-section="theme">主題單字</button>
         </div>
     </div>
-    <!-- 分類：文法練習 -->
-    <div class="section-group">
-        <h3>文法練習</h3>
-        <div class="section-buttons">
-            <button class="section-btn btn-blue" data-section="5">形容詞用法</button>
-            <button class="section-btn btn-red" data-section="grammar">介系詞與問句</button>
-            <button class="section-btn btn-green" data-section="plural">複數規則</button>
-        </div>
-    </div>
-    <!-- 分類：理解與發音 -->
-    <div class="section-group">
-        <h3>理解與發音</h3>
-        <div class="section-buttons">
-            <button class="section-btn btn-orange" data-section="dialogue">對話理解</button>
-            <button class="section-btn btn-teal" data-section="sounds">音標字母</button>
-        </div>
-    </div>
+    <!-- 移除文法練習區 -->
+    <!-- 移除理解與發音區 -->
 </div>
 
 <!-- 測驗區塊 -->
@@ -1663,6 +1638,20 @@
             const sectionId = this.getAttribute('data-section');
             startSection(sectionId);
         });
+    });
+
+    // 允許使用 Enter 鍵提交答案：按下 Enter 時執行確認答案的按鈕
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            // 僅在測驗區塊顯示並且提交按鈕可用時觸發
+            if (quizSection && quizSection.style.display !== 'none') {
+                const display = window.getComputedStyle(submitBtn).display;
+                if (display !== 'none' && !submitBtn.disabled) {
+                    e.preventDefault();
+                    submitBtn.click();
+                }
+            }
+        }
     });
 </script>
 </body>
