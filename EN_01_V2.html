@@ -283,7 +283,36 @@
             <button class="section-btn btn-orange" data-section="vocab">單字練習</button>
         </div>
     </div>
-    <!-- 移除文法練習區 -->
+    <!-- 新增家庭/職業類練習：連結到段落 2 題庫 -->
+    <div class="section-group">
+        <h3>家庭/職業練習</h3>
+        <div class="section-buttons">
+            <button class="section-btn btn-teal" data-section="2">家庭/職業練習</button>
+        </div>
+    </div>
+    <!-- 文法/句型練習區：新增多個分類按鈕 -->
+    <div class="section-group">
+        <h3>文法/句型練習</h3>
+        <div class="section-buttons">
+            <!-- 問候語練習 -->
+            <button class="section-btn btn-purple" data-section="greeting">問候語練習</button>
+            <!-- be 動詞疑問練習 -->
+            <button class="section-btn btn-red" data-section="be_questions">Be動詞疑問練習</button>
+            <!-- Who/How 問句練習 -->
+            <button class="section-btn btn-green" data-section="wh_questions">Who/How問句練習</button>
+            <!-- 所有格練習 -->
+            <button class="section-btn btn-blue" data-section="possessive">所有格練習</button>
+            <!-- 形容詞與連接詞練習 -->
+            <button class="section-btn btn-orange" data-section="adj_and">形容詞/連接詞練習</button>
+        </div>
+    </div>
+    <!-- 發音練習區：音標與發音題目 -->
+    <div class="section-group">
+        <h3>發音練習</h3>
+        <div class="section-buttons">
+            <button class="section-btn btn-teal" data-section="sounds">發音練習</button>
+        </div>
+    </div>
     <!-- 移除理解與發音區 -->
 </div>
 
@@ -345,22 +374,76 @@
             { question: "問句 Who's that man? 是在詢問什麼？", options: ["這個人的身分", "這個人的年齡", "他的職業", "他的衣服顏色"], correct: 0 },
             { question: "句子 My name is Peggy. 中 my 意為？", options: ["我的", "妳的", "他的", "你的"], correct: 0 }
         ],
+        // 第一課家庭/職業相關練習：為避免孩子死記題目，每個概念提供多種問法。
         '2': [
-            { question: "My mom's brother is my _____.", options: ["uncle", "aunt", "cousin", "brother"], correct: 0 },
-            { question: "My father's mother is my ______.", options: ["grandmother", "grandfather", "aunt", "mother"], correct: 0 },
-            { question: "男警察是 policeman，那女警察是？", options: ["policewoman", "police officer", "nurse", "singer"], correct: 0 },
-            { question: "housewife 是指？", options: ["在家照顧家庭的人", "在辦公室工作的人", "作家", "警察"], correct: 0 },
-            { question: "woman 的複數為？", options: ["women", "womans", "womens", "woment"], correct: 0 },
-            { question: "談到家庭整體時哪一句正確？", options: ["My family is large.", "My family are large.", "My families is large.", "My family am large."], correct: 0 },
-            { question: "office worker 是什麼職業？", options: ["在辦公室工作的人", "歌手", "警察", "護士"], correct: 0 },
-            { question: "下列哪一個是男性親屬？", options: ["uncle", "aunt", "cousin", "sister"], correct: 0 },
-            { question: "she 的所有格是？", options: ["her", "she", "hers", "their"], correct: 0 },
-            { question: "Are they your parents? 的正確回答為？", options: ["Yes, they are.", "Yes, they is.", "Yes, they isn't.", "Yes, they be."], correct: 0 },
-            { question: "He is a doctor. 句中的職業為？", options: ["doctor", "He", "is", "a"], correct: 0 },
-            { question: "下列哪個複數形式正確？", options: ["baby–babies", "family–familys", "child–childs", "cousin–cousins"], correct: 0 },
-            { question: "My cousin is my uncle's son. cousin 是指？", options: ["堂/表兄弟姊妹", "哥哥", "爸爸", "男朋友"], correct: 0 },
-            { question: "下列哪一個不是職業？", options: ["aunt", "singer", "police officer", "nurse"], correct: 0 },
-            { question: "強調每位家庭成員時哪一句正確？", options: ["My family are fine.", "My family is fine.", "My families is fine.", "My family am fine."], correct: 0 }
+            // uncle/叔叔
+            { question: "My mom's brother is my _____.", options: ["uncle","aunt","cousin","brother"], correct: 0 },
+            { question: "My mother's brother is my _____.", options: ["uncle","aunt","cousin","brother"], correct: 0 },
+            { question: "我的媽媽的兄弟是我的_____。", options: ["uncle","aunt","cousin","brother"], correct: 0 },
+            { question: "我的爸爸的哥哥是我的_____。", options: ["uncle","aunt","cousin","brother"], correct: 0 },
+            { question: "我們稱呼父母的兄弟為_____。", options: ["uncle","aunt","cousin","brother"], correct: 0 },
+            // grandmother/祖母
+            { question: "My father's mother is my ______.", options: ["grandmother","grandfather","aunt","mother"], correct: 0 },
+            { question: "我的爸爸的媽媽是我的_____。", options: ["grandmother","grandfather","aunt","mother"], correct: 0 },
+            { question: "我們稱呼父親的母親為______。", options: ["grandmother","grandfather","aunt","mother"], correct: 0 },
+            // policewoman/女警
+            { question: "男警察是 policeman，那女警察是？", options: ["policewoman","police officer","nurse","singer"], correct: 0 },
+            { question: "女警察的英文是什麼？", options: ["policewoman","police officer","nurse","singer"], correct: 0 },
+            { question: "如果 policeman 指男警察，則女警察是______。", options: ["policewoman","police officer","nurse","singer"], correct: 0 },
+            // housewife/家庭主婦
+            { question: "housewife 是指？", options: ["在家照顧家庭的人","在辦公室工作的人","作家","警察"], correct: 0 },
+            { question: "家庭主婦的英文是______。", options: ["housewife","office worker","writer","police officer"], correct: 0 },
+            { question: "我的媽媽在家照顧我們，她是 ______。", options: ["housewife","office worker","writer","singer"], correct: 0 },
+            { question: "如果一個人在家照顧家庭，她的職稱是 ______。", options: ["housewife","office worker","writer","police officer"], correct: 0 },
+            // women/複數
+            { question: "woman 的複數為？", options: ["women","womans","womens","woment"], correct: 0 },
+            { question: "請問 woman 的複數是哪一個？", options: ["women","womans","womens","woment"], correct: 0 },
+            { question: "Which is the plural form of woman?", options: ["women","womans","womens","woment"], correct: 0 },
+            { question: "woman 的複數形式是 ______。", options: ["women","womans","womens","woment"], correct: 0 },
+            // family as a whole
+            { question: "談到家庭整體時哪一句正確？", options: ["My family is large.","My family are large.","My families is large.","My family am large."], correct: 0 },
+            { question: "Which sentence is correct when talking about a family as a whole?", options: ["My family is large.","My family are large.","My families is large.","My family am large."], correct: 0 },
+            { question: "當你把家庭視為一個整體時，該用哪一句？", options: ["My family is large.","My family are large.","My families is large.","My family am large."], correct: 0 },
+            { question: "When describing your family size as one unit, you should say: ______", options: ["My family is large.","My family are large.","My families is large.","My family am large."], correct: 0 },
+            // office worker/上班族
+            { question: "office worker 是什麼職業？", options: ["在辦公室工作的人","歌手","警察","護士"], correct: 0 },
+            { question: "哪一個英語單字是指「上班族」？", options: ["office worker","singer","police officer","nurse"], correct: 0 },
+            { question: "在辦公室裡工作的人稱為 ______。", options: ["office worker","singer","police officer","nurse"], correct: 0 },
+            { question: "我的爸爸在公司上班，他是一個 ______。", options: ["office worker","writer","police officer","doctor"], correct: 0 },
+            // male relative/男性親屬
+            { question: "下列哪一個是男性親屬？", options: ["uncle","aunt","cousin","sister"], correct: 0 },
+            { question: "Which of the following is a male relative?", options: ["uncle","aunt","cousin","sister"], correct: 0 },
+            { question: "在英文中，下列哪一個指男性親人？", options: ["uncle","aunt","cousin","sister"], correct: 0 },
+            // possessive of she/her
+            { question: "she 的所有格是？", options: ["her","she","hers","their"], correct: 0 },
+            { question: "Which word shows possession for she?", options: ["her","she","hers","their"], correct: 0 },
+            { question: "What is the possessive form of 'she'?", options: ["her","she","hers","their"], correct: 0 },
+            // are they your parents yes/no
+            { question: "Are they your parents? 的正確回答為？", options: ["Yes, they are.","Yes, they is.","Yes, they isn't.","Yes, they be."], correct: 0 },
+            { question: "問：Are they your parents? 請選擇正確的答句。", options: ["Yes, they are.","Yes, they is.","Yes, they isn't.","Yes, they be."], correct: 0 },
+            { question: "回答「Are they your parents?」 正確的是 ______。", options: ["Yes, they are.","Yes, they is.","Yes, they isn't.","Yes, they be."], correct: 0 },
+            // doctor/醫生
+            { question: "He is a doctor. 句中的職業為？", options: ["doctor","He","is","a"], correct: 0 },
+            { question: "在句子 He is a doctor 中，職業是什麼？", options: ["doctor","He","is","a"], correct: 0 },
+            { question: "Which word in the sentence 'He is a doctor' refers to a job?", options: ["doctor","He","is","a"], correct: 0 },
+            // plural forms
+            { question: "下列哪個複數形式正確？", options: ["baby–babies","family–familys","child–childs","cousin–cousins"], correct: 0 },
+            { question: "Which of the following plural forms is correct?", options: ["baby–babies","family–familys","child–childs","cousin–cousins"], correct: 0 },
+            // cousin/堂表兄弟姊妹
+            { question: "My cousin is my uncle's son. cousin 是指？", options: ["堂/表兄弟姊妹","哥哥","爸爸","男朋友"], correct: 0 },
+            { question: "我的叔叔的孩子是我的 ____?", options: ["cousin","brother","uncle","father"], correct: 0 },
+            { question: "My uncle's child is my ______.", options: ["cousin","brother","uncle","father"], correct: 0 },
+            { question: "堂表兄弟姊妹英文是什麼？", options: ["cousin","uncle","aunt","brother"], correct: 0 },
+            { question: "My aunt's son is my ______.", options: ["cousin","brother","uncle","father"], correct: 0 },
+            // not a job/職業與親屬區分
+            { question: "下列哪一個不是職業？", options: ["aunt","singer","police officer","nurse"], correct: 0 },
+            { question: "Which of the following is NOT a job?", options: ["aunt","singer","police officer","nurse"], correct: 0 },
+            { question: "哪一個不屬於職業？", options: ["aunt","singer","police officer","nurse"], correct: 0 },
+            { question: "以下哪一個是親屬而非職業？", options: ["aunt","singer","police officer","nurse"], correct: 0 },
+            // family are fine/強調個別家庭成員
+            { question: "強調每位家庭成員時哪一句正確？", options: ["My family are fine.","My family is fine.","My families is fine.","My family am fine."], correct: 0 },
+            { question: "若強調家人個別狀態時，哪一句正確？", options: ["My family are fine.","My family is fine.","My families is fine.","My family am fine."], correct: 0 },
+            { question: "When talking about individual family members, which sentence is correct?", options: ["My family are fine.","My family is fine.","My families is fine.","My family am fine."], correct: 0 }
         ],
         '3': [
             { question: "填空：This is ___ orange.", options: ["an", "a", "the", "one"], correct: 0 },
@@ -471,6 +554,72 @@
             { question: 'Which word ends with the [z] sound?', options: ['buzz','six','kiss','box'], correct: 0 },
             { question: 'Which word begins with the [l] sound?', options: ['lion','meet','year','yummy'], correct: 0 }
         ]
+        ,
+        // 新增練習分類：問候語、be 動詞疑問、who/how 問句、所有格、形容詞與連接詞
+        'greeting': [
+            { question: "早上打招呼時應該說什麼？", options: ["Good morning","Good afternoon","Good evening","Good night"], correct: 0 },
+            { question: "下午時，正確的問候語是？", options: ["Good afternoon","Good morning","Good night","Good bye"], correct: 0 },
+            { question: "晚餐前的打招呼，應該說？", options: ["Good evening","Good night","Hello","See you"], correct: 0 },
+            { question: "晚安道別時，應說？", options: ["Good night","Good evening","Good afternoon","Hello"], correct: 0 },
+            { question: "第一次見面時，常用哪一句？", options: ["Nice to meet you","See you","Good night","Good morning"], correct: 0 },
+            { question: "聽到別人說「Nice to meet you.」你應回應？", options: ["Nice to meet you, too.","Good night.","Thank you.","Bye."], correct: 0 },
+            { question: "自我介紹時，可以說：", options: ["Hello, I'm Tom.","Hello, is Tom.","Hi, am Tom.","Tom I am."], correct: 0 },
+            { question: "哪一句是正確的招呼語？", options: ["Hello, Gary.","Hello is Gary.","Hello Gary is.","Hello he Gary."], correct: 0 },
+            { question: "「Good night」通常用於？", options: ["道別時","打招呼時","上午開會","下午見面"], correct: 0 },
+            { question: "向別人介紹自己名字時，可以說：", options: ["My name is Anna.","I name is Anna.","Name my Anna.","Me name Anna."], correct: 0 },
+            { question: "如果別人對你說「Good evening」你應該回？", options: ["Good evening","Good night","Good morning","Good afternoon"], correct: 0 },
+            { question: "問候對方晚上好，最合適的句子是？", options: ["Good evening.","Good night.","Hello, morning.","Bye."], correct: 0 }
+        ],
+        'be_questions': [
+            { question: "回答 \"Are you Peter?\" 若是，正確的是？", options: ["Yes, I am.","Yes, I'm.","Yes, you are.","Yes, he is."], correct: 0 },
+            { question: "回答 \"Are you Peter?\" 若不是，正確的是？", options: ["No, I'm not.","No, I isn't.","No, I'm.","No, you're not."], correct: 0 },
+            { question: "下列哪個句子是正確的 Yes/No 問句？", options: ["Is she your teacher?","She is your teacher?","Is your teacher she?","She your teacher is?"], correct: 0 },
+            { question: "\"He is not tall.\" 的縮寫是哪一個？", options: ["He's not tall.","He not tall.","He isn't tall.","He aren't tall."], correct: 2 },
+            { question: "\"You are not at home.\" 的縮寫為？", options: ["You're not at home.","You aren't at home.","以上皆是。","You not at home."], correct: 2 },
+            { question: "問句使用哪一個冠詞來指單數名詞以子音音素開頭？", options: ["a","an","the","one"], correct: 0 },
+            { question: "填空：\"___ he your uncle?\"", options: ["Is","Are","Am","Be"], correct: 0 },
+            { question: "把句子 \"She is tall.\" 改為否定句。", options: ["She is not tall.","She not tall.","She isn't tall.","She are not tall."], correct: 2 },
+            { question: "哪個句子正確使用 \"I'm not\" 的縮寫？", options: ["I'm not a student.","I amn't a student.","Im not a student.","I'mn't a student."], correct: 0 },
+            { question: "\"Are they your friends?\" 的否定簡答為？", options: ["No, they aren't.","No, they are.","No, they isn't.","Yes, they are not."], correct: 0 },
+            { question: "\"Isn't he your brother?\" 若他不是你的弟弟，回答應為？", options: ["No, he isn't.","Yes, he is.","Yes, he isn't.","No, he is."], correct: 0 },
+            { question: "\"Is she a nurse?\" 正確的肯定簡答是？", options: ["Yes, she is.","Yes, she's.","Yes, she am.","Yes, he is."], correct: 0 }
+        ],
+        'wh_questions': [
+            { question: "下列哪一個問句正確詢問一個人的年齡？", options: ["How old are you?","How old you are?","How you old are?","How are you old?"], correct: 0 },
+            { question: "填空：___ is that man? (那個男人是誰？)", options: ["Who","What","How","Where"], correct: 0 },
+            { question: "Who is 的縮寫是哪一個？", options: ["who's","whos","whose","who´s"], correct: 0 },
+            { question: "問：\"Who are they?\" 可能的回答是？", options: ["They're my parents.","It's a dog.","I am nine.","Yes, he is."], correct: 0 },
+            { question: "\"Who's that woman?\" 正確回答為？", options: ["She's my teacher.","He is my teacher.","She's my teacher?","Her is my teacher."], correct: 0 },
+            { question: "Which question correctly asks about someone's grandparents?", options: ["Who are his grandma and grandpa?","Who his grandma and grandpa?","Who is his grandma and grandpa?","Who his grandma and grandpa are?"], correct: 0 },
+            { question: "如果要問『那是誰的兄弟？』哪一句正確？", options: ["Who's that boy's brother?","Whose that boy brother?","Who that boy's brother?","Who that brother of boy?"], correct: 0 },
+            { question: "填空：\"Who is she?\" 她的回答應該用？", options: ["She is","She are","He is","It is"], correct: 0 },
+            { question: "\"How old is your aunt?\" 此句在問什麼？", options: ["問她的年齡","問她的工作","問她的名字","問她是誰"], correct: 0 },
+            { question: "若要用 who 介紹某人的身分，句型應為？", options: ["Who + be 動詞 + 主詞?","Be 動詞 + who + 主詞?","Who + 動詞 + 主詞?","主詞 + be 動詞 + who?"], correct: 0 }
+        ],
+        'possessive': [
+            { question: "填入正確的所有格：That is ___ book. (他)", options: ["his","her","our","their"], correct: 0 },
+            { question: "填入正確的所有格：This is ___ pencil. (她)", options: ["her","his","their","its"], correct: 0 },
+            { question: "Grace is Mr. and Mrs. Ma's daughter. 句中的 Mr. and Mrs. Ma's 用來表示什麼？", options: ["他們夫妻的所有","兩個老師","女孩的名字","食物的名稱"], correct: 0 },
+            { question: "選出正確的複數所有格用法：", options: ["The two boys' father","The two boy's father","The two boys father","The two boys's father"], correct: 0 },
+            { question: "填空：A: Are Joe and Lucy brother and sister? B: Yes, ___ mother is Melissa.", options: ["their","her","his","its"], correct: 0 },
+            { question: "填空：We are in Class 704. ___ teacher is Miss Nelson.", options: ["Our","Our's","Ours","We"], correct: 0 },
+            { question: "Which sentence shows possession correctly?", options: ["My friend's house is near.","My friend house's is near.","My friend house is near.","My friend's houses is near."], correct: 0 },
+            { question: "Which possessive pronoun should be used for \"it\"? (表示所有物)", options: ["its","it's","it","its'"] , correct: 0 },
+            { question: "選出正確的所有格形式：my sister 和 my mom 的房子", options: ["my sister's and my mom's house","my sister and mom's house","my sister' and mom' house","my sister and my mom house"], correct: 0 },
+            { question: "填空：B: Jeff is my brother. 句中 my 表示什麼？", options: ["所有格","主格","動詞","冠詞"], correct: 0 }
+        ],
+        'adj_and': [
+            { question: "將 'This car is big. This car is new.' 結合為一句。", options: ["This car is big and new.","This car and new is big.","This big and new car is.","This car new and big is."], correct: 0 },
+            { question: "將 'I'm at the zoo. My dad is at the zoo.' 結合為一句。", options: ["My dad and I are at the zoo.","I at the zoo and my dad is.","I'm at the zoo, my dad is at the zoo.","My dad at the zoo and I'm."], correct: 0 },
+            { question: "下列哪一句正確地將兩個形容詞接在名詞前？", options: ["He's young and handsome.","He young and is handsome.","He's young and is handsome.","Young he is and handsome."], correct: 0 },
+            { question: "Which sentence correctly uses 'and' to connect a list of names?", options: ["Pam, Andy, and Kenny are good friends.","Pam and Andy, Kenny are good friends.","Pam, Andy and, Kenny are good friends.","Pam and Andy and Kenny, are good friends."], correct: 0 },
+            { question: "在句子 'She is young and pretty.' 中，and 連接的是？", options: ["兩個形容詞","兩個動詞","兩個名詞","兩個代名詞"], correct: 0 },
+            { question: "Which sentence correctly uses 'too' to mean 'also'?", options: ["She's beautiful, too.","She's too beautiful,","She too is beautiful.","She's beautiful too?."], correct: 0 },
+            { question: "Which sentence correctly uses an appositive to explain the subject?", options: ["My brother, Gary, is a teacher.","My brother Gary is a teacher.","Gary my brother is a teacher.","Is my brother, Gary a teacher?"], correct: 0 },
+            { question: "哪一句是使用同位語解釋前面的名詞？", options: ["This is Sara, my wife.","This is my is wife Sara.","Sara is this my wife.","This my wife is Sara,"], correct: 0 },
+            { question: "Which sentence connects two independent clauses with 'and'?", options: ["My sister is an elementary school student, and I'm a junior high school student.","My sister is an elementary school student and I'm a junior high school student.","My sister is an elementary school student I'm a junior high school student.","My sister is an elementary school student. And I'm a junior high school student."], correct: 0 },
+            { question: "Which sentence uses 'and' to connect two nouns sharing a verb?", options: ["Jenny is a police officer, and her husband is, too.","Jenny and her husband are police officers.","Jenny is a police officer and her husband.","Jenny a police officer and her husband is too."], correct: 1 }
+        ]
     };
 
     // 練習階段名稱對照：用於顯示標題與引導下一階段
@@ -485,6 +634,16 @@
         'plural': '複數規則',
         'dialogue': '對話理解',
         'sounds': '音標字母'
+    ,
+        // 第一課家庭/職業練習標題
+        '2': '家庭/職業練習'
+        ,
+        // 新增文法/句型練習標題
+        'greeting': '問候語練習',
+        'be_questions': 'Be動詞疑問練習',
+        'wh_questions': 'Who/How問句練習',
+        'possessive': '所有格練習',
+        'adj_and': '形容詞/連接詞練習'
     };
     // 練習階段順序：用於自動前往下一階段
     const sectionOrder = ['combined','4','article','reading2','vocab','theme','grammar','plural','dialogue','sounds'];
@@ -1510,9 +1669,11 @@
 
     // 開始指定段落的測驗
     function startSection(sectionId) {
-        // 將當前段落記錄下來：中文名稱與原始 ID
-        currentSection = sectionId;
+        // 將當前段落記錄下來
+        // currentSectionId 始終保存原始段落 ID，用於決定下一階段
         currentSectionId = sectionId;
+        // 使用 sectionNames 中的中文名稱作為 currentSection，若未定義則使用原始 ID
+        currentSection = sectionNames[sectionId] || sectionId;
         // 開始每個練習前，設定標題並隱藏下一階段按鈕
         setSectionTitle(sectionId);
         nextSectionBtn.style.display = 'none';

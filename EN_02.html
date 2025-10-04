@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>國一英文第二課練習題庫</title>
-    <!-- 手機適應 viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         /* 主題色與樣式變數 */
@@ -13,8 +12,6 @@
             --accent-color: #f5a623;
             --danger-color: #e74c3c;
             --success-color: #2ecc71;
-            --neutral-color: #2980b9;
-            --warning-color: #f39c12;
             --bg-color: #f6f8fa;
             --text-color: #333;
         }
@@ -44,7 +41,6 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
             position: relative;
-            /* 頂部彩線增添色彩，提升扁平化層次感 */
             border-top: 6px solid var(--primary-color);
         }
 
@@ -65,10 +61,6 @@
         #navbar a:hover {
             background-color: rgba(0, 0, 0, 0.05);
         }
-        #navbar a.active {
-            border-bottom: 3px solid var(--primary-color);
-            padding-bottom: 4px;
-        }
 
         #timer {
             position: absolute;
@@ -84,11 +76,6 @@
         .question {
             font-size: 1.15em;
             margin-bottom: 15px;
-        }
-        .section-label {
-            font-size: 0.85em;
-            color: var(--secondary-color);
-            margin-bottom: 5px;
         }
         .options {
             list-style-type: none;
@@ -162,7 +149,20 @@
             list-style-type: disc;
             padding-left: 18px;
         }
-
+        /* 歷史紀錄表格樣式 */
+        #historyContainer table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #historyContainer th, #historyContainer td {
+            padding: 10px;
+            border: 1px solid #e1e4e8;
+            text-align: center;
+        }
+        #historyContainer th {
+            background-color: #f5f7fa;
+            font-weight: 600;
+        }
         /* 段落選擇按鈕區佈局 */
         .section-buttons {
             display: grid;
@@ -184,72 +184,17 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
-        /* 分類區塊樣式 */
-        .section-group {
-            margin-bottom: 25px;
-        }
-        .section-group h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.1em;
-            color: var(--primary-color);
-            font-weight: 600;
-        }
         /* 各按鈕的色系 */
-        .btn-purple { background-color: #8e44ad; }
-        .btn-red    { background-color: #e74c3c; }
-        .btn-green  { background-color: #16a085; }
-        .btn-blue   { background-color: #2980b9; }
         .btn-orange { background-color: #f39c12; }
-        .btn-teal   { background-color: #1abc9c; }
-
-        /* 歷史紀錄表格樣式 */
-        #historyContainer table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        #historyContainer th, #historyContainer td {
-            padding: 10px;
-            border: 1px solid #e1e4e8;
-            text-align: center;
-        }
-        #historyContainer th {
-            background-color: #f5f7fa;
-            font-weight: 600;
-        }
-
-        /* 錯誤詳情 Modal */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: 80px auto;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 600px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .modal-content h3 {
-            margin-top: 0;
-            color: var(--primary-color);
-        }
-        .modal-close {
-            float: right;
-            font-size: 1.4em;
-            cursor: pointer;
-            color: #999;
-        }
-        .modal-close:hover {
-            color: #666;
-        }
+        .btn-green  { background-color: #16a085; }
+        /* 新增紫色按鈕，用於文法練習 */
+        .btn-purple { background-color: #8e44ad; }
+        /* 新增藍綠色按鈕，用於語法探索練習 */
+        .btn-teal { background-color: #27ae60; }
+        /* 新增棕色按鈕，用於介系詞練習 */
+        .btn-brown { background-color: #8e5a2b; }
+        /* 新增粉色按鈕，用於課文閱讀練習 */
+        .btn-pink { background-color: #e84393; }
     </style>
 </head>
 <body>
@@ -257,7 +202,6 @@
 
 <!-- 導覽列，用於切換測驗與歷史紀錄 -->
 <nav id="navbar" style="text-align:center; margin-bottom:20px;">
-    <!-- 導覽列：選課程 → 返回 index.html；練習選單 → 顯示段落選擇；歷史紀錄 → 顯示測驗紀錄 -->
     <a href="index.html" style="margin-right:20px; font-weight:bold; color:#2c3e50; text-decoration:none;">選課程</a>
     <a id="quizTab" href="#" style="margin-right:20px; font-weight:bold; color:#2c3e50; text-decoration:none;">練習選單</a>
     <a id="historyTab" href="#" style="font-weight:bold; color:#2c3e50; text-decoration:none;">歷史紀錄</a>
@@ -266,50 +210,56 @@
 <!-- 段落選擇區塊 -->
 <div class="quiz-container" id="section-section">
     <h2 style="text-align:center;">選擇練習分類開始測驗</h2>
-    <!-- 發音練習 -->
+    <!-- 單字練習 -->
     <div class="section-group">
-        <h3>發音練習</h3>
+        <h3>單字練習</h3>
         <div class="section-buttons">
-            <button class="section-btn btn-purple" data-section="sounds2">發音練習</button>
-        </div>
-    </div>
-    <!-- 主題單字：職業與家庭關係 -->
-    <div class="section-group">
-        <h3>主題單字</h3>
-        <div class="section-buttons">
-            <button class="section-btn btn-orange" data-section="jobs">職業單字</button>
-            <button class="section-btn btn-blue" data-section="family">家庭關係</button>
-        </div>
-    </div>
-    <!-- 文法練習 -->
-    <div class="section-group">
-        <h3>文法練習</h3>
-        <div class="section-buttons">
-            <button class="section-btn btn-green" data-section="grammar2">文法練習</button>
-        </div>
-    </div>
-    <!-- 其他練習：字彙、對話與閱讀 -->
-    <div class="section-group">
-        <h3>其他練習</h3>
-        <div class="section-buttons">
-            <button class="section-btn btn-red" data-section="vocab2">字彙練習</button>
-            <button class="section-btn btn-teal" data-section="dialogue2">對話理解</button>
-            <button class="section-btn btn-purple" data-section="reading2">閱讀練習</button>
+            <button class="section-btn btn-orange" data-section="vocab">單字練習</button>
+            <button class="section-btn btn-green" data-section="sentences">句型練習</button>
+            <button class="section-btn btn-purple" data-section="grammar">文法練習</button>
+            <button class="section-btn btn-teal" data-section="explore">語法探索</button>
+            <button class="section-btn btn-brown" data-section="prepositions">介系詞練習</button>
+            <button class="section-btn btn-pink" data-section="reading">課文閱讀</button>
         </div>
     </div>
 </div>
 
 <!-- 測驗區塊 -->
 <div class="quiz-container" id="quiz-section" style="display:none;">
-    <!-- 顯示當前練習階段名稱 -->
     <h2 id="sectionTitle" style="text-align:center; margin-top:0; margin-bottom:15px; color: var(--primary-color);"></h2>
-    <!-- 閱讀文章顯示區 -->
-    <div id="articleContainer" style="display:none; margin-bottom:20px; background-color:#f9f9f9; border-radius:5px; padding:15px;"></div>
+    <!-- 閱讀文本容器，僅在課文閱讀時顯示 -->
+    <div id="readingText" style="display:none; background-color:#f9f9f9; padding:10px; border-radius:6px; margin-bottom:15px; max-height:180px; overflow-y:auto; font-size:0.9em; line-height:1.5; border:1px solid #e1e4e8; white-space:pre-wrap;">
+        <p><strong>Dialogue 1:</strong> (Jamie is at Zac's house.)<br>
+        Zac: Come meet my parents.<br>
+        Jamie: OK.<br>
+        Zac: Mom and Dad, this is Jamie.<br>
+        Jamie: Nice to meet you, Mr. and Mrs. Hugo.<br>
+        Zac's dad: Nice to meet you, too.<br>
+        Jamie: Wow, the living room walls are purple.<br>
+        Zac's mom: Well, purple is my favorite color.<br>
+        Jamie: Are the kitchen and the dining room purple, too?<br>
+        Zac: The dining room is, but the kitchen isn’t. It’s gray.</p>
+
+        <p><strong>Dialogue 2:</strong><br>
+        Jamie: What are those in the brown box?<br>
+        Zac: They're cookies for my mice, Mickey, Minnie, and Molly.<br>
+        Jamie: Where are they?<br>
+        Zac: They're in their house. Oh, no. Where's Mickey?<br>
+        Jamie: Maybe he's under the sofa.<br>
+        Zac: No, he's not.<br>
+        Jamie: Look. He's next to the box.<br>
+        Zac: He's hungry, haha.<br>
+        Jamie: He really is.</p>
+
+        <p><strong>Reading:</strong> The Keret House is a small house in Poland. It is long, thin, and very special. Inside the house, the bathroom, the kitchen, and the dining room are right next to each other. The bedroom is above those three rooms. The Keret House is not big, but it is enough for one person.</p>
+    </div>
     <div id="timer">已用時間：00:00</div>
     <div id="progress">第 1 / 20 題</div>
     <div id="quiz">
         <div class="question" id="question"></div>
         <ul class="options" id="options"></ul>
+        <!-- 音訊播放按鈕，僅在聽力題時顯示 -->
+        <button id="audioBtn" style="display:none; margin-top:10px; padding:6px 12px; background-color: var(--accent-color); color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:0.9em;">播放發音</button>
     </div>
     <div class="navigation">
         <button id="submitBtn">確認答案</button>
@@ -317,8 +267,6 @@
     </div>
     <div id="result"></div>
     <div id="wrong-list" style="display:none;"></div>
-    <!-- 下一個練習階段按鈕，預設隱藏 -->
-    <button id="nextSectionBtn" style="display:none; width:100%; margin-top:15px; background-color: var(--secondary-color); color:#fff; padding:12px; border:none; border-radius:6px; font-size:1em; cursor:pointer;"></button>
     <button id="restartBtn" style="display:none;">重新開始</button>
 </div>
 
@@ -328,720 +276,475 @@
     <div id="historyContainer" style="margin-top:20px;"></div>
 </div>
 
-    <!-- 錯誤詳情模態視窗：用於顯示每次測驗的錯誤題目和正確答案 -->
-    <div id="wrongModal" class="modal">
-        <div class="modal-content">
-            <span id="closeModal" class="modal-close">×</span>
-            <div id="wrongDetails"></div>
-        </div>
-    </div>
-
 <script>
-    // 題目資料：第二課題庫設計
-    const sectionQuestions = {
-        // 發音練習：根據音素與拼讀
-        'sounds2': [
-            { question: "Which word contains the vowel sound [æ]?", options: ["cat", "bed", "pig", "big"], correct: 0 },
-            { question: "Which word begins with the consonant sound [p]?", options: ["park", "rabbit", "cat", "big"], correct: 0 },
-            { question: "Which word begins with the consonant sound [f]?", options: ["fat", "happy", "rabbit", "kiss"], correct: 0 },
-            { question: "Which word begins with the consonant sound [g]?", options: ["big", "good", "fat", "park"], correct: 1 },
-            { question: "What is the correct phonetic transcription for 'bat'?", options: ["[bæt]", "[bet]", "[bɪt]", "[bʌt]"], correct: 0 },
-            { question: "What is the correct phonetic transcription for 'pet'?", options: ["[pet]", "[pit]", "[pat]", "[pæt]"], correct: 0 },
-            { question: "Which word contains the vowel sound [ɪ]?", options: ["pig", "fat", "bed", "man"], correct: 0 },
-            { question: "Which pair matches the pronunciations [dɪg] and [dɪd]?", options: ["dig/did", "bat/bet", "kit/cat", "gap/gab"], correct: 0 },
-            { question: "Which word is pronounced [væt]?", options: ["vat", "fat", "gab", "gap"], correct: 0 },
-            { question: "Which word ends with the consonant sound [v]?", options: ["five", "seven", "very", "fat"], correct: 0 }
-            ,
-            // 新增題目：更多子音音素練習
-            { question: "Which word begins with the consonant sound [t]?", options: ["ten", "desk", "cat", "big"], correct: 0 },
-            { question: "Which word begins with the consonant sound [d]?", options: ["desk", "ten", "cat", "big"], correct: 0 },
-            { question: "Which word contains the consonant sound [k]?", options: ["kiss", "fat", "big", "good"], correct: 0 },
-            { question: "Which word contains the consonant sound [g]?", options: ["good", "cat", "fat", "ten"], correct: 0 },
-            { question: "Which word begins with the consonant sound [f]?", options: ["fifty", "seven", "very", "Jeff"], correct: 0 },
-            { question: "Which word begins with the consonant sound [v]?", options: ["very", "five", "seven", "fat"], correct: 0 }
-        ],
-        // 主題單字：工作職業（側重英文單字而非人物）
-        'jobs': [
-            { question: "Which word refers to someone who teaches students?", options: ["teacher", "singer", "writer", "cook"], correct: 0 },
-            { question: "Which word refers to someone who writes books?", options: ["writer", "teacher", "singer", "student"], correct: 0 },
-            { question: "Which word refers to someone who works in an office?", options: ["office worker", "housewife", "teacher", "student"], correct: 0 },
-            { question: "Which word refers to someone who sings songs professionally?", options: ["singer", "cook", "writer", "student"], correct: 0 },
-            { question: "Which word refers to someone who cooks professionally?", options: ["cook", "writer", "singer", "office worker"], correct: 0 },
-            { question: "Which word refers to someone who stays at home to care for the family?", options: ["housewife", "teacher", "student", "police officer"], correct: 0 },
-            { question: "Which word refers to someone who keeps people safe and catches criminals?", options: ["police officer", "cook", "office worker", "teacher"], correct: 0 },
-            { question: "Which word refers to someone who goes to school?", options: ["student", "teacher", "writer", "housewife"], correct: 0 }
-        ],
-        // 家庭關係：家譜關係（強調詞彙而非個別名字）
-        'family': [
-            { question: "Which word refers to your father's father?", options: ["grandfather", "uncle", "cousin", "brother"], correct: 0 },
-            { question: "Which word refers to your mother's mother?", options: ["grandmother", "aunt", "cousin", "sister"], correct: 0 },
-            { question: "What do you call the child of your aunt or uncle?", options: ["cousin", "aunt", "uncle", "brother"], correct: 0 },
-            { question: "What do you call your mother's sister?", options: ["aunt", "mother", "cousin", "wife"], correct: 0 },
-            { question: "What do you call your father's brother?", options: ["uncle", "father", "cousin", "grandfather"], correct: 0 },
-            { question: "Which word means 'family'?", options: ["family", "son", "daughter", "cousin"], correct: 0 },
-            { question: "Which word means 'baby'?", options: ["baby", "grandfather", "cousin", "family"], correct: 0 },
-            { question: "Which word means 'son'?", options: ["son", "daughter", "cousin", "uncle"], correct: 0 },
-            { question: "Which word means 'daughter'?", options: ["daughter", "son", "cousin", "aunt"], correct: 0 }
-        ],
-        // 閱讀練習：由程式生成文章與題目，題庫留空，將由 articleExercises2 決定
-        'reading2': [],
-        // 文法練習：肯定/否定句與疑問句
-        'grammar2': [
-            { question: "Which sentence is correct?", options: ["She is not tall.", "She not is tall.", "Is she not tall.", "She is tall not."], correct: 0 },
-            { question: "Which of the following sentences is a correct negative sentence?", options: ["I am not a young boy.", "I not am a young boy.", "I am a not young boy.", "I am no young boy."], correct: 0 },
-            { question: "Which of the following is a correct yes/no question?", options: ["Are you young?", "You are young?", "Young you are?", "Are young you?"], correct: 0 },
-            { question: "Which of the following is a correct yes/no question?", options: ["Is she a tall girl?", "She is a tall girl?", "Is she tall girl?", "Is a tall girl she?"], correct: 0 },
-            { question: "How should you answer the question 'Are you a doctor?'", options: ["Yes, I am.", "Yes, I'm.", "Yes, I are.", "Yes, I'm not."], correct: 0 },
-            { question: "Which of the following is a correct negative response to 'Are you a doctor?'", options: ["No, I'm not. I'm a nurse.", "No, I amn't. I'm a nurse.", "No, I'm not. I'm nurse.", "No, I'm no. I'm a nurse."], correct: 0 },
-            { question: "Which is the correct contraction of 'he is not'?", options: ["he's not", "hesn't", "he is n't", "he'sn't"], correct: 0 },
-            { question: "Which is the correct contraction of 'she is not'?", options: ["she's not", "she'snt", "shesn't", "she is no"], correct: 0 },
-            { question: "Which is the correct contraction of 'you are not'?", options: ["you're not", "you are not", "you're no", "you is not"], correct: 0 },
-            { question: "Which is the correct contraction of 'I am not'?", options: ["I'm not", "I amn't", "Im not", "I'm no"], correct: 0 }
-        ],
-        // 字彙練習：常用單字與片語
-        'vocab2': [
-            { question: "Which word means '英俊的'?", options: ["handsome", "beautiful", "ugly", "fat"], correct: 0 },
-            { question: "Which word means '新的'?", options: ["new", "old", "young", "beautiful"], correct: 0 },
-            { question: "Which word means '同學'?", options: ["classmate", "teacher", "student", "friend"], correct: 0 },
-            { question: "Which word means '年輕的'?", options: ["young", "old", "tall", "short"], correct: 0 },
-            { question: "Which word means '女人'?", options: ["woman", "man", "girl", "boy"], correct: 0 },
-            { question: "Which word means '非常'?", options: ["very", "little", "many", "enough"], correct: 0 },
-            { question: "Which word means '美麗的'?", options: ["beautiful", "handsome", "ugly", "fat"], correct: 0 },
-            { question: "Which word means '也'?", options: ["too", "and", "but", "or"], correct: 0 },
-            { question: "Which phrase means '很高興認識你'?", options: ["Nice to meet you", "Nice to see you", "I'm hungry", "I'm sorry"], correct: 0 },
-            { question: "Which word means '真的'?", options: ["really", "maybe", "very", "yes"], correct: 0 }
-        ],
-        // 對話理解：根據對話內容回答
-        'dialogue2': [
-            // 對話 A：At school — 著重於人物描述和職業詞彙
-            {
-                question: "In the ‘At school’ dialogue, the new classmate is described as _____.",
-                options: ["handsome", "old", "short", "angry"],
-                correct: 0
-            },
-            {
-                question: "In the ‘At school’ dialogue, the young woman is a _____.",
-                options: ["nurse", "teacher", "writer", "student"],
-                correct: 0
-            },
-            {
-                question: "Yuki says the young woman is very _____.",
-                options: ["beautiful", "sad", "angry", "short"],
-                correct: 0
-            },
-            // 對話 B：In the classroom — 著重於職業、年齡與關係詞彙
-            {
-                question: "Jamie's cousin's job is _____.",
-                options: ["doctor", "teacher", "writer", "student"],
-                correct: 0
-            },
-            {
-                question: "Is Jamie's cousin a student?",
-                options: ["No, he isn't. He's a doctor.", "Yes, he is.", "Yes, he is a doctor.", "No, he isn't."],
-                correct: 0
-            },
-            {
-                question: "How old is Jamie's cousin?",
-                options: ["29", "25", "30", "20"],
-                correct: 0
-            },
-            {
-                question: "Jamie's cousin is his _____.",
-                options: ["cousin", "brother", "friend", "uncle"],
-                correct: 0
-            },
-            {
-                question: "How do the boys greet each other in the classroom?",
-                options: ["Nice to meet you", "Good morning", "Hello", "See you"],
-                correct: 0
-            }
-        ]
-    };
-
-    // 動態產生閱讀練習文章與題目
-    // 隨機產生元素的輔助函式
-    function getRandomElement(arr) {
-        return arr[Math.floor(Math.random() * arr.length)];
-    }
-    // 從陣列中取得多個不重複元素，可排除某些元素
-    function getRandomUnique(arr, count, exclude = []) {
-        const excluded = new Set(exclude);
-        const available = arr.filter(item => !excluded.has(item));
-        const result = [];
-        while (result.length < count && available.length > 0) {
-            const idx = Math.floor(Math.random() * available.length);
-            const item = available.splice(idx, 1)[0];
-            result.push(item);
-        }
-        return result;
-    }
-    // 判斷使用 a 或 an
-    function getIndefArticle(word) {
-        return /^[aeiou]/i.test(word) ? 'an' : 'a';
-    }
-    // 產生隨機閱讀文章
-    function generateRandomReading() {
-        const jobList = ['teacher', 'office worker', 'nurse', 'doctor', 'singer', 'writer', 'police officer', 'housewife', 'cook', 'student'];
-        // 預設形容詞僅選用第二課常見形容詞
-        const adjectives = ['handsome', 'beautiful', 'young', 'tall', 'short', 'old'];
-        // 隨機決定文章類型
-        const scenario = Math.floor(Math.random() * 4);
-        const article = { title: '', text: '', questions: [] };
-        // 案例 0：描述家庭成員與工作
-        if (scenario === 0) {
-            const fatherJob = getRandomElement(jobList);
-            const motherJob = getRandomElement(jobList);
-            const sisterJob = getRandomElement(jobList);
-            const brotherJob = getRandomElement(jobList);
-            const familySize = Math.floor(Math.random() * 3) + 4; // 4–6 人
-            const fatherArticle = getIndefArticle(fatherJob);
-            const motherArticle = getIndefArticle(motherJob);
-            const sisterArticle = getIndefArticle(sisterJob);
-            const brotherArticle = getIndefArticle(brotherJob);
-            article.title = 'My Family';
-            article.text = `This is my family. My father is ${fatherArticle} ${fatherJob}. My mother is ${motherArticle} ${motherJob}. My sister is ${sisterArticle} ${sisterJob}. My brother is ${brotherArticle} ${brotherJob}. We are a family of ${familySize}.`;
-            const fatherOptions = [fatherJob, ...getRandomUnique(jobList, 3, [fatherJob])];
-            const motherOptions = [motherJob, ...getRandomUnique(jobList, 3, [motherJob])];
-            const sisterOptions = [sisterJob, ...getRandomUnique(jobList, 3, [sisterJob])];
-            const brotherOptions = [brotherJob, ...getRandomUnique(jobList, 3, [brotherJob])];
-            // 組合人數選項 3–6
-            const numberOptions = [String(familySize)];
-            const numCandidates = [];
-            for (let n = 3; n <= 6; n++) {
-                if (n !== familySize) numCandidates.push(String(n));
-            }
-            // 洗牌並取三個
-            for (let i = numCandidates.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [numCandidates[i], numCandidates[j]] = [numCandidates[j], numCandidates[i]];
-            }
-            numberOptions.push(...numCandidates.slice(0, 3));
-            article.questions = [
-                { question: "What is the father's job?", options: fatherOptions, correct: 0 },
-                { question: "What is the mother's job?", options: motherOptions, correct: 0 },
-                { question: "What is the sister's job?", options: sisterOptions, correct: 0 },
-                { question: "What is the brother's job?", options: brotherOptions, correct: 0 },
-                { question: "How many people are in the family?", options: numberOptions, correct: 0 }
-            ];
-        }
-        // 案例 1：在學校認識新同學
-        else if (scenario === 1) {
-            // 男孩特徵：總是用 "tall and X"
-            const boyAdj = getRandomElement(['handsome', 'young', 'old']);
-            const boyDesc = `tall and ${boyAdj}`;
-            const sisterJob = getRandomElement(jobList);
-            // 姊姊的形容詞僅選擇適合女性的詞彙
-            const sisterAdj = getRandomElement(['beautiful', 'young']);
-            // 決定姊姊職業的冠詞
-            const sisterArticle = getIndefArticle(sisterJob);
-            const schoolType = getRandomElement(['junior high school', 'elementary school']);
-            article.title = 'At School';
-            article.text = `At school, I see my new classmate. He is ${boyDesc}. His sister is ${sisterArticle} ${sisterJob}. She is very ${sisterAdj}. We go to ${schoolType}.`;
-            const descOptions = [boyDesc, 'short and old', 'young and short', 'tall and ugly'];
-            const sisterJobOptions = [sisterJob, ...getRandomUnique(jobList, 3, [sisterJob])];
-            const placeOptions = ['At school', 'At home', 'At the park', 'At the store'];
-            const sisterAdjOptions = [sisterAdj, 'ugly', 'sad', 'angry'];
-            const allSchoolTypes = ['junior high school', 'elementary school', 'high school', 'college'];
-            const otherTypes = allSchoolTypes.filter(x => x !== schoolType);
-            // 若其他類別大於 3 則截取前三個
-            const schoolTypeOptions = [schoolType, ...otherTypes.slice(0, 3)];
-            article.questions = [
-                { question: 'What is the boy like?', options: descOptions, correct: 0 },
-                { question: "What is the boy's sister's job?", options: sisterJobOptions, correct: 0 },
-                { question: 'Where are the students?', options: placeOptions, correct: 0 },
-                { question: 'Which word describes the sister?', options: sisterAdjOptions, correct: 0 },
-                { question: 'What kind of school do they attend?', options: schoolTypeOptions, correct: 0 }
-            ];
-        }
-        // 案例 2：描述家族成員與工作與表兄的年齡
-        else if (scenario === 2) {
-            const uncleJob = getRandomElement(jobList);
-            const auntJob = getRandomElement(jobList);
-            const cousinJob = getRandomElement(jobList);
-            const fatherJob = getRandomElement(jobList);
-            const motherJob = getRandomElement(jobList);
-            const cousinAge = Math.floor(Math.random() * 8) + 8; // 8–15
-            article.title = 'Occupations';
-            // 根據職業決定冠詞
-            const articleUncle = getIndefArticle(uncleJob);
-            const articleAunt = getIndefArticle(auntJob);
-            const articleCousin = getIndefArticle(cousinJob);
-            const articleFather = getIndefArticle(fatherJob);
-            const articleMother = getIndefArticle(motherJob);
-            article.text = `My uncle is ${articleUncle} ${uncleJob}. He works every day. My aunt is ${articleAunt} ${auntJob}. She cooks and cleans. My cousin is ${articleCousin} ${cousinJob}. He is ${cousinAge} years old. My father is ${articleFather} ${fatherJob}, and my mother is ${articleMother} ${motherJob}. They are very busy.`;
-            const uncleOptions = [uncleJob, ...getRandomUnique(jobList, 3, [uncleJob])];
-            const auntOptions = ['My aunt', 'My uncle', 'My cousin', 'My father'];
-            const ageOptions = [String(cousinAge)];
-            const ageCandidates = [];
-            for (let n = 8; n <= 15; n++) {
-                if (n !== cousinAge) ageCandidates.push(String(n));
-            }
-            // 洗牌並取前三個
-            for (let i = ageCandidates.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [ageCandidates[i], ageCandidates[j]] = [ageCandidates[j], ageCandidates[i]];
-            }
-            ageOptions.push(...ageCandidates.slice(0, 3));
-            const fatherOptions = [fatherJob, ...getRandomUnique(jobList, 3, [fatherJob])];
-            const motherOptions = [motherJob, ...getRandomUnique(jobList, 3, [motherJob])];
-            article.questions = [
-                { question: "What is the uncle's job?", options: uncleOptions, correct: 0 },
-                { question: `Who is a ${auntJob}?`, options: auntOptions, correct: 0 },
-                { question: 'How old is the cousin?', options: ageOptions, correct: 0 },
-                { question: "What is the father's job?", options: fatherOptions, correct: 0 },
-                { question: "What is the mother's job?", options: motherOptions, correct: 0 }
-            ];
-        }
-        // 案例 3：描述祖父母與父母的職業
-        else {
-            const grandfatherJob = getRandomElement(jobList);
-            const grandfatherAge = Math.floor(Math.random() * 21) + 50; // 50–70
-            const grandmotherJob = getRandomElement(jobList);
-            const fatherJob = getRandomElement(jobList);
-            const motherJob = getRandomElement(jobList);
-            article.title = 'Family Occupations';
-            // 冠詞處理
-            const articleGrandfather = getIndefArticle(grandfatherJob);
-            const articleGrandmother = getIndefArticle(grandmotherJob);
-            const articleFather2 = getIndefArticle(fatherJob);
-            const articleMother2 = getIndefArticle(motherJob);
-            article.text = `My grandfather is ${articleGrandfather} ${grandfatherJob}. He is ${grandfatherAge} years old. My grandmother is ${articleGrandmother} ${grandmotherJob}. She cooks very well. My father is ${articleFather2} ${fatherJob}, and my mother is ${articleMother2} ${motherJob}. I am a student. We have a small family.`;
-            const grandfatherOptions = [grandfatherJob, ...getRandomUnique(jobList, 3, [grandfatherJob])];
-            const ageOptions = [String(grandfatherAge)];
-            const ageCandidates = [];
-            for (let n = 50; n <= 70; n++) {
-                if (n !== grandfatherAge) ageCandidates.push(String(n));
-            }
-            for (let i = ageCandidates.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [ageCandidates[i], ageCandidates[j]] = [ageCandidates[j], ageCandidates[i]];
-            }
-            ageOptions.push(...ageCandidates.slice(0, 3));
-            const grandmotherOptions = [grandmotherJob, ...getRandomUnique(jobList, 3, [grandmotherJob])];
-            const motherOptions2 = [motherJob, ...getRandomUnique(jobList, 3, [motherJob])];
-            const childOptions = ['student', 'teacher', 'writer', 'police officer'];
-            article.questions = [
-                { question: "What is the grandfather's job?", options: grandfatherOptions, correct: 0 },
-                { question: 'How old is the grandfather?', options: ageOptions, correct: 0 },
-                { question: "What is the grandmother's job?", options: grandmotherOptions, correct: 0 },
-                { question: "What is the mother's job?", options: motherOptions2, correct: 0 },
-                { question: "What is the child's job?", options: childOptions, correct: 0 }
-            ];
-        }
-        return article;
-    }
-
-    // ========= 動態字彙與文法題目生成 =========
-    // 字彙資料庫：映射英文單字或片語到中文義詞
-    const vocabItems = [
-        { word: 'handsome', meaning: '英俊的' },
-        { word: 'new', meaning: '新的' },
-        { word: 'classmate', meaning: '同學' },
-        { word: 'young', meaning: '年輕的' },
-        { word: 'woman', meaning: '女人' },
-        { word: 'very', meaning: '非常' },
-        { word: 'beautiful', meaning: '美麗的' },
-        { word: 'too', meaning: '也' },
-        { word: 'Nice to meet you', meaning: '很高興認識你' },
-        { word: 'really', meaning: '真的' },
-        { word: 'dear', meaning: '親愛的' },
-        { word: 'family', meaning: '家庭；家人' },
-        { word: 'junior high school', meaning: '國中' },
-        { word: 'elementary school', meaning: '國小' },
-        { word: 'baby', meaning: '嬰兒；年幼的' }
-    ,
-    // 新增第二課補充詞彙：來自發音與練習頁面
-    { word: 'park', meaning: '公園' },
-    { word: 'big', meaning: '大的' },
-    { word: 'happy', meaning: '快樂的' },
-    { word: 'rabbit', meaning: '兔子' },
-    { word: 'ten', meaning: '十' },
-    { word: 'desk', meaning: '書桌' },
-    { word: 'daddy', meaning: '爸爸' },
-    { word: 'sad', meaning: '傷心的' },
-    { word: 'cat', meaning: '貓' },
-    { word: 'good', meaning: '好的' },
-    { word: 'kiss', meaning: '親吻' },
-    { word: 'black', meaning: '黑色的' },
-    { word: 'egg', meaning: '蛋' },
-    { word: 'fat', meaning: '胖的' },
-    { word: 'fifty', meaning: '五十' },
-    { word: 'seven', meaning: '七' },
-    { word: 'five', meaning: '五' }
+    // 第二課單字列表：中英對照
+    const vocabList = [
+        { english: 'house', chinese: '房子' },
+        { english: 'parents', chinese: '父母親' },
+        { english: 'living room', chinese: '客廳' },
+        { english: 'wall', chinese: '牆壁' },
+        { english: 'purple', chinese: '紫色的' },
+        { english: 'favorite', chinese: '最喜愛的' },
+        { english: 'color', chinese: '顏色' },
+        { english: 'kitchen', chinese: '廚房' },
+        { english: 'dining room', chinese: '餐廳' },
+        { english: 'but', chinese: '但是' },
+        { english: 'gray', chinese: '灰色的' },
+        { english: 'brown', chinese: '棕色的' },
+        { english: 'cookie', chinese: '餅乾' },
+        { english: 'mice', chinese: '老鼠' },
+        { english: 'maybe', chinese: '可能' },
+        { english: 'sofa', chinese: '沙發' },
+        { english: 'hungry', chinese: '餓的' },
+        { english: 'notebook', chinese: '筆記本' },
+        { english: 'marker', chinese: '彩色筆' },
+        { english: 'brush', chinese: '筆刷' },
+        { english: 'gift', chinese: '禮物' },
+        { english: 'pencil case', chinese: '鉛筆盒' },
+        { english: 'bathroom', chinese: '浴室' },
+        { english: 'table', chinese: '桌子' },
+        { english: 'bedroom', chinese: '臥室' },
+        { english: 'near', chinese: '在附近' },
+        { english: 'between', chinese: '在之間' },
+        { english: 'behind', chinese: '在後面' },
+        { english: 'in front of', chinese: '在前面' },
+        { english: 'special', chinese: '特別的' },
+        { english: 'inside', chinese: '在裡面' },
+        { english: 'right', chinese: '就' },
+        { english: 'each other', chinese: '彼此' },
+        { english: 'above', chinese: '在上方' },
+        { english: 'enough', chinese: '足夠的' },
+        { english: 'person', chinese: '人' }
     ];
 
-    // 從 vocabItems 隨機挑選 n 道字彙題目
-    function generateVocabQuestions(num) {
-        const questions = [];
-        // 複製 vocabItems 避免修改原陣列
-        const itemsCopy = vocabItems.slice();
-        // 洗牌
-        for (let i = itemsCopy.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [itemsCopy[i], itemsCopy[j]] = [itemsCopy[j], itemsCopy[i]];
-        }
-        // 確保 num 不超過資料庫長度
-        const count = Math.min(num, itemsCopy.length);
-        for (let i = 0; i < count; i++) {
-            const item = itemsCopy[i];
-            // 建立選項：正確字詞放第一個，其餘錯誤選項從其餘項目挑選
-            const wrongWords = [];
-            let idx = 0;
-            while (wrongWords.length < 3 && idx < itemsCopy.length) {
-                const candidate = itemsCopy[count + idx] || itemsCopy[(count + idx) % itemsCopy.length];
-                if (candidate.word !== item.word && !wrongWords.includes(candidate.word)) {
-                    wrongWords.push(candidate.word);
-                }
-                idx++;
-            }
-            const options = [item.word, ...wrongWords];
-            questions.push({
-                question: `Which word means '${item.meaning}'?`,
-                options: options,
-                correct: 0
-            });
-        }
-        return questions;
-    }
-
-    // 動態生成文法題目
-    function generateGrammarQuestions(num) {
-        const jobList = ['teacher', 'office worker', 'nurse', 'doctor', 'singer', 'writer', 'police officer', 'housewife', 'cook', 'student'];
-        const pronouns = ['I', 'you', 'he', 'she'];
-        const questions = [];
-        // 隨機選擇不同題型
-        for (let i = 0; i < num; i++) {
-        const type = Math.floor(Math.random() * 5); // 0: negative sentence, 1: yes/no question, 2: yes answer, 3: contraction, 4: negative answer
-            const pronoun = getRandomElement(pronouns);
-            const job = getRandomElement(jobList);
-            const article = getIndefArticle(job);
-            let q = null;
-            switch (type) {
-                case 0: // 負面句子
-                    if (pronoun === 'I') {
-                        q = {
-                            question: 'Which sentence is correct?',
-                            options: [
-                                `I am not ${article} ${job}.`,
-                                `I not am ${article} ${job}.`,
-                                `I am a not ${job}.`,
-                                `I am no ${job}.`
-                            ],
-                            correct: 0
-                        };
-                    } else if (pronoun === 'you') {
-                        q = {
-                            question: 'Which sentence is correct?',
-                            options: [
-                                `You are not ${article} ${job}.`,
-                                `You not are ${article} ${job}.`,
-                                `You are a not ${job}.`,
-                                `You am not ${article} ${job}.`
-                            ],
-                            correct: 0
-                        };
-                    } else if (pronoun === 'he') {
-                        q = {
-                            question: 'Which sentence is correct?',
-                            options: [
-                                `He is not ${article} ${job}.`,
-                                `He not is ${article} ${job}.`,
-                                `He is a not ${job}.`,
-                                `He is no ${job}.`
-                            ],
-                            correct: 0
-                        };
-                    } else { // she
-                        q = {
-                            question: 'Which sentence is correct?',
-                            options: [
-                                `She is not ${article} ${job}.`,
-                                `She not is ${article} ${job}.`,
-                                `She is a not ${job}.`,
-                                `She is no ${job}.`
-                            ],
-                            correct: 0
-                        };
-                    }
-                    break;
-                case 1: // 是非問句
-                    if (pronoun === 'I') {
-                        // 問句不使用 I 作主體，改用 you 產生
-                        const qJob = job;
-                        const qArticle = article;
-                        q = {
-                            question: 'Which of the following is a correct yes/no question?',
-                            options: [
-                                `Are you ${qArticle} ${qJob}?`,
-                                `You are ${qArticle} ${qJob}?`,
-                                `Are you ${qJob}?`,
-                                `Are ${qArticle} ${qJob} you?`
-                            ],
-                            correct: 0
-                        };
-                    } else if (pronoun === 'you') {
-                        // 用 he 作問句
-                        q = {
-                            question: 'Which of the following is a correct yes/no question?',
-                            options: [
-                                `Is he ${article} ${job}?`,
-                                `He is ${article} ${job}?`,
-                                `Is he ${job}?`,
-                                `Is ${article} ${job} he?`
-                            ],
-                            correct: 0
-                        };
-                    } else if (pronoun === 'he') {
-                        q = {
-                            question: 'Which of the following is a correct yes/no question?',
-                            options: [
-                                `Is he ${article} ${job}?`,
-                                `He is ${article} ${job}?`,
-                                `Is he ${job}?`,
-                                `Is ${article} ${job} he?`
-                            ],
-                            correct: 0
-                        };
-                    } else { // she
-                        q = {
-                            question: 'Which of the following is a correct yes/no question?',
-                            options: [
-                                `Is she ${article} ${job}?`,
-                                `She is ${article} ${job}?`,
-                                `Is she ${job}?`,
-                                `Is ${article} ${job} she?`
-                            ],
-                            correct: 0
-                        };
-                    }
-                    break;
-                case 2: // Yes 回答
-                    if (pronoun === 'I') {
-                        q = {
-                            question: `How should you answer the question 'Are you ${article} ${job}?'`,
-                            options: [
-                                'Yes, I am.',
-                                'Yes, I\'m.',
-                                'Yes, I are.',
-                                'Yes, I\'m not.'
-                            ],
-                            correct: 0
-                        };
-                    } else if (pronoun === 'you') {
-                        q = {
-                            question: `How should you answer the question 'Is he ${article} ${job}?'`,
-                            options: [
-                                'Yes, he is.',
-                                'Yes, he\'s.',
-                                'Yes, he are.',
-                                'Yes, he isn\'t.'
-                            ],
-                            correct: 0
-                        };
-                    } else if (pronoun === 'he') {
-                        q = {
-                            question: `How should you answer the question 'Is he ${article} ${job}?'`,
-                            options: [
-                                'Yes, he is.',
-                                'Yes, he\'s.',
-                                'Yes, he are.',
-                                'Yes, he isn\'t.'
-                            ],
-                            correct: 0
-                        };
-                    } else { // she
-                        q = {
-                            question: `How should you answer the question 'Is she ${article} ${job}?'`,
-                            options: [
-                                'Yes, she is.',
-                                'Yes, she\'s.',
-                                'Yes, she are.',
-                                'Yes, she isn\'t.'
-                            ],
-                            correct: 0
-                        };
-                    }
-                    break;
-                case 3: // 縮寫 (contraction)
-                    if (pronoun === 'I') {
-                        q = {
-                            question: "Which is the correct contraction of 'I am not'?",
-                            options: ['I\'m not', 'I amn\'t', 'Im not', 'I\'m no'],
-                            correct: 0
-                        };
-                    } else if (pronoun === 'you') {
-                        q = {
-                            question: "Which is the correct contraction of 'you are not'?",
-                            options: ['you\'re not', 'you are not', 'you\'re no', 'you is not'],
-                            correct: 0
-                        };
-                    } else if (pronoun === 'he') {
-                        q = {
-                            question: "Which is the correct contraction of 'he is not'?",
-                            options: ['he\'s not', 'hesn\'t', 'he is n\'t', 'he\'snt'],
-                            correct: 0
-                        };
-                    } else {
-                        q = {
-                            question: "Which is the correct contraction of 'she is not'?",
-                            options: ['she\'s not', 'she\'snt', 'shesn\'t', 'she is no'],
-                            correct: 0
-                        };
-                    }
-                    break;
-                case 4: // 否定回答 (No 回答)
-                    // 針對 he 或 she 的問題提供否定回答範例
-                    if (pronoun === 'I') {
-                        // 為 I 模式，使用 you 提問
-                        q = {
-                            question: `How should you answer the question 'Are you ${article} ${job}?' negatively?`,
-                            options: [
-                                `No, I'm not. I'm ${getIndefArticle(job)} ${job}.`,
-                                `No, I'm no. I'm ${job}.`,
-                                `No, I amn't. I'm ${getIndefArticle(job)} ${job}.`,
-                                `No, I'm not. I'm a ${job}.` // 重複一個錯誤版本，語法微錯
-                            ],
-                            correct: 0
-                        };
-                    } else if (pronoun === 'you' || pronoun === 'he') {
-                        // 他或他人
-                        q = {
-                            question: `How should you answer the question 'Is he ${article} ${job}?' negatively?`,
-                            options: [
-                                `No, he's not. He's ${getIndefArticle(job)} ${job}.`,
-                                `No, he not. He is ${job}.`,
-                                `No, he isn't. He's ${job}.`,
-                                `No, he not is. He's ${getIndefArticle(job)} ${job}.`
-                            ],
-                            correct: 0
-                        };
-                    } else {
-                        // she
-                        q = {
-                            question: `How should you answer the question 'Is she ${article} ${job}?' negatively?`,
-                            options: [
-                                `No, she's not. She's ${getIndefArticle(job)} ${job}.`,
-                                `No, she not. She is ${job}.`,
-                                `No, she isn't. She's ${job}.`,
-                                `No, she not is. She's ${getIndefArticle(job)} ${job}.`
-                            ],
-                            correct: 0
-                        };
-                    }
-                    break;
-            }
-            questions.push(q);
-        }
-        return questions;
-    }
-
-    // 從陣列中隨機選取 n 個元素，若 n 大於陣列長度則返回整個陣列（會複製一份）
-    function sampleArray(arr, n) {
-        if (!arr || arr.length === 0) return [];
-        if (n >= arr.length) return arr.slice();
-        const copy = arr.slice();
-        for (let i = copy.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [copy[i], copy[j]] = [copy[j], copy[i]];
-        }
-        return copy.slice(0, n);
-    }
-
-    // 練習階段名稱對照：用於顯示標題與引導下一階段
-    const sectionNames = {
-        'sounds2': '發音練習',
-        'jobs': '職業單字',
-        'family': '家庭關係',
-        'grammar2': '文法練習',
-        'vocab2': '字彙練習',
-        'dialogue2': '對話理解',
-        // 新增閱讀練習分類名稱
-        'reading2': '閱讀練習'
-    };
-    // 練習階段順序：用於自動前往下一階段
-    // 練習階段順序：加入閱讀練習至最後
-    const sectionOrder = ['sounds2','jobs','family','grammar2','vocab2','dialogue2','reading2'];
-    const sectionTitleEl = document.getElementById('sectionTitle');
-    const nextSectionBtn = document.getElementById('nextSectionBtn');
-
-    // 用於追蹤當前練習的原始段落 ID（非中文名稱），方便決定下一階段
-    let currentSectionId = '';
-
-    // 設定練習標題
-    function setSectionTitle(sectionId) {
-        sectionTitleEl.textContent = sectionNames[sectionId] || '';
-    }
-
-    // 準備下一階段按鈕
-    function prepareNextSection(currentId) {
-        // 找到當前索引
-        const idx = sectionOrder.indexOf(currentId);
-        if (idx >= 0 && idx < sectionOrder.length - 1) {
-            const nextId = sectionOrder[idx + 1];
-            const nextName = sectionNames[nextId] || '';
-            nextSectionBtn.textContent = `前往下一階段：${nextName}`;
-            nextSectionBtn.dataset.section = nextId;
-            nextSectionBtn.style.display = 'block';
-        } else {
-            // 無下一階段，隱藏
-            nextSectionBtn.style.display = 'none';
-        }
-    }
-
-    // 為未使用的文章與單字練習準備空陣列，避免程式錯誤
-    const readingPassages = [];
-    const articleExercises = [];
-    const vocabList = [];
-    const vocabData = [];
-
-    // 第一課版本中的其餘函式保持不變，用於處理答題流程
-
-    // 當前題目列表
+    // 全局變數
     let questions = [];
     let currentQuestion = 0;
     let score = 0;
     let seconds = 0;
-    // 記錄計時起始時間（毫秒）
-    let startTime = 0;
-    // 計時器識別碼，每次啟動計時前需清除舊的計時器
     let timerInterval = null;
     const wrongAnswers = [];
+    const history = [];
     let currentSection = null;
 
-    // 單字練習相關變數（本檔未使用進階單字練習）
-    let vocabIndex = 0;
-    const vocabResponses = [];
-
-    const questionEl = document.getElementById('question');
-    const optionsEl = document.getElementById('options');
-    const submitBtn = document.getElementById('submitBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const resultEl = document.getElementById('result');
-    const restartBtn = document.getElementById('restartBtn');
-    const timerEl = document.getElementById('timer');
-    const progressEl = document.getElementById('progress');
-    const wrongListContainer = document.getElementById('wrong-list');
-    const historyContainer = document.getElementById('historyContainer');
-    const quizSection = document.getElementById('quiz-section');
-    const historySection = document.getElementById('history-section');
-    const sectionSection = document.getElementById('section-section');
-    const articleContainer = document.getElementById('articleContainer');
-    const quizTab = document.getElementById('quizTab');
-    const historyTab = document.getElementById('historyTab');
-
-    function loadQuestion(index) {
-        // 清空結果區域
-        resultEl.textContent = '';
-        // 顯示題目
-        const q = questions[index];
-        // 若題目屬於綜合段落，顯示原段落標籤
-        let sectionLabelHTML = '';
-        if (q.sectionSource) {
-            sectionLabelHTML = `<div class="section-label">段落 ${q.sectionSource}</div>`;
+    // 洗牌函式
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
-        questionEl.innerHTML = sectionLabelHTML + `${index + 1}. ${q.question}`;
-        // 生成選項
+    }
+
+    // 根據 vocabList 隨機生成題目
+    function generateQuestions() {
+        const generated = [];
+        // 從全部單字中隨機挑選 10 個，避免每次練習題目過多
+        const indices = Array.from({ length: vocabList.length }, (_, i) => i);
+        shuffle(indices);
+        const chosen = indices.slice(0, 10);
+        chosen.forEach(idx => {
+            const item = vocabList[idx];
+            // 隨機決定題型：chToEn、enToCh、audio 或 scramble
+            const types = ['chToEn', 'enToCh', 'audio', 'scramble'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            let questionText;
+            let correctAnswer;
+            const allEnglish = vocabList.map(v => v.english);
+            const allChinese = vocabList.map(v => v.chinese);
+            const options = [];
+            let scrambled = '';
+            if (type === 'chToEn') {
+                // 中文提示，選英文
+                questionText = `以下哪個單字意思是「${item.chinese}」？`;
+                correctAnswer = item.english;
+                // 生成錯誤選項
+                const wrongs = [];
+                while (wrongs.length < 3) {
+                    const candidate = allEnglish[Math.floor(Math.random() * allEnglish.length)];
+                    if (candidate !== correctAnswer && !wrongs.includes(candidate)) {
+                        wrongs.push(candidate);
+                    }
+                }
+                options.push(correctAnswer, ...wrongs);
+            } else if (type === 'enToCh') {
+                // 英文提示，選中文
+                questionText = `「${item.english}」的中文是什麼？`;
+                correctAnswer = item.chinese;
+                const wrongs = [];
+                while (wrongs.length < 3) {
+                    const candidate = allChinese[Math.floor(Math.random() * allChinese.length)];
+                    if (candidate !== correctAnswer && !wrongs.includes(candidate)) {
+                        wrongs.push(candidate);
+                    }
+                }
+                options.push(correctAnswer, ...wrongs);
+            } else if (type === 'audio') {
+                // 聽音選英文
+                questionText = '請聽發音，選出正確的單字。';
+                correctAnswer = item.english;
+                const wrongs = [];
+                while (wrongs.length < 3) {
+                    const candidate = allEnglish[Math.floor(Math.random() * allEnglish.length)];
+                    if (candidate !== correctAnswer && !wrongs.includes(candidate)) {
+                        wrongs.push(candidate);
+                    }
+                }
+                options.push(correctAnswer, ...wrongs);
+            } else {
+                // scramble 題：顯示亂序字母，選英文
+                const letters = item.english.replace(/\s+/g, '').split('');
+                shuffle(letters);
+                scrambled = letters.join(' ');
+                questionText = `由以下字母組成的單字是什麼？ ${scrambled}`;
+                correctAnswer = item.english;
+                const wrongs = [];
+                while (wrongs.length < 3) {
+                    const candidate = allEnglish[Math.floor(Math.random() * allEnglish.length)];
+                    if (candidate !== correctAnswer && !wrongs.includes(candidate)) {
+                        wrongs.push(candidate);
+                    }
+                }
+                options.push(correctAnswer, ...wrongs);
+            }
+            // 洗牌選項
+            shuffle(options);
+            const correctIndex = options.indexOf(correctAnswer);
+            generated.push({ question: questionText, options: options, correct: correctIndex, type: type, audioWord: type === 'audio' ? item.english : null });
+        });
+        // 打亂題目順序
+        shuffle(generated);
+        return generated;
+    }
+
+    // 句型練習題庫：根據課本句型與介系詞用法出題
+    function generateSentenceQuestions() {
+        const sentenceQuestions = [
+            { question: 'Aunt Dolly is ___ my house.', options: ['in', 'on', 'at', 'to'], correct: 0 },
+            { question: 'How are your parents? They are ___, thanks.', options: ['fine', 'hungry', 'happy', 'sad'], correct: 0 },
+            { question: '「living room」指的是哪一種房間？', options: ['起居室；客廳', '浴室；盥洗室', '臥室', '餐廳'], correct: 0 },
+            { question: 'Which sentence correctly uses "dining room"?', options: ['Their dining room is big.', 'Their dining table is big.', 'Their kitchen is big.', 'Their bedroom is big.'], correct: 0 },
+            { question: 'Which of the following is a synonym for "sofa"?', options: ['couch', 'table', 'chair', 'bed'], correct: 0 },
+            { question: 'What is the opposite of "hungry"?', options: ['full', 'thin', 'tired', 'empty'], correct: 0 },
+            { question: 'Which sentence is correct?', options: ['This is my new notebook.', 'This is my new laptop.', 'This is my new marker.', 'This is my new brown.'], correct: 0 },
+            { question: 'Which word means "彩色筆"?', options: ['marker', 'pencil case', 'brush', 'cookie'], correct: 0 },
+            { question: 'Which of the following can also mean "pencil box"?', options: ['pencil case', 'gift', 'notebook', 'bathroom'], correct: 0 },
+            { question: 'Where is the bathroom?', options: ['It is between the kitchen and the living room.', 'It is in the bedroom.', 'It is on the sofa.', 'It is under the table.'], correct: 0 },
+            { question: 'My house is ___ the farm.', options: ['near', 'between', 'behind', 'in'], correct: 0 },
+            { question: 'Which preposition means "在……後面"?', options: ['behind','in front of','between','near'], correct: 0 },
+            { question: 'Jane is in front of Tom but behind Amy. Jane is ___ Tom and Amy.', options: ['between','in front of','behind','inside'], correct: 0 },
+            { question: 'What does "inside" mean?', options: ['在裡面','在外面','在上面','在下面'], correct: 0 },
+            { question: 'Which word can mean "就；馬上"?', options: ['right','left','near','between'], correct: 0 },
+            { question: 'Which preposition completes: My mom is ___ the house.', options: ['in','at','on','to'], correct: 0 },
+            { question: 'My car is ___ a tree.', options: ['behind','between','in','inside'], correct: 0 }
+        ];
+        // 隨機取 10 題
+        const indices = Array.from({ length: sentenceQuestions.length }, (_, i) => i);
+        shuffle(indices);
+        const chosen = indices.slice(0, 10);
+        const generated = [];
+        chosen.forEach(i => {
+            const item = sentenceQuestions[i];
+            // 複製選項並洗牌
+            const opts = item.options.slice();
+            shuffle(opts);
+            const correctIndex = opts.indexOf(item.options[item.correct]);
+            generated.push({ question: item.question, options: opts, correct: correctIndex, type: 'choice', audioWord: null });
+        });
+        return generated;
+    }
+
+    // 文法練習題庫：根據第二課語法與課文內容出題
+    function generateGrammarQuestions() {
+        /*
+         * 文法題針對課本中的介系詞用法、同義詞、反義詞和句子結構設計。
+         * 每題提供四個選項，正確答案索引由 correct 屬性指定。
+         * 題庫會在每次測驗開始時隨機抽取 10 題，並且打亂選項順序，
+         * 避免題目與答案固定讓小孩記答案。
+         */
+        const grammarQuestions = [
+            { question: 'Fill in the blank: Aunt Dolly is ___ my house.', options: ['in', 'on', 'at', 'to'], correct: 0 },
+            { question: 'How are your parents? They are ___, thanks.', options: ['fine', 'hungry', 'happy', 'sad'], correct: 0 },
+            { question: 'What does "living room" refer to?', options: ['起居室；客廳', '浴室；盥洗室', '臥室', '餐廳'], correct: 0 },
+            { question: 'Which sentence uses "dining room" correctly?', options: ['Their dining room is big.', 'Their dining table is big.', 'Their kitchen is big.', 'Their bedroom is big.'], correct: 0 },
+            { question: 'Which word is a synonym for "sofa"?', options: ['couch', 'table', 'chair', 'bed'], correct: 0 },
+            { question: 'What is the opposite of "hungry"?', options: ['full', 'thin', 'tired', 'empty'], correct: 0 },
+            { question: 'Which sentence is correct?', options: ['This is my new notebook.', 'This is my new laptop.', 'This is my new marker.', 'This is my new brown.'], correct: 0 },
+            { question: 'Which word means "彩色筆"?', options: ['marker', 'pencil case', 'brush', 'cookie'], correct: 0 },
+            { question: 'Which of the following also means "pencil box"?', options: ['pencil case', 'gift', 'notebook', 'bathroom'], correct: 0 },
+            { question: 'Where is the bathroom?', options: ['It is between the kitchen and the living room.', 'It is in the bedroom.', 'It is on the sofa.', 'It is under the table.'], correct: 0 },
+            { question: 'My house is ___ the farm.', options: ['near', 'between', 'behind', 'in'], correct: 0 },
+            { question: 'Which preposition means "在……後面"?', options: ['behind','in front of','between','near'], correct: 0 },
+            { question: 'Jane is in front of Tom but behind Amy. Jane is ___ Tom and Amy.', options: ['between','in front of','behind','inside'], correct: 0 },
+            { question: 'What does "inside" mean?', options: ['在裡面','在外面','在上面','在下面'], correct: 0 },
+            { question: 'Which word can mean "立即；馬上"?', options: ['right','left','near','between'], correct: 0 },
+            { question: 'My mom is ___ the house.', options: ['inside','at','on','to'], correct: 0 },
+            { question: 'My car is ___ a tree.', options: ['under','between','in','inside'], correct: 0 },
+            { question: 'The ball is ___ the door.', options: ['behind','in front of','between','near'], correct: 0 },
+            { question: 'What does "bedroom" refer to?', options: ['臥室','客廳','浴室','餐廳'], correct: 0 },
+            { question: 'What does "bathroom" refer to?', options: ['浴室','客廳','書房','臥室'], correct: 0 },
+            { question: 'What does "dining room" refer to?', options: ['餐廳','客廳','臥室','浴室'], correct: 0 },
+            { question: 'Sofa bed 指的是什麼?', options: ['沙發床','床的沙發','餐廳','沙發椅'], correct: 0 },
+            { question: 'Which preposition means "在前面"?', options: ['in front of','behind','between','near'], correct: 0 },
+            { question: 'Which word also refers to a "laptop"?', options: ['notebook','marker','sofa','house'], correct: 0 },
+            { question: 'Parents refers to ___?', options: ['mom and dad','teacher','brother','grandparents'], correct: 0 }
+        ];
+        // 產生隨機順序的題目索引
+        const indices = Array.from({ length: grammarQuestions.length }, (_, i) => i);
+        shuffle(indices);
+        // 取前 10 題
+        const chosen = indices.slice(0, 10);
+        const generated = [];
+        chosen.forEach(i => {
+            const item = grammarQuestions[i];
+            // 複製選項並打亂
+            const opts = item.options.slice();
+            shuffle(opts);
+            const correctIndex = opts.indexOf(item.options[item.correct]);
+            generated.push({ question: item.question, options: opts, correct: correctIndex, type: 'choice', audioWord: null });
+        });
+        return generated;
+    }
+
+    // 語法探索題庫：涵蓋複數名詞、發音規則以及代名詞疑問句
+    function generateExploreQuestions() {
+        /*
+         * 此題庫包含多元題型：
+         *  - 複數名詞形成規則
+         *  - 複數名詞的正確拼寫
+         *  - 複數語尾發音辨識
+         *  - 複數名詞所有格用法
+         *  - 使用 these/those/they 的 Yes/No 問答與疑問句
+         * 每次從題庫隨機挑選 10 題並隨機排列選項，避免固定答案順序。
+         */
+        const exploreQuestions = [
+            // 複數形成
+            { question: 'What is the plural form of “family”?', options: ['families','familys','familyes','family'], correct: 0 },
+            { question: 'What is the plural form of “table”?', options: ['tables','table','tabless','tablees'], correct: 0 },
+            { question: 'What is the plural form of “woman”?', options: ['women','womans','woman','womens'], correct: 0 },
+            { question: 'What is the plural form of “mouse” (老鼠)?', options: ['mice','mouse','mouses','mousees'], correct: 0 },
+            { question: 'Which of the following is the correct plural of “fish”?', options: ['fish','fishes','fishs','fishies'], correct: 0 },
+            { question: 'What is the plural form of “housewife”?', options: ['housewives','housewifes','housewife','housewifees'], correct: 0 },
+            { question: 'What is the plural form of “person”?', options: ['people','persons','person','peoples'], correct: 0 },
+            { question: 'What is the plural form of “watch”?', options: ['watches','watchs','watch','watchies'], correct: 0 },
+            { question: 'What is the plural form of “police officer”?', options: ['police officers','police officer','polices officer','police offcers'], correct: 0 },
+            { question: 'What is the plural form of “pencil case”?', options: ['pencil cases','pencils case','pencil case','pencil casees'], correct: 0 },
+            { question: 'Which noun does NOT follow the regular plural rule of adding -s or -es?', options: ['person','tomatoes','buses','classes'], correct: 0 },
+            // 發音規則
+            { question: 'In which word is the plural ending pronounced /s/?', options: ['cats','zoos','buses','oranges'], correct: 0 },
+            { question: 'In which word is the plural ending pronounced /ɪz/?', options: ['buses','desks','maps','rooms'], correct: 0 },
+            { question: 'In which word is the plural ending pronounced /z/?', options: ['dogs','maps','cats','desks'], correct: 0 },
+            // 所有格
+            { question: 'How do you form the possessive of a plural noun ending in -s?', options: ['Add only an apostrophe (\')','Add -\'s','Do not change it','Add s\'s'], correct: 0 },
+            { question: 'Which sentence correctly shows plural possession?', options: ['Those girls\' mother','Those girl\'s mother','Those girls mother','Those girl mother'], correct: 0 },
+            // Yes/No 問答與代名詞
+            { question: 'Which question correctly asks about plural items?', options: ['Are these erasers?','Is this erasers?','Are this eraser?','Is these erasers?'], correct: 0 },
+            { question: 'What is the correct short answer to “Are those erasers?”', options: ['Yes, they are.','Yes, those are.','Yes, these are.','Yes, those erasers are.'], correct: 0 },
+            { question: 'Fill in the blank: No, ___ aren\'t.', options: ['they','those','these','that'], correct: 0 },
+            { question: 'Fill in the blank: Aren\'t ___ your bags? — Yes, they are.', options: ['they','those','these','that'], correct: 0 },
+            { question: 'Which pronoun can replace a plural noun in an answer?', options: ['they','these','those','it'], correct: 0 },
+            // wh- 疑問句
+            { question: 'How do you change “What is this?” to ask about more than one item?', options: ['What are these?','What are this?','What is these?','What are that?'], correct: 0 },
+            { question: 'Which sentence correctly uses a plural demonstrative?', options: ['Those are pencils.','That are pencils.','This are pencils.','These is pencils.'], correct: 0 }
+        ];
+        const indices = Array.from({ length: exploreQuestions.length }, (_, i) => i);
+        shuffle(indices);
+        const chosen = indices.slice(0, 10);
+        const generated = [];
+        chosen.forEach(i => {
+            const item = exploreQuestions[i];
+            const opts = item.options.slice();
+            shuffle(opts);
+            const correctIndex = opts.indexOf(item.options[item.correct]);
+            generated.push({ question: item.question, options: opts, correct: correctIndex, type: 'choice', audioWord: null });
+        });
+        return generated;
+    }
+
+    // 介系詞與連接詞題庫：涵蓋位置介系詞與 but/and 用法
+    function generatePrepositionQuestions() {
+        /*
+         * 題庫涵蓋三個主題：
+         * 1. 填空題：選出正確的介系詞，描述物件的相對位置。
+         * 2. 問答題：Where 問句的正確問法與回答。
+         * 3. 連接詞 but/and 的使用，用於連接形容詞或兩個句子。
+         * 每次隨機抽取 10 題並打亂選項順序，避免背答案。
+         */
+        const prepositionQuestions = [
+            // 介系詞填空
+            { question: 'Fill in the blank: The oranges are ___ the desk.', options: ['on','in','under','above'], correct: 0 },
+            { question: 'Fill in the blank: The school is ___ the park.', options: ['near','at','behind','on'], correct: 0 },
+            { question: 'Fill in the blank: The desk is ___ the sofa.', options: ['behind','under','on','near'], correct: 0 },
+            { question: 'Fill in the blank: We are ___ Sophia\'s house.', options: ['at','in','on','near'], correct: 0 },
+            { question: 'Fill in the blank: The basketball is ___ the table.', options: ['under','above','in front of','next to'], correct: 0 },
+            { question: 'Fill in the blank: The markers are ___ the pencil case.', options: ['in','on','under','between'], correct: 0 },
+            { question: 'Fill in the blank: The notebooks are ___ the comic books.', options: ['next to','under','above','between'], correct: 0 },
+            { question: 'Fill in the blank: A clock is ___ the TV.', options: ['on','in','under','behind'], correct: 0 },
+            { question: 'Fill in the blank: Two cats are ___ the cabinet.', options: ['in front of','behind','next to','under'], correct: 0 },
+            { question: 'Fill in the blank: My bag is ___ the box and the umbrellas.', options: ['between','next to','on','near'], correct: 0 },
+            // Where 問句與回答
+            { question: 'Complete the dialogue: A: Where is your sister? B: ___', options: ['She is in the kitchen.','She is at the park.','She is on the bed.','She is near the house.'], correct: 0 },
+            { question: 'Complete the dialogue: A: Where are the notebooks? B: ___', options: ['They are in the purple box.','They are under the chair.','They are behind the door.','They are next to the table.'], correct: 0 },
+            { question: 'Complete the dialogue: A: Where\'s the dog? B: ___', options: ['It\'s under the chair.','It\'s in the bedroom.','It\'s on the table.','It\'s behind the box.'], correct: 0 },
+            { question: 'Complete the dialogue: A: Where\'s Dad? B: ___', options: ['He\'s over there.','He\'s under the chair.','He\'s in front of the bus.','He\'s at home.'], correct: 0 },
+            // but / and 用法
+            { question: 'Complete the sentence: Kate is hungry, ___ her brother isn\'t.', options: ['but','and','or','so'], correct: 0 },
+            { question: 'Complete the sentence: The house is old ___ big.', options: ['but','and','so','or'], correct: 0 },
+            { question: 'Complete the sentence: Sylvia is beautiful, ___ she is not very nice.', options: ['but','and','so','or'], correct: 0 },
+            { question: 'Complete the sentence: Mr. Wang is short, ___ his son is very tall.', options: ['but','and','so','or'], correct: 0 },
+            { question: 'Complete the sentence: My mom is a singer, ___ my dad is, too.', options: ['and','but','or','so'], correct: 0 },
+            { question: 'Choose the correct combined sentence for: “The woman is tall. Her husband is short.”', options: ['The woman is tall, but her husband is short.','The woman is tall, and her husband is short.','The woman is tall and her husband is short.','The woman is tall, but her husband short is.'], correct: 0 },
+            { question: 'Choose the correct combined sentence for: “They are at the park. Their parents are not at the park.”', options: ['They are at the park, but their parents are not.','They are at the park, and their parents are not.','They are at the park but their parents are.','They are at the park, or their parents are not.'], correct: 0 },
+            { question: 'Which article is used with a specific singular noun that has been mentioned before?', options: ['the','a','an','some'], correct: 0 },
+            { question: 'Where\'s is a contraction of which phrase?', options: ['where is','when is','what is','who is'], correct: 0 },
+            { question: 'Fill in the blank: A: Where\'s the dog? B: It\'s ___ the chair.', options: ['under','in','above','behind'], correct: 0 }
+        ];
+        const indices = Array.from({ length: prepositionQuestions.length }, (_, i) => i);
+        shuffle(indices);
+        const chosen = indices.slice(0, 10);
+        const generated = [];
+        chosen.forEach(i => {
+            const item = prepositionQuestions[i];
+            const opts = item.options.slice();
+            shuffle(opts);
+            const correctIndex = opts.indexOf(item.options[item.correct]);
+            generated.push({ question: item.question, options: opts, correct: correctIndex, type: 'choice', audioWord: null });
+        });
+        return generated;
+    }
+
+    // 課文閱讀題庫：根據對話與閱讀內容出題
+    function generateReadingQuestions() {
+        /*
+         * 題庫根據課文對話與閱讀文章內容出題。
+         * 包含對話理解、詞彙選擇、翻譯、閱讀理解等題型。
+         * 每次隨機選取 10 題並打亂選項順序。
+         */
+        const readingQuestions = [
+            // 對話理解
+            { question: 'Who does Zac invite Jamie to meet?', options: ['His parents','His friends','His cousins','His teacher'], correct: 0 },
+            { question: 'How does Zac introduce Jamie to his parents?', options: ['Mom and Dad, this is Jamie.','Mom and Dad, meet Jamie.','Dad and Mom, this is Jamie.','Hello, Jamie meet my parents.'], correct: 0 },
+            { question: 'Why does Jamie say “Wow” in the dialogue?', options: ['Because the living room walls are purple.','Because Zac’s mom is his teacher.','Because the living room is messy.','Because he sees Mickey.'], correct: 0 },
+            { question: 'What is Zac\'s mom\'s favorite color?', options: ['Purple','Gray','Blue','Green'], correct: 0 },
+            { question: 'Are the kitchen and the dining room purple, too?', options: ['The dining room is, but the kitchen isn\'t.','Both are purple.','Neither is purple.','The kitchen is, but the dining room isn\'t.'], correct: 0 },
+            { question: 'What color is the kitchen in Zac\'s house?', options: ['Gray','Purple','Brown','White'], correct: 0 },
+            { question: 'My favorite ____ is gray, not purple.', options: ['color','drink','family','number'], correct: 0 },
+            { question: 'Hi, Ray. Welcome to my house. ______ B: OK. Wow, they are cute.', options: ['Come meet my dogs.','This is my dog.','Are they your dogs?','Is this your favorite dog?'], correct: 0 },
+            // 翻譯題
+            { question: 'Translate: 我的房子是新的，但車子不是。', options: ['My house is new, but my car isn\'t.','My house is old, but my car is new.','My car is new, but my house is not new.','My house is old, but my car isn\'t.'], correct: 0 },
+            { question: 'Translate: 來見見我的表哥，Max。', options: ['Come meet my cousin, Max.','Come see my cousin, Max.','Come meet my cousin Max.','Come meet my brother, Max.'], correct: 0 },
+            // 第二段對話
+            { question: 'What are those in the brown box?', options: ['Cookies for Zac\'s mice','Cookies for Jamie\'s dogs','Brown cookies','Books'], correct: 0 },
+            { question: 'Who are Mickey, Minnie, and Molly?', options: ['Zac\'s mice','Zac\'s dogs','Zac\'s cats','Zac\'s rabbits'], correct: 0 },
+            { question: 'Where are the mice?', options: ['They\'re in their house.','They\'re under the sofa.','They\'re on the table.','They\'re next to the box.'], correct: 0 },
+            { question: 'Where is Mickey?', options: ['He\'s next to the box.','He\'s under the sofa.','He\'s in the brown box.','He\'s at the park.'], correct: 0 },
+            // Keret House 閱讀理解
+            { question: 'Where is the Keret House located?', options: ['Poland','Paris','The USA','London'], correct: 0 },
+            { question: 'Which rooms are right next to each other inside the Keret House?', options: ['The bathroom, the kitchen, and the dining room','The living room, bedroom, and bathroom','The kitchen, dining room, and bedroom','The living room, kitchen, and bathroom'], correct: 0 },
+            { question: 'Where is the bedroom in the Keret House?', options: ['Above the bathroom, kitchen, and dining room','Inside the bathroom','Next to the kitchen','Below the house'], correct: 0 },
+            { question: 'Which statement describes the Keret House?', options: ['It is not big, but it is enough for one person.','It is big and suitable for a family of four.','It is small but not enough for one person.','It is not enough for two people.'], correct: 0 },
+            { question: 'Which adjectives describe the Keret House?', options: ['long, thin, and very special','short, wide, and old','long, wide, and special','thick, short, and old'], correct: 0 },
+            // p53 選擇題
+            { question: 'The cat is ___ those two chairs.', options: ['between','in','inside','of'], correct: 0 },
+            { question: 'A: Where is your baby girl? B: ______.', options: ['She\'s next to the sofa.','She\'s hungry.','She\'s one.','She\'s a nice girl.'], correct: 0 },
+            // 翻譯 p53
+            { question: 'Translate: 這間房間是雙人房。', options: ['This room is for two people.','This room is for one person.','This house is for two people.','This room is big.'], correct: 0 },
+            { question: 'Translate: 我的筆記本在兩本紅色的書中間。', options: ['My notebook is between the two red books.','My notebook is under the red books.','My notebook is next to the red books.','My pen is between two red books.'], correct: 0 },
+            { question: 'Translate: 紫色的車正與黑色的車緊緊相鄰。', options: ['The purple car is next to the black car.','The purple car is behind the black car.','The purple car is in front of the black car.','The purple car is between two black cars.'], correct: 0 }
+        ];
+        // 隨機抽取 10 題
+        const indices = Array.from({ length: readingQuestions.length }, (_, i) => i);
+        shuffle(indices);
+        const chosen = indices.slice(0, 10);
+        const generated = [];
+        chosen.forEach(i => {
+            const item = readingQuestions[i];
+            const opts = item.options.slice();
+            shuffle(opts);
+            const correctIndex = opts.indexOf(item.options[item.correct]);
+            generated.push({ question: item.question, options: opts, correct: correctIndex, type: 'choice', audioWord: null });
+        });
+        return generated;
+    }
+
+    // 開始測驗，根據 sectionId 決定題庫
+    function startQuiz(sectionId) {
+        currentSection = sectionId;
+        // 根據不同分類生成題目
+        if (sectionId === 'vocab') {
+            questions = generateQuestions();
+            document.getElementById('sectionTitle').textContent = '單字練習';
+            // 隱藏閱讀文本
+            document.getElementById('readingText').style.display = 'none';
+        } else if (sectionId === 'sentences') {
+            questions = generateSentenceQuestions();
+            document.getElementById('sectionTitle').textContent = '句型練習';
+            document.getElementById('readingText').style.display = 'none';
+        } else if (sectionId === 'grammar') {
+            questions = generateGrammarQuestions();
+            document.getElementById('sectionTitle').textContent = '文法練習';
+            document.getElementById('readingText').style.display = 'none';
+        } else if (sectionId === 'explore') {
+            questions = generateExploreQuestions();
+            document.getElementById('sectionTitle').textContent = '語法探索';
+            document.getElementById('readingText').style.display = 'none';
+        } else if (sectionId === 'prepositions') {
+            questions = generatePrepositionQuestions();
+            document.getElementById('sectionTitle').textContent = '介系詞練習';
+            document.getElementById('readingText').style.display = 'none';
+        } else if (sectionId === 'reading') {
+            questions = generateReadingQuestions();
+            document.getElementById('sectionTitle').textContent = '課文閱讀';
+            // 顯示閱讀文本
+            document.getElementById('readingText').style.display = 'block';
+        } else {
+            // 預設使用單字題庫
+            questions = generateQuestions();
+            document.getElementById('sectionTitle').textContent = '';
+            document.getElementById('readingText').style.display = 'none';
+        }
+        // 重置狀態
+        currentQuestion = 0;
+        score = 0;
+        seconds = 0;
+        wrongAnswers.length = 0;
+        // 顯示測驗區域，隱藏其他區域
+        document.getElementById('section-section').style.display = 'none';
+        document.getElementById('history-section').style.display = 'none';
+        document.getElementById('quiz-section').style.display = 'block';
+        // 顯示按鈕狀態
+        document.getElementById('submitBtn').style.display = 'inline-block';
+        document.getElementById('submitBtn').disabled = false;
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('restartBtn').style.display = 'none';
+        document.getElementById('result').textContent = '';
+        document.getElementById('wrong-list').style.display = 'none';
+        // 顯示計時
+        document.getElementById('timer').style.display = '';
+        document.getElementById('progress').style.display = '';
+        // 開始計時
+        startTimer();
+        // 載入第一題
+        loadQuestion(currentQuestion);
+    }
+
+    // 載入單題
+    function loadQuestion(index) {
+        const q = questions[index];
+        document.getElementById('result').textContent = '';
+        // 顯示題目文本
+        document.getElementById('question').textContent = `${index + 1}. ${q.question}`;
+        const optionsEl = document.getElementById('options');
         optionsEl.innerHTML = '';
+        const audioBtn = document.getElementById('audioBtn');
+        // 若為音訊題目，自動播放發音，並顯示重播按鈕
+        if (q.type === 'audio' && q.audioWord) {
+            speak(q.audioWord);
+            audioBtn.style.display = 'inline-block';
+            audioBtn.onclick = () => speak(q.audioWord);
+        } else {
+            audioBtn.style.display = 'none';
+            audioBtn.onclick = null;
+        }
         q.options.forEach((option, i) => {
             const li = document.createElement('li');
             const label = document.createElement('label');
@@ -1054,13 +757,13 @@
             li.appendChild(label);
             optionsEl.appendChild(li);
         });
-        // 按鈕狀態
-        submitBtn.disabled = false;
-        nextBtn.style.display = 'none';
+        document.getElementById('submitBtn').disabled = false;
+        document.getElementById('nextBtn').style.display = 'none';
         // 更新進度顯示
-        progressEl.textContent = `第 ${index + 1} / ${questions.length} 題`;
+        document.getElementById('progress').textContent = `第 ${index + 1} / ${questions.length} 題`;
     }
 
+    // 檢查答案
     function checkAnswer() {
         const selected = document.querySelector('input[name="option"]:checked');
         if (!selected) {
@@ -1068,368 +771,205 @@
             return;
         }
         const answer = parseInt(selected.value);
-        const correct = questions[currentQuestion].correct;
-        if (answer === correct) {
+        const q = questions[currentQuestion];
+        const correctIndex = q.correct;
+        const resultEl = document.getElementById('result');
+        if (answer === correctIndex) {
             score++;
             resultEl.style.color = '#2ecc71';
             resultEl.textContent = '回答正確！';
         } else {
             resultEl.style.color = '#e74c3c';
-            const correctText = questions[currentQuestion].options[correct];
+            const correctText = q.options[correctIndex];
             resultEl.textContent = `答錯了！正確答案是：${correctText}`;
-            // 記錄錯誤題目
             wrongAnswers.push({
-                question: questions[currentQuestion].question,
+                question: q.question,
                 correctAnswer: correctText,
-                userAnswer: questions[currentQuestion].options[answer]
+                userAnswer: q.options[answer]
             });
         }
-        submitBtn.disabled = true;
-        // 若還有下一題顯示下一題按鈕，否則顯示重試按鈕
+        document.getElementById('submitBtn').disabled = true;
+        // 判斷是否還有下一題
         if (currentQuestion < questions.length - 1) {
-            nextBtn.style.display = 'inline-block';
+            document.getElementById('nextBtn').style.display = 'inline-block';
         } else {
             showFinalResult();
         }
     }
 
+    // 下一題
     function nextQuestion() {
         currentQuestion++;
-        loadQuestion(currentQuestion);
+        if (currentQuestion < questions.length) {
+            loadQuestion(currentQuestion);
+        }
     }
 
+    // 顯示最終結果
     function showFinalResult() {
-        // 隱藏題目和按鈕
-        questionEl.style.display = 'none';
-        optionsEl.style.display = 'none';
-        submitBtn.style.display = 'none';
-        nextBtn.style.display = 'none';
-        // 停止計時
         stopTimer();
-        // 顯示分數與時間
-        const totalTime = formatTime(seconds);
-        resultEl.style.color = '#34495e';
-        resultEl.innerHTML = `您答對了 ${score} 題，共 ${questions.length} 題。<br/>總完成時間：${totalTime}`;
-        // 顯示錯誤題目列表
+        const resultEl = document.getElementById('result');
+        resultEl.style.color = '#333';
+        resultEl.innerHTML = `你答對了 ${score} 題，總共 ${questions.length} 題。<br>總用時：${formatTime(seconds)}`;
+        // 顯示錯誤清單
+        const wrongListEl = document.getElementById('wrong-list');
+        wrongListEl.innerHTML = '';
         if (wrongAnswers.length > 0) {
-            wrongListContainer.style.display = 'block';
-            wrongListContainer.innerHTML = '<h3>需要複習的題目：</h3>';
+            wrongListEl.style.display = 'block';
+            const h3 = document.createElement('h3');
+            h3.textContent = '錯誤題目';
+            wrongListEl.appendChild(h3);
             const ul = document.createElement('ul');
             wrongAnswers.forEach(item => {
                 const li = document.createElement('li');
-                li.textContent = `${item.question} → 正確答案：${item.correctAnswer}`;
+                li.textContent = `${item.question} 正確答案：${item.correctAnswer}；你的答案：${item.userAnswer}`;
                 ul.appendChild(li);
             });
-            wrongListContainer.appendChild(ul);
+            wrongListEl.appendChild(ul);
         } else {
-            wrongListContainer.style.display = 'block';
-            wrongListContainer.innerHTML = '<h3>全部答對，太棒了！</h3>';
+            wrongListEl.style.display = 'none';
         }
-        // 隱藏進度與計時器
-        progressEl.style.display = 'none';
-        timerEl.style.display = 'none';
-        // 隱藏文章
-        articleContainer.style.display = 'none';
-        // 顯示重新開始按鈕
-        restartBtn.style.display = 'block';
-        // 儲存結果至歷史紀錄
-        const scorePercent = questions.length ? Math.round((score / questions.length) * 100) : 0;
-        const recordData = {
-            timestamp: new Date().toLocaleString('zh-Hant', { hour12: false }),
-            totalTime: totalTime,
-            correct: score,
+        // 記錄歷史
+        history.push({
+            date: new Date().toLocaleString('zh-TW', { hour12: false }),
+            score: score,
             total: questions.length,
-            wrongCount: wrongAnswers.length,
-            section: currentSection,
-            scorePercent: scorePercent,
-            wrongList: wrongAnswers.slice()
-        };
-        saveResult(recordData);
-        // 準備下一階段按鈕
-        prepareNextSection(currentSectionId);
-    }
-
-    function restartQuiz() {
-        // 停止上一個計時器，避免疊加導致時間跑太快
-        stopTimer();
-        currentQuestion = 0;
-        score = 0;
-        seconds = 0;
-        wrongAnswers.length = 0;
-        questionEl.style.display = '';
-        optionsEl.style.display = '';
-        submitBtn.style.display = '';
-        // 重置進度與計時器
-        progressEl.style.display = '';
-        timerEl.style.display = '';
-        // 隱藏重新開始按鈕與錯誤列表
-        restartBtn.style.display = 'none';
-        wrongListContainer.style.display = 'none';
-        // 洗牌題目順序
-        shuffleArray(questions);
-        // 開始計時
-        startTimer();
-        loadQuestion(currentQuestion);
-    }
-
-    // 洗牌函式：每次測驗開始前重新排列題目順序
-    function shuffleArray(arr) {
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-    }
-    // 亂數排列單一題目的選項，並調整正確答案索引
-    function shuffleOptionsForQuestion(q) {
-        if (!q.options || q.options.length === 0) return;
-        const pairs = q.options.map((opt, idx) => ({ opt: opt, isCorrect: idx === q.correct }));
-        shuffleArray(pairs);
-        q.options = pairs.map(p => p.opt);
-        q.correct = pairs.findIndex(p => p.isCorrect);
-    }
-
-    // 儲存結果至 localStorage
-    function saveResult(record) {
-        const history = JSON.parse(localStorage.getItem('quizHistory2') || '[]');
-        history.push(record);
-        localStorage.setItem('quizHistory2', JSON.stringify(history));
-    }
-    // 渲染歷史紀錄
-    function renderHistory() {
-        const history = JSON.parse(localStorage.getItem('quizHistory2') || '[]');
-        if (history.length === 0) {
-            historyContainer.innerHTML = '<p>尚無紀錄，完成測驗後即可在此查看成績。</p>';
-            return;
-        }
-        // 建立表格
-        let html = '<table>';
-        html += '<thead><tr><th>日期時間</th><th>段落</th><th>完成時間</th><th>分數</th><th>正確/總題數</th><th>錯誤題數</th><th>錯誤詳情</th></tr></thead>';
-        html += '<tbody>';
-        history.forEach((record, idx) => {
-            const scoreDisplay = record.scorePercent !== undefined ? record.scorePercent + '%' : `${record.correct} / ${record.total}`;
-            html += `<tr>`;
-            html += `<td>${record.timestamp}</td>`;
-            html += `<td>${record.section}</td>`;
-            html += `<td>${record.totalTime}</td>`;
-            html += `<td>${scoreDisplay}</td>`;
-            html += `<td>${record.correct} / ${record.total}</td>`;
-            html += `<td>${record.wrongCount}</td>`;
-            html += `<td>`;
-            if (record.wrongList && record.wrongList.length > 0) {
-                html += `<button class="view-wrong" data-index="${idx}" style="padding:5px 10px; border-radius:4px; background-color:var(--accent-color); color:#fff; border:none; cursor:pointer;">查看</button>`;
-            } else {
-                html += '-';
-            }
-            html += `</td>`;
-            html += `</tr>`;
+            time: formatTime(seconds),
+            wrong: wrongAnswers.slice()
         });
-        html += '</tbody></table>';
-        historyContainer.innerHTML = html;
-        // 為每個查看按鈕添加事件監聽
-        const viewBtns = historyContainer.querySelectorAll('.view-wrong');
-        viewBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.getAttribute('data-index'));
-                showWrongDetails(index);
-            });
-        });
-    }
-
-    // 顯示測驗區域
-    function showQuiz() {
-        quizSection.style.display = 'block';
-        historySection.style.display = 'none';
-        sectionSection.style.display = 'none';
-    }
-    // 顯示歷史紀錄區域
-    function showHistory() {
-        quizSection.style.display = 'none';
-        historySection.style.display = 'block';
-        sectionSection.style.display = 'none';
-        renderHistory();
-        // 更新導覽列的活動狀態
-        historyTab.classList.add('active');
-        quizTab.classList.remove('active');
-        // 清空標題與下一階段按鈕
-        sectionTitleEl.textContent = '';
-        nextSectionBtn.style.display = 'none';
-        nextSectionBtn.dataset.section = '';
-    }
-    // 顯示段落選擇區域
-    function showSectionSelection() {
-        quizSection.style.display = 'none';
-        historySection.style.display = 'none';
-        sectionSection.style.display = 'block';
-        // 更新導覽列的活動狀態：顯示練習選單當前頁
-        quizTab.classList.add('active');
-        historyTab.classList.remove('active');
-        // 清除標題並隱藏下一階段按鈕
-        sectionTitleEl.textContent = '';
-        nextSectionBtn.style.display = 'none';
-        nextSectionBtn.dataset.section = '';
-    }
-
-    // 開始指定段落的測驗
-    function startSection(sectionId) {
-        // 記錄當前段落
-        currentSection = sectionId;
-        currentSectionId = sectionId;
-        // 設定標題並隱藏下一階段按鈕
-        setSectionTitle(sectionId);
-        nextSectionBtn.style.display = 'none';
-        nextSectionBtn.dataset.section = '';
-        // 若先前有計時器在運行，先行停止
-        stopTimer();
-        seconds = 0;
-        // 依照段落類型準備題目
-        if (sectionId === 'reading2') {
-            // 閱讀練習：隨機生成文章並使用其中的題目
-            const article = generateRandomReading();
-            articleContainer.innerHTML = `<h3>${article.title}</h3><p>${article.text}</p>`;
-            articleContainer.style.display = 'block';
-            questions = (article.questions || []).slice();
-        } else if (sectionId === 'vocab2') {
-            // 字彙練習：動態生成字彙題目，每次取 8 題
-            questions = generateVocabQuestions(8);
-            articleContainer.style.display = 'none';
-        } else if (sectionId === 'grammar2') {
-            // 文法練習：動態生成文法題目，每次取 8 題
-            questions = generateGrammarQuestions(8);
-            articleContainer.style.display = 'none';
-        } else {
-            // 其他段落：從固定題庫中隨機挑選一部分，避免題目重複
-            const baseQuestions = sectionQuestions[sectionId] || [];
-            let count = baseQuestions.length;
-            // 根據不同段落設定欲抽取的題數
-            if (sectionId === 'sounds2') count = Math.min(8, baseQuestions.length);
-            else if (sectionId === 'jobs') count = Math.min(6, baseQuestions.length);
-            else if (sectionId === 'family') count = Math.min(6, baseQuestions.length);
-            else if (sectionId === 'dialogue2') count = Math.min(6, baseQuestions.length);
-            questions = sampleArray(baseQuestions, count).slice();
-            articleContainer.style.display = 'none';
-        }
-        // 對題目亂序處理，避免固定順序導致死背
-        shuffleArray(questions);
-        // 隨機排列每題的選項位置，讓正確答案不總在第一個
-        questions.forEach(q => shuffleOptionsForQuestion(q));
-        // 重置測驗狀態與計分計時器
-        currentQuestion = 0;
-        score = 0;
-        seconds = 0;
-        wrongAnswers.length = 0;
-        // 顯示測驗介面並開始計時
-        showQuiz();
-        startTimer();
-        progressEl.style.display = '';
-        timerEl.style.display = '';
-        restartBtn.style.display = 'none';
-        questionEl.style.display = '';
-        optionsEl.style.display = '';
-        submitBtn.style.display = '';
-        loadQuestion(currentQuestion);
+        // 顯示重試按鈕
+        document.getElementById('restartBtn').style.display = 'block';
+        document.getElementById('submitBtn').style.display = 'none';
+        document.getElementById('nextBtn').style.display = 'none';
     }
 
     // 開始計時
     function startTimer() {
-        // 若已有舊的計時器運作，先清除避免疊加
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        }
-        // 記錄起始時間
-        startTime = Date.now();
-        timerEl.textContent = '已用時間：00:00';
-        // 使用 setInterval 每秒更新顯示的已用時間
+        clearInterval(timerInterval);
         timerInterval = setInterval(() => {
-            const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            timerEl.textContent = '已用時間：' + formatTime(elapsed);
+            seconds++;
+            document.getElementById('timer').textContent = `已用時間：${formatTime(seconds)}`;
         }, 1000);
     }
+
+    // 停止計時
     function stopTimer() {
-        // 停止計時器並計算結束時的秒數
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        }
-        if (startTime) {
-            seconds = Math.floor((Date.now() - startTime) / 1000);
-        }
+        clearInterval(timerInterval);
     }
+
+    // 格式化時間
     function formatTime(sec) {
-        const m = Math.floor(sec / 60).toString().padStart(2, '0');
-        const s = (sec % 60).toString().padStart(2, '0');
-        return `${m}:${s}`;
+        const mins = Math.floor(sec / 60).toString().padStart(2, '0');
+        const secs = (sec % 60).toString().padStart(2, '0');
+        return `${mins}:${secs}`;
     }
-    // 顯示錯誤詳情至模態視窗
-    function showWrongDetails(index) {
-        const history = JSON.parse(localStorage.getItem('quizHistory2') || '[]');
-        const record = history[index];
-        const modal = document.getElementById('wrongModal');
-        const detailsDiv = document.getElementById('wrongDetails');
-        if (!record || !record.wrongList || record.wrongList.length === 0) {
-            detailsDiv.innerHTML = '<p>沒有錯誤題目。</p>';
-        } else {
-            let html = '<h3>錯誤題目清單</h3><ul style="padding-left:18px;">';
-            record.wrongList.forEach(item => {
-                if (item.question) {
-                    html += `<li><strong>題目：</strong>${item.question}<br/><strong>你的答案：</strong>${item.userAnswer}<br/><strong>正確答案：</strong>${item.correctAnswer}</li>`;
-                }
+
+    // 使用瀏覽器語音 API 播放單字發音
+    function speak(word) {
+        try {
+            if ('speechSynthesis' in window) {
+                const utter = new SpeechSynthesisUtterance(word);
+                utter.lang = 'en-US';
+                window.speechSynthesis.speak(utter);
+            }
+        } catch (e) {
+            // 若瀏覽器不支援則忽略
+            console.warn('語音播放失敗：', e);
+        }
+    }
+
+    // 更新歷史紀錄顯示
+    function updateHistory() {
+        const container = document.getElementById('historyContainer');
+        if (history.length === 0) {
+            container.innerHTML = '<p>目前沒有紀錄。</p>';
+            return;
+        }
+        let html = '<table><tr><th>日期時間</th><th>分數</th><th>耗時</th><th>詳細錯誤</th></tr>';
+        history.forEach((item, idx) => {
+            html += `<tr><td>${item.date}</td><td>${item.score}/${item.total}</td><td>${item.time}</td><td><button onclick="showWrongDetails(${idx})">查看</button></td></tr>`;
+        });
+        html += '</table>';
+        container.innerHTML = html;
+    }
+
+    // 顯示某次測驗的錯誤詳情
+    window.showWrongDetails = function(index) {
+        const item = history[index];
+        let html = '<h3>錯誤題目詳情</h3><ul>';
+        item.wrong.forEach(w => {
+            html += `<li>${w.question} 正確答案：${w.correctAnswer}；你的答案：${w.userAnswer}</li>`;
+        });
+        html += '</ul>';
+        alert(html.replace(/<[^>]+>/g, ''));
+    };
+
+    // 切換到練習選單
+    function showSectionMenu() {
+        stopTimer();
+        document.getElementById('quiz-section').style.display = 'none';
+        document.getElementById('history-section').style.display = 'none';
+        document.getElementById('section-section').style.display = 'block';
+        // 隱藏閱讀文本容器
+        document.getElementById('readingText').style.display = 'none';
+    }
+
+    // 切換到歷史紀錄
+    function showHistory() {
+        stopTimer();
+        document.getElementById('quiz-section').style.display = 'none';
+        document.getElementById('section-section').style.display = 'none';
+        document.getElementById('history-section').style.display = 'block';
+        updateHistory();
+        // 隱藏閱讀文本容器
+        document.getElementById('readingText').style.display = 'none';
+    }
+
+    // DOM 事件綁定
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('quizTab').addEventListener('click', (e) => {
+            e.preventDefault();
+            showSectionMenu();
+        });
+        document.getElementById('historyTab').addEventListener('click', (e) => {
+            e.preventDefault();
+            showHistory();
+        });
+        // 單字練習按鈕
+        const sectionButtons = document.querySelectorAll('.section-btn');
+        sectionButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const sectionId = btn.dataset.section || 'vocab';
+                startQuiz(sectionId);
             });
-            html += '</ul>';
-            detailsDiv.innerHTML = html;
-        }
-        modal.style.display = 'block';
-    }
-    // 關閉錯誤詳情模態視窗
-    function closeWrongModal() {
-        const modal = document.getElementById('wrongModal');
-        modal.style.display = 'none';
-    }
-    // 綁定關閉按鈕
-    document.getElementById('closeModal').addEventListener('click', closeWrongModal);
-    // 點擊遮罩區域也關閉
-    window.addEventListener('click', function(event) {
-        const modal = document.getElementById('wrongModal');
-        if (event.target === modal) {
-            closeWrongModal();
-        }
-    });
-    // 導覽列事件
-    quizTab.addEventListener('click', function(e) {
-        e.preventDefault();
-        showSectionSelection();
-    });
-    historyTab.addEventListener('click', function(e) {
-        e.preventDefault();
-        showHistory();
-    });
-    // 段落按鈕事件
-    const sectionButtons = document.querySelectorAll('.section-btn');
-    sectionButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const sectionId = this.getAttribute('data-section');
-            startSection(sectionId);
+        });
+        // 提交答案
+        document.getElementById('submitBtn').addEventListener('click', checkAnswer);
+        // 下一題
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            nextQuestion();
+        });
+        // 重新開始
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            showSectionMenu();
+        });
+
+        // 鍵盤 Enter 鍵觸發提交或下一題
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const submitBtn = document.getElementById('submitBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                // 若提交按鈕顯示且可用，執行提交
+                if (submitBtn.style.display !== 'none' && !submitBtn.disabled) {
+                    checkAnswer();
+                    e.preventDefault();
+                } else if (nextBtn.style.display !== 'none') {
+                    nextQuestion();
+                    e.preventDefault();
+                }
+            }
         });
     });
-
-    // 主要測驗按鈕事件綁定
-    // 當使用者點擊「確認答案」時，呼叫 checkAnswer 處理作答結果
-    submitBtn.addEventListener('click', checkAnswer);
-    // 點擊「下一題」則載入下一題目
-    nextBtn.addEventListener('click', nextQuestion);
-    // 點擊「重新開始」重新載入當前段落
-    restartBtn.addEventListener('click', restartQuiz);
-    // 下一階段按鈕：根據 data-section 屬性決定要開始哪個段落
-    nextSectionBtn.addEventListener('click', function() {
-        const target = this.dataset.section;
-        if (target) {
-            // 隱藏按鈕避免重複點擊
-            this.style.display = 'none';
-            startSection(target);
-        }
-    });
-    // 初始顯示段落選擇
-    showSectionSelection();
 </script>
 </body>
 </html>
