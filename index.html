@@ -2,6 +2,7 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dell の English Study</title>
     <style>
         :root {
@@ -17,19 +18,28 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             display: flex;
+            /* 調整 min-height，讓內容在手機上不會因為鍵盤彈出而跳動 */
+            min-height: 100vh;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            /* 在小螢幕上允許內容垂直滾動 */
+            padding: 20px 10px; /* 增加一點邊距 */
+            box-sizing: border-box; /* 確保 padding 不影響寬度計算 */
         }
         .container {
             text-align: center;
             background-color: #fff;
+            /* 調整 padding，在電腦版保持較大，手機版會通過 media query 調整 */
             padding: 40px 60px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            /* **重要RWD步驟 2: 設置最大寬度，確保內容不會撐滿超大螢幕** */
+            max-width: 900px; 
+            width: 100%; /* 確保在小螢幕上可以佔滿可用寬度 */
         }
         .header-icon {
-            width: 120px;
+            /* 稍微縮小圖示，使其更適合手機螢幕 */
+            width: 100px; 
             height: auto;
             margin-bottom: 15px;
         }
@@ -37,6 +47,8 @@
             margin-top: 0;
             margin-bottom: 10px;
             color: var(--primary-color);
+            /* 調整字體大小，使其在小螢幕上更協調 */
+            font-size: 2em; 
         }
         p {
             margin-top: 0;
@@ -44,10 +56,11 @@
             font-size: 1em;
             color: #555;
         }
+        /* 調整按鈕大小，使其在手機上更易點擊 */
         .btn {
             display: inline-block;
-            padding: 14px 28px;
-            font-size: 1em;
+            padding: 16px 32px; /* 增加 padding */
+            font-size: 1.1em; /* 略微放大字體 */
             color: #fff;
             background-color: var(--primary-color);
             border: none;
@@ -62,6 +75,7 @@
         /* links to units */
         .unit-links {
             margin-top: 20px;
+            /* 維持彈性佈局 */
             display: flex;
             justify-content: center;
             gap: 15px;
@@ -72,7 +86,12 @@
             border: 1px solid #e2e4e8;
             border-radius: 8px;
             padding: 20px;
-            width: 220px;
+            /* 設置卡片的基本寬度，在電腦版是 220px */
+            width: 220px; 
+            /* **重要RWD步驟 3: 確保卡片在縮小時仍有彈性** */
+            flex-grow: 1; 
+            flex-basis: 220px; 
+            max-width: 100%; /* 確保不會超過容器寬度 */
             text-align: center;
             transition: box-shadow 0.2s ease;
         }
@@ -83,6 +102,7 @@
             font-weight: 600;
             margin-bottom: 10px;
             color: var(--primary-color);
+            font-size: 1.1em; /* 稍微放大標題 */
         }
         .unit-desc {
             font-size: 0.9em;
@@ -91,21 +111,56 @@
         }
         .unit-link {
             display: inline-block;
-            padding: 8px 18px;
+            padding: 10px 20px; /* 增加點擊區域 */
             background-color: var(--accent-color);
             color: #fff;
             border-radius: 6px;
             text-decoration: none;
-            font-size: 0.9em;
+            font-size: 1em; /* 稍微放大字體 */
         }
         .unit-link:hover {
             background-color: #d78a09;
         }
+
+        /* **重要RWD步驟 4: 加入 Media Query 針對小螢幕 (例如手機)** */
+        @media (max-width: 600px) {
+            body {
+                /* 移除 flex 對齊，讓內容從頂部開始，在手機上更自然 */
+                align-items: flex-start; 
+                padding: 20px 15px; /* 增加左右邊距 */
+            }
+            .container {
+                /* 移除水平 padding 讓內容更寬 */
+                padding: 30px 20px; 
+                /* 確保在小螢幕上可以佔滿寬度 */
+                box-shadow: none; /* 在手機上可以移除陰影讓視覺更輕盈 */
+            }
+            h1 {
+                font-size: 1.8em; /* 稍微縮小標題 */
+            }
+            p {
+                font-size: 0.95em;
+            }
+            .unit-links {
+                /* 在小螢幕上讓卡片垂直排列 */
+                flex-direction: column; 
+                gap: 10px; /* 縮小垂直間距 */
+            }
+            .unit-card {
+                width: 100%; /* 卡片佔滿寬度 */
+                flex-basis: auto; /* 移除 flex-basis 限制 */
+            }
+            .unit-link {
+                 /* 讓按鈕在手機卡片內寬一點 */
+                width: 80%; 
+                max-width: 200px;
+            }
+        }
+        /* 針對中型螢幕 (例如平板) 可以進行更多優化，但基礎的 RWD 已完成 */
     </style>
 </head>
 <body>
 <div class="container">
-    <!-- 頁面標誌圖案 -->
     <img src="assets/book_icon.png" alt="English study icon" class="header-icon">
     <h1>Dell の English Study</h1>
     <p>歡迎來到英文學習網頁！請選擇以下單元開始練習。</p>
@@ -113,14 +168,11 @@
         <div class="unit-card">
             <div class="unit-title">第一課測驗</div>
             <div class="unit-desc">國一英文第一課單元題庫</div>
-            <!-- 根據實際檔案路徑更新連結 -->
             <a class="unit-link" href="EN_01_V2.html">開始練習</a>
         </div>
-        <!-- 其他單元預留卡片，可日後新增 -->
         <div class="unit-card">
             <div class="unit-title">第二課測驗</div>
             <div class="unit-desc">國一英文第二課單元題庫</div>
-            <!-- 新增第二課連結，指向第二課練習頁面 -->
             <a class="unit-link" href="EN_02.html">開始練習</a>
         </div>
     </div>
