@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>英文單字隨機測驗（70 字｜每回合 15 題）</title>
+<style>
+  :root{--brand:#2563eb;}
+  *{box-sizing:border-box}
+  body{font-family:"Noto Sans TC",system-ui,Arial;background:#f6f7fb;color:#222;margin:0}
+  header{padding:22px 16px;text-align:center;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+  h1{margin:0;color:var(--brand);font-size:22px}
+  #app{max-width:1000px;margin:18px auto;padding:16px}
+  .tabs{display:flex;gap:10px;justify-content:center;margin-bottom:12px}
+  .tab{padding:10px 14px;border-radius:999px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;color:#333}
+  .tab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .grid{display:grid;grid-template-columns:1fr 360px;gap:16px}
+  .card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+  .meta{display:flex;gap:10px;justify-content:center;margin-bottom:10px;color:#666;font-size:14px;flex-wrap:wrap}
+  .pill{border:1px solid #e5e7eb;padding:6px 10px;border-radius:999px;font-size:12px;color:#555}
+  .q-title{font-size:20px;margin:10px 0 14px;text-align:center}
+  .opts{display:grid;grid-template-columns:1fr;gap:10px}
+  .btn{border:0;border-radius:10px;padding:12px 14px;cursor:pointer;background:var(--brand);color:#fff;font-weight:700}
+  .btn.block{width:100%;text-align:left}
+  .btn.gray{background:#e5e7eb;color:#111}
+  .btn.danger{background:#dc2626}
+  .input{width:100%;font-size:18px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px}
+  .tip{margin-top:6px;color:#dc2626;font-weight:700;min-height:22px}
+  .feedback{margin-top:10px;font-weight:700;min-height:24px}
+  .ok{color:#16a34a}.bad{color:#dc2626}
+  footer{margin-top:14px;text-align:center;color:#777;font-size:12px}
+  .row{display:flex;gap:10px;margin-top:12px;justify-content:center;flex-wrap:wrap}
+
+  /* 歷史記錄 */
+  .table{width:100%;border-collapse:collapse}
+  .table th,.table td{border-bottom:1px solid #eef0f4;padding:10px 8px;text-align:center;font-size:14px}
+  .table th{background:#f9fafb;font-weight:700}
+  .muted{color:#666}
+  .pagination{display:flex;gap:8px;justify-content:center;margin-top:10px}
+  .hide{display:none !important}
+
+  /* Modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:14px}
+  .modal .panel{background:#fff;max-width:680px;width:100%;border-radius:12px;padding:16px;box-shadow:0 10px 24px rgba(0,0,0,.3)}
+  .panel h3{margin:0 0 10px}
+  .panel ul{margin:0;padding-left:18px;max-height:50vh;overflow:auto}
+</style>
+</head>
+<body>
+<header>
+  <h1>英文單字隨機測驗（70 字｜每回合 15 題）</h1>
+</header>
+
+<div id="app">
+  <div class="tabs">
+    <button class="tab active" id="tabQuiz">練習單字</button>
+    <button class="tab" id="tabHistory">歷史記錄</button>
+  </div>
+
+  <div class="grid" id="pageQuiz">
+    <!-- 左：測驗 -->
+    <div class="card">
+      <div class="meta">
+        <span class="pill" id="status">尚未開始</span>
+        <span class="pill" id="modePill">—</span>
+        <span class="pill">題型：選擇／填空／聽音／重組</span>
+      </div>
+
+      <div id="q" class="q-title">按「開始測驗」出第一題</div>
+
+      <div id="opts" class="opts"></div>
+
+      <div id="fillWrap" style="display:none;">
+        <input id="answer" class="input" placeholder="輸入英文答案…" autocomplete="off"/>
+        <div id="tip" class="tip"></div>
+      </div>
+
+      <div class="row">
+        <!-- 只保留兩個按鈕：下一步、試聽（僅聽音題出現） -->
+        <button id="primary" class="btn">開始測驗</button>
+        <button id="replay" class="btn gray" style="display:none;">🔊 試聽</button>
+      </div>
+
+      <div id="feedback" class="feedback"></div>
+      <footer>規則：每回合 15 題，從 70 題中隨機抽題、不重複；選項隨機排序；多字詞自動避開「重組」。</footer>
+    </div>
+
+    <!-- 右：本回合即時統計 -->
+    <div class="card">
+      <h3 style="margin-top:0">本回合統計</h3>
+      <div class="muted" id="statTime">用時：00:00</div>
+      <div class="muted" id="statScore">得分：0 / 15</div>
+      <div class="muted" id="statWrong">錯誤：0</div>
+      <div class="row" style="margin-top:16px;justify-content:flex-start">
+        <button class="btn gray" id="gotoHistory">查看歷史記錄</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 歷史記錄頁 -->
+  <div id="pageHistory" class="hide">
+    <div class="card">
+      <h3 style="margin:0 0 12px;">歷史記錄</h3>
+      <table class="table" id="historyTable">
+        <thead>
+          <tr>
+            <th>日期時間</th>
+            <th>段落</th>
+            <th>完成時間</th>
+            <th>分數</th>
+            <th>正確/總題數</th>
+            <th>錯誤題數</th>
+            <th>錯誤詳情</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="pagination">
+        <button class="btn gray" id="prevPage">上一頁</button>
+        <span class="muted" id="pageInfo">第 1 / 1 頁</span>
+        <button class="btn gray" id="nextPage">下一頁</button>
+        <button class="btn danger" id="clearHistory" title="清除所有歷史紀錄">清空紀錄</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 詳情 Modal -->
+<div class="modal" id="modal">
+  <div class="panel">
+    <h3>錯誤詳情</h3>
+    <ul id="detailList"></ul>
+    <div class="row" style="justify-content:flex-end">
+      <button class="btn gray" id="closeModal">關閉</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ====== 70 個單字 ====== */
+const VOCAB=[{ch:"英俊的",en:"handsome"},{ch:"新的",en:"new"},{ch:"同學",en:"classmate"},{ch:"年輕的",en:"young"},{ch:"女人",en:"woman"},{ch:"非常",en:"very"},{ch:"美麗的",en:"beautiful"},{ch:"也",en:"also"},{ch:"很高興認識你。",en:"nice to meet you",aliases:["pleased to meet you"]},{ch:"堂表兄弟姐妹",en:"cousins",aliases:["cousin"]},{ch:"真的",en:"really",aliases:["truly","indeed"]},{ch:"一歲",en:"one year old"},{ch:"我知道了。",en:"I see",aliases:["got it","I got it","I understand"]},{ch:"歌手",en:"singer"},{ch:"上班族",en:"office worker",aliases:["worker","employee","salaried worker"]},{ch:"家庭主婦",en:"housewife",aliases:["homemaker"]},{ch:"警察",en:"police officer",aliases:["policeman","police"]},{ch:"作家",en:"writer",aliases:["author"]},{ch:"叔伯；舅舅",en:"uncle"},{ch:"阿姨；姑姑",en:"aunt"},{ch:"妻子",en:"wife"},{ch:"女兒",en:"daughter"},{ch:"丈夫",en:"husband"},{ch:"兒子",en:"son"},{ch:"親愛的",en:"dear",aliases:["beloved"]},{ch:"家庭；家人",en:"family"},{ch:"國小",en:"elementary school",aliases:["primary school"]},{ch:"國中",en:"junior high school",aliases:["middle school"]},{ch:"嬰兒；年幼的",en:"baby",aliases:["infant","young"]},{ch:"看著",en:"watching",aliases:["looking at","staring at"]},{ch:"對…很珍貴",en:"precious to",aliases:["dear to","valuable to"]},{ch:"五口之家",en:"a family of five",aliases:["family of five"]},{ch:"55歲的作家",en:"a 55-year-old writer",aliases:["55-year-old writer"]},{ch:"一把傘",en:"an umbrella",aliases:["umbrella"]},{ch:"房子",en:"house",aliases:["home"]},{ch:"父母親",en:"parents"},{ch:"客廳",en:"living room"},{ch:"牆壁",en:"wall"},{ch:"紫色(的)",en:"purple"},{ch:"最喜愛(的)",en:"favorite",aliases:["favourite"]},{ch:"顏色",en:"color",aliases:["colour"]},{ch:"廚房",en:"kitchen"},{ch:"飯廳",en:"dining room"},{ch:"但是",en:"but"},{ch:"灰色(的)",en:"gray",aliases:["grey"]},{ch:"棕色(的)",en:"brown"},{ch:"餅乾",en:"cookies",aliases:["cookie","biscuits","biscuit"]},{ch:"老鼠（複數）",en:"mice"},{ch:"可能",en:"maybe",aliases:["perhaps","possible"]},{ch:"沙發",en:"sofa",aliases:["couch"]},{ch:"飽的",en:"full"},{ch:"筆記本",en:"notebook"},{ch:"記號筆；彩色筆",en:"marker",aliases:["felt pen","highlighter"]},{ch:"毛筆；筆刷",en:"brush",aliases:["paintbrush"]},{ch:"禮物",en:"gift",aliases:["present"]},{ch:"鉛筆盒",en:"pencil case"},{ch:"浴室；廁所",en:"bathroom",aliases:["restroom","toilet","washroom"]},{ch:"桌子",en:"table",aliases:["desk"]},{ch:"臥室",en:"bedroom"},{ch:"在；附近",en:"near",aliases:["nearby","close to"]},{ch:"在…之間",en:"between"},{ch:"在…後面",en:"behind"},{ch:"在…前面",en:"in front of"},{ch:"特別的",en:"special"},{ch:"在…裡面",en:"in",aliases:["inside"]},{ch:"就",en:"then",aliases:["just"]},{ch:"彼此；互相",en:"each other",aliases:["one another"]},{ch:"在…上方；在上方",en:"above",aliases:["over"]},{ch:"足夠(的)",en:"enough"},{ch:"人",en:"person",aliases:["human","people"]}]; // 70
+
+/* ====== 常數與工具 ====== */
+const ROUND_SIZE=15, PAGE_SIZE=10, LS_KEY="vocabHistoryV2"; // V2 防止舊版本衝突
+const $=s=>document.querySelector(s);
+const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+const norm=s=>(s||"").toLowerCase().replace(/[’'"]/g,"'").replace(/[-–—]/g,"-").replace(/[^a-z0-9\s-]/g,"").replace(/\s+/g," ").trim();
+const fmt=n=>n.toString().padStart(2,"0");
+
+/* ====== 測驗狀態 ====== */
+let roundIndices=[],pos=0,cur=null,mode="",utter=null;
+let startTs=0, correct=0, wrong=0, wrongList=[];
+
+/* ====== Tab 切換 ====== */
+function switchTab(which){
+  if(which==="quiz"){
+    $("#tabQuiz").classList.add("active"); $("#tabHistory").classList.remove("active");
+    $("#pageQuiz").classList.remove("hide"); $("#pageHistory").classList.add("hide");
+  }else{
+    $("#tabHistory").classList.add("active"); $("#tabQuiz").classList.remove("active");
+    $("#pageHistory").classList.remove("hide"); $("#pageQuiz").classList.add("hide");
+    renderHistory();
+  }
+}
+$("#tabQuiz").onclick=()=>switchTab("quiz");
+$("#tabHistory").onclick=()=>switchTab("history");
+$("#gotoHistory").onclick=()=>switchTab("history");
+
+/* ====== 回合控制 ====== */
+function startRound(){
+  const all=[...Array(VOCAB.length).keys()];
+  roundIndices=shuffle(all).slice(0,ROUND_SIZE);
+  pos=0; correct=0; wrong=0; wrongList=[]; startTs=Date.now();
+  $("#feedback").textContent=""; $("#statScore").textContent=`得分：0 / ${ROUND_SIZE}`; $("#statWrong").textContent=`錯誤：0`; $("#statTime").textContent=`用時：00:00`;
+  tickTimer();
+  nextQ();
+}
+
+let timerId=null;
+function tickTimer(){
+  clearInterval(timerId);
+  timerId=setInterval(()=>{
+    if(!startTs) return;
+    const sec=Math.floor((Date.now()-startTs)/1000);
+    $("#statTime").textContent=`用時：${fmt(Math.floor(sec/60))}:${fmt(sec%60)}`;
+  },500);
+}
+
+function updateHeader(){
+  $("#status").textContent=`第 ${pos+1} / ${ROUND_SIZE} 題`;
+  $("#modePill").textContent="題型："+({choice:"選擇",fill:"填空",audio:"聽音",jumble:"重組"})[mode];
+}
+
+/* ====== 題目生成 ====== */
+function canJumble(word){return /^[a-zA-Z]+$/.test(word);}
+function nextQ(){
+  if(pos>=ROUND_SIZE){ return endRound(); }
+
+  $("#feedback").textContent=""; $("#tip").textContent=""; $("#answer").value=""; $("#opts").innerHTML="";
+  cur=VOCAB[ roundIndices[pos] ];
+  const types=["choice","fill","audio","jumble"].filter(t=>t!=="jumble"||canJumble(cur.en.replace(/\s/g,"")));
+  mode=types[rnd(types.length)];
+  updateHeader();
+
+  $("#fillWrap").style.display="none"; $("#replay").style.display="none";
+  $("#primary").textContent=(pos===0 && $("#status").textContent==="尚未開始")?"開始測驗":"下一步";
+
+  if(mode==="choice"){
+    $("#q").textContent=`請選出「${cur.ch}」的英文：`;
+    const opts=new Set([cur.en]);
+    while(opts.size<4){ const c=VOCAB[rnd(VOCAB.length)].en; if(!opts.has(c)) opts.add(c); }
+    shuffle([...opts]).forEach(o=>{
+      const b=document.createElement("button");
+      b.className="btn block";
+      b.textContent=o;
+      b.onclick=()=>submitAnswer(o);
+      $("#opts").appendChild(b);
+    });
+  }else if(mode==="fill"){
+    $("#q").textContent=`請翻譯：「${cur.ch}」`;
+    $("#fillWrap").style.display="block"; $("#primary").textContent="下一步";
+  }else if(mode==="jumble"){
+    $("#q").textContent=`請把字母重組為「${cur.ch}」的英文：`;
+    const letters=shuffle(cur.en.split("")).join(" ");
+    const p=document.createElement("div"); p.style.fontSize="22px"; p.style.letterSpacing="2px"; p.style.margin="6px 0 12px"; p.textContent=letters;
+    $("#opts").appendChild(p);
+    $("#fillWrap").style.display="block"; $("#primary").textContent="下一步";
+  }else if(mode==="audio"){
+    $("#q").textContent=`請聽發音，寫出單字（提示：${cur.ch}）`;
+    $("#fillWrap").style.display="block"; $("#replay").style.display="inline-block"; speak(cur.en);
+  }
+}
+
+/* ====== 發音 ====== */
+function speak(text){
+  try{ if(utter){speechSynthesis.cancel();} utter=new SpeechSynthesisUtterance(text); utter.lang="en-US"; utter.rate=.95; speechSynthesis.speak(utter);}catch(e){}
+}
+
+/* ====== 判題流程 ====== */
+function isCorrect(ans){
+  const a=norm(ans), gold=norm(cur.en);
+  if(a===gold) return true;
+  const al=(cur.aliases||[]).map(norm);
+  return al.includes(a);
+}
+
+function submitAnswer(valueFromChoice=null){
+  if(mode!=="choice"){
+    const val=$("#answer").value.trim();
+    if(!val){ $("#tip").textContent="請輸入答案，才能前往下一步。"; $("#answer").focus(); return; }
+    evaluate(val);
+  }else{
+    if(valueFromChoice==null){ $("#feedback").textContent="請點選一個選項作答。"; return; }
+    evaluate(valueFromChoice);
+  }
+}
+
+function evaluate(ans){
+  const ok=isCorrect(ans);
+  if(ok){ correct++; $("#feedback").innerHTML=`<span class="ok">✅ 正確！</span>`; }
+  else{
+    wrong++; wrongList.push({ch:cur.ch, correct:cur.en, your:ans});
+    $("#feedback").innerHTML=`<span class="bad">❌ 錯誤</span>，正確答案：<b>${cur.en}</b>`+(cur.aliases?`（也可：${cur.aliases.join(" / ")}）`:"");
+  }
+  $("#statScore").textContent=`得分：${correct} / ${ROUND_SIZE}`;
+  $("#statWrong").textContent=`錯誤：${wrong}`;
+  pos++; setTimeout(nextQ,900);
+}
+
+function endRound(){
+  clearInterval(timerId);
+  const elapsedSec=Math.max(1,Math.floor((Date.now()-startTs)/1000));
+  const percent=Math.round((correct/ROUND_SIZE)*100); // 百分制分數
+
+  const record={
+    id:Date.now(),
+    when:new Date().toLocaleString(),
+    stage:"單字",
+    time:`${fmt(Math.floor(elapsedSec/60))}:${fmt(elapsedSec%60)}`,
+    score:percent,                  // 儲存百分比
+    correct,total:ROUND_SIZE,wrong,
+    details:wrongList
+  };
+  saveHistory(record);
+
+  $("#q").textContent="本回合結束 🎉";
+  $("#opts").innerHTML="";
+  $("#fillWrap").style.display="none";
+  $("#feedback").innerHTML=`完成時間：<b>${record.time}</b>，分數：<b>${percent} 分</b>（${correct}/${ROUND_SIZE}）`;
+  $("#status").textContent="回合完成";
+  $("#primary").textContent="開始測驗";
+  $("#replay").style.display="none";
+}
+
+/* ====== 綁定主按鈕與鍵盤 ====== */
+$("#primary").onclick=()=>{
+  if(pos===0 && $("#status").textContent==="尚未開始"){ startRound(); return; }
+  if(pos>=ROUND_SIZE){ startRound(); return; }
+  if(mode==="choice"){ $("#feedback").textContent="請點選一個選項作答。"; }
+  else{ submitAnswer(); }
+};
+$("#replay").onclick=()=>speak(cur?.en||"");
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter" && $("#fillWrap").style.display!=="none"){ submitAnswer(); }
+});
+
+/* ====== 歷史（localStorage） ====== */
+function getHistory(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)||"[]"); }catch{ return []; } }
+function saveHistory(rec){
+  const list=getHistory(); list.unshift(rec);
+  localStorage.setItem(LS_KEY,JSON.stringify(list));
+}
+
+let currentPage=1;
+function renderHistory(page=1){
+  const list=getHistory(); const totalPages=Math.max(1,Math.ceil(list.length/PAGE_SIZE));
+  currentPage=Math.min(Math.max(1,page),totalPages);
+  $("#pageInfo").textContent=`第 ${currentPage} / ${totalPages} 頁`;
+
+  const tbody=$("#historyTable tbody"); tbody.innerHTML="";
+  const start=(currentPage-1)*PAGE_SIZE, end=start+PAGE_SIZE;
+  list.slice(start,end).forEach(rec=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${rec.when}</td>
+      <td>${rec.stage}</td>
+      <td>${rec.time}</td>
+      <td>${rec.score} 分</td>
+      <td>${rec.correct} / ${rec.total}</td>
+      <td>${rec.wrong}</td>
+      <td><button class="btn gray" data-id="${rec.id}">查看</button></td>`;
+    tbody.appendChild(tr);
+  });
+
+  // 查看詳情
+  tbody.querySelectorAll("button[data-id]").forEach(btn=>{
+    btn.onclick=()=>{
+      const id=Number(btn.getAttribute("data-id"));
+      const rec=getHistory().find(r=>r.id===id);
+      const listEl=$("#detailList"); listEl.innerHTML="";
+      if(!rec || !rec.details || rec.details.length===0){
+        listEl.innerHTML="<li>沒有錯誤題目。</li>";
+      }else{
+        rec.details.forEach((d,i)=>{
+          const li=document.createElement("li");
+          li.innerHTML=`第 ${i+1} 題｜<b>${d.ch}</b>｜你的答案：<code>${d.your||"(空白)"}</code>｜正解：<b>${d.correct}</b>`;
+          listEl.appendChild(li);
+        });
+      }
+      $("#modal").style.display="flex";
+    };
+  });
+}
+$("#prevPage").onclick=()=>renderHistory(currentPage-1);
+$("#nextPage").onclick=()=>renderHistory(currentPage+1);
+$("#clearHistory").onclick=()=>{
+  if(confirm("確定要清空所有歷史記錄嗎？")){ localStorage.removeItem(LS_KEY); renderHistory(1); }
+};
+$("#closeModal").onclick=()=>$("#modal").style.display="none";
+$("#modal").addEventListener("click",e=>{ if(e.target.id==="modal") $("#modal").style.display="none"; });
+
+/* 初始狀態 */
+$("#status").textContent="尚未開始";
+</script>
+</body>
+</html>
