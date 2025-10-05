@@ -8,7 +8,41 @@
   :root{--brand:#2563eb;}
   *{box-sizing:border-box}
   body{font-family:"Noto Sans TC",system-ui,Arial;background:#f6f7fb;color:#222;margin:0}
-  header{padding:22px 16px;text-align:center;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+  
+  /* --- 新增：返回選單按鈕樣式 --- */
+  header{
+    padding:22px 16px;
+    text-align:center;
+    background:#fff;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    position:relative; /* 讓絕對定位的連結能參考 */
+  }
+  .back-to-menu{
+    position:absolute; /* 浮動在左側 */
+    left:16px;
+    top:50%;
+    transform:translateY(-50%);
+    text-decoration:none;
+    color:#555;
+    font-size:16px;
+    font-weight:600;
+    padding:6px 8px; /* 增加點擊區域 */
+    border-radius:6px;
+    transition:color 0.2s, background 0.2s;
+  }
+  .back-to-menu:hover{
+    color:var(--brand);
+    background:#f0f0f0;
+  }
+  /* 手機調整 */
+  @media (max-width: 600px) {
+    .back-to-menu {
+      left: 10px;
+      font-size: 14px;
+    }
+  }
+  /* ------------------------------ */
+
   h1{margin:0;color:var(--brand);font-size:22px}
   #app{max-width:1000px;margin:18px auto;padding:16px}
   .tabs{display:flex;gap:10px;justify-content:center;margin-bottom:12px}
@@ -48,6 +82,9 @@
 </head>
 <body>
 <header>
+  <a href="index.html" class="back-to-menu">
+      &lt; 返回選單
+  </a>
   <h1>英文單字隨機測驗（70 字｜每回合 15 題）</h1>
 </header>
 
@@ -58,7 +95,6 @@
   </div>
 
   <div class="grid" id="pageQuiz">
-    <!-- 左：測驗 -->
     <div class="card">
       <div class="meta">
         <span class="pill" id="status">尚未開始</span>
@@ -76,7 +112,6 @@
       </div>
 
       <div class="row">
-        <!-- 只保留兩個按鈕：下一步、試聽（僅聽音題出現） -->
         <button id="primary" class="btn">開始測驗</button>
         <button id="replay" class="btn gray" style="display:none;">🔊 試聽</button>
       </div>
@@ -85,7 +120,6 @@
       <footer>規則：每回合 15 題，從 70 題中隨機抽題、不重複；選項隨機排序；多字詞自動避開「重組」。</footer>
     </div>
 
-    <!-- 右：本回合即時統計 -->
     <div class="card">
       <h3 style="margin-top:0">本回合統計</h3>
       <div class="muted" id="statTime">用時：00:00</div>
@@ -97,7 +131,6 @@
     </div>
   </div>
 
-  <!-- 歷史記錄頁 -->
   <div id="pageHistory" class="hide">
     <div class="card">
       <h3 style="margin:0 0 12px;">歷史記錄</h3>
@@ -125,7 +158,6 @@
   </div>
 </div>
 
-<!-- 詳情 Modal -->
 <div class="modal" id="modal">
   <div class="panel">
     <h3>錯誤詳情</h3>
