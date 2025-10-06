@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>國一英文｜第二課 評量測驗（隨機出題）</title>
+  <style>
+    :root{--primary:#4a90e2;--accent:#00b894;--bg:#f6f8fa;--card:#ffffff;--text:#222}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,"Noto Sans TC","PingFang TC",sans-serif;background:var(--bg);color:var(--text)}
+    header{position:sticky;top:0;background:linear-gradient(90deg,var(--primary),#7ec8ff);color:#fff;padding:16px 20px;z-index:10}
+    h1{font-size:22px;margin:0 0 6px}
+    .wrap{max-width:980px;margin:18px auto;padding:0 14px}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    a.btn,button{cursor:pointer;border:0;background:var(--primary);color:#fff;padding:10px 14px;border-radius:12px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.08);text-decoration:none}
+    button.secondary{background:#e9eef5;color:#1f3b57}
+    a.link{background:transparent;border:1px solid rgba(255,255,255,.6)}
+    .card{background:var(--card);border-radius:16px;box-shadow:0 10px 30px rgba(14,30,37,.06);padding:18px;margin:14px 0}
+    .question{margin:12px 0}
+    .q-title{font-weight:700;margin:0 0 8px}
+    .options{display:grid;grid-template-columns:repeat(1, minmax(0,1fr));gap:8px}
+    .opt{border:1px solid #e6ecf2;border-radius:12px;padding:10px;display:flex;gap:10px;align-items:center}
+    .opt input{transform:scale(1.15)}
+    .pill{display:inline-block;padding:.2em .65em;border-radius:999px;background:#eef6ff;color:#2b5fb8;font-size:12px;margin-left:6px}
+    .tag{font-size:12px;color:#6b7280;margin-left:6px}
+    .reading{background:#fff9ed;border:1px dashed #f2c97d}
+    .muted{opacity:.75}
+    .correct{background:#e6ffef;border-color:#07c168}
+    .wrong{background:#ffeef0;border-color:#f14668}
+    .ans{font-weight:700;color:#0a7a44}
+    .explain{font-size:13px;color:#425466}
+    footer{padding:30px 0 50px;color:#6b7280;text-align:center}
+    .score{font-size:18px;font-weight:800}
+    .flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .small{font-size:12px}
+    .section-title{font-weight:800;color:#1f3b57;margin-bottom:10px}
+    .ribbon{font-size:12px;background:var(--accent);color:#fff;padding:4px 8px;border-radius:999px}
+    .floating-submit{position:fixed;right:16px;bottom:16px}
+    @media(min-width:720px){.options{grid-template-columns:repeat(2, minmax(0,1fr));}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>國一英文｜第二課 隨機評量測驗</h1>
+    <div class="toolbar">
+      <a class="btn link" href="index.html">← 回首頁</a>
+      <button class="btn" id="btn-new">重新出題</button>
+      <span class="small">各題型 5 題（含閱讀）。題目與選項順序、正解皆隨機。</span>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="card" id="intro">
+      <div class="section-title">作答說明 <span class="pill">Unit 2</span></div>
+      <ol class="small">
+        <li>涵蓋題型：發音、文意字彙（教室物品）、文法（this/that/these/those、單複數、a/an、is/are、介系詞 in/on/under、whose）、對話選擇、閱讀理解。</li>
+        <li>按「送出並看分數」查看對錯與解析。</li>
+        <li>點「重新出題」即可換新題目與答案組合。</li>
+      </ol>
+    </div>
+
+    <div id="quiz"></div>
+    <div class="floating-submit"><button id="btn-submit">送出並看分數</button></div>
+    <div class="card" id="result" style="display:none"></div>
+  </div>
+  <footer class="small">© Unit 2 Randomized Quiz — classroom & everyday English.</footer>
+
+<script>
+const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+const sampleN=(a,n)=>shuffle(a).slice(0,Math.min(a.length,n));
+
+// ---------- 題庫 ----------
+// 1) 發音（找出畫線部分發音不同）
+const phonicsPool=[
+  {q:"找出畫線部分發音不同：<u>th</u>is / <u>th</u>at / <u>th</u>ink / <u>th</u>ese",opts:["this","that","think","these"],ans:2,explain:"think 的 th 發 /θ/，其餘為 /ð/."},
+  {q:"找出畫線部分發音不同：<u>c</u>at / <u>c</u>ity / <u>c</u>up / <u>c</u>ookie",opts:["cat","city","cup","cookie"],ans:1,explain:"city 的 c 發 /s/，其餘多為 /k/."},
+  {q:"找出畫線部分發音不同：wat<u>ch</u> / s<u>ch</u>ool / tea<u>ch</u>er / lun<u>ch</u>",opts:["watch","school","teacher","lunch"],ans:1,explain:"school 的 ch 發 /k/."},
+  {q:"找出畫線部分發音不同：p<u>e</u>n / d<u>e</u>sk / rul<u>e</u>r / er<u>a</u>ser",opts:["pen","desk","ruler","eraser"],ans:2,explain:"ruler 的元音為 /uː/，其餘為短母音。"},
+  {q:"找出畫線部分發音不同：b<u>oo</u>k / l<u>oo</u>k / n<u>o</u>tebook / f<u>oo</u>d",opts:["book","look","notebook","food"],ans:2,explain:"notebook 的 o 發 /oʊ/；book/look 為 /ʊ/，food 為 /uː/."}
+];
+
+// 2) 文意字彙（教室物品/校園）
+const vocabPool=[
+  {q:"Please open your _____ and turn to page 10.",opts:["book","ruler","chair","window"],ans:"book"},
+  {q:"I need an _____ to clean the board.",opts:["eraser","pencil","map","clock"],ans:"eraser"},
+  {q:"Put your bag under the _____, please.",opts:["desk","ceiling","wall","door"],ans:"desk"},
+  {q:"Miss Wu is our English _____.",opts:["teacher","police officer","cook","driver"],ans:"teacher"},
+  {q:"There is a world _____ on the wall.",opts:["map","ruler","notebook","marker"],ans:"map"}
+];
+
+// 3) 文法（this/that/these/those；單複數；a/an；介系詞；whose）
+const grammarPool=[
+  {q:"_____ is my pencil. (近處單數)",opts:["This","That","These","Those"],ans:"This"},
+  {q:"Are _____ your books? — Yes, they are.",opts:["these","this","that","it"],ans:"these"},
+  {q:"We have _____ apple and two bananas.",opts:["an","a","some","any"],ans:"an"},
+  {q:"The cat is _____ the desk.",opts:["under","at","to","from"],ans:"under"},
+  {q:"Whose bag is this? — It's _____.",opts:["Amy's","a Amy","Amy","of Amy"],ans:"Amy's"}
+];
+
+// 4) 對話選擇
+const dialoguePool=[
+  {q:"A: Is this your ruler?  B: _____.",opts:["No, it isn't. It's Tom's.","Yes, they are.","No, I'm not.","Yes, he is."],ans:0},
+  {q:"A: Where is my book?  B: _____.",opts:["It's on the desk.","They are pens.","I'm fine, thanks.","Yes, it is."],ans:0},
+  {q:"A: What's this in English?  B: _____.",opts:["It's a notebook.","They are pencils.","I'm a student.","Yes, I am."],ans:0},
+  {q:"A: Are those your markers?  B: _____.",opts:["Yes, they are.","Yes, it is.","No, he isn't.","No, she isn't."],ans:0},
+  {q:"A: Whose jacket is that?  B: _____.",opts:["It's Kevin's.","They're Kevin's.","Kevin is.","It Kevin."],ans:0}
+];
+
+// 5) 閱讀理解（2 個版本隨機，從中抽 5 題）
+const readingPool=[
+  {
+    title:"Lost and Found（失物招領）",
+    passage:`Welcome to the Lost and Found Box! We have three things today: a black pen, a blue notebook, and a red backpack. The pen is Amy's. The notebook isn't Ben's; it is Tom's. The backpack is under the chair. If these are yours, come to Room 203 after class. Mr. Lee is there from 1:30 to 2:00 p.m.`,
+    qs:[
+      {q:"What color is the backpack?",opts:["Red","Black","Blue","Green"],ans:0},
+      {q:"Whose notebook is it?",opts:["Tom's","Ben's","Amy's","Mr. Lee's"],ans:0},
+      {q:"Where is the backpack?",opts:["Under the chair","On the desk","In the box","Near the door"],ans:0},
+      {q:"When can students go to Room 203?",opts:["1:30–2:00 p.m.","7:30–8:00 a.m.","12:00–12:30 p.m.","After 5:00 p.m."],ans:0},
+      {q:"Which is true?",opts:["The pen is Amy's.","The notebook is Ben's.","The backpack is blue.","Mr. Lee is not in Room 203."],ans:0},
+      {q:"How many things are in the box?",opts:["Three","Two","Four","One"],ans:0}
+    ]
+  },
+  {
+    title:"Our Classroom（我們的教室）",
+    passage:`This is Class 701. There is a big map on the wall and a clock over the door. Miss Chen is our homeroom teacher. Her desk is near the window. Tom and Jenny sit by the door. There are thirty students in the class. The computers are on a long table at the back of the classroom.`,
+    qs:[
+      {q:"Where is the clock?",opts:["Over the door","On the teacher's desk","Under the table","By the window"],ans:0},
+      {q:"Who is the homeroom teacher?",opts:["Miss Chen","Mr. Lee","Miss Wu","Mr. Wang"],ans:0},
+      {q:"Where is the teacher's desk?",opts:["Near the window","At the back","By the door","In the middle"],ans:0},
+      {q:"How many students are there in Class 701?",opts:["Thirty","Thirteen","Twenty","Forty"],ans:0},
+      {q:"Where are the computers?",opts:["On a long table at the back","Under the chairs","In the teacher's office","On the wall"],ans:0},
+      {q:"Who sits by the door?",opts:["Tom and Jenny","Tom and Amy","Jenny and Ben","Ben and Amy"],ans:0}
+    ]
+  }
+];
+
+// ---------- 組卷 ----------
+function buildQuiz(){
+  const quizEl=document.getElementById('quiz');
+  document.getElementById('result').style.display='none';
+  quizEl.innerHTML='';
+
+  const chosen=[];
+  sampleN(phonicsPool,5).forEach(q=>chosen.push({...q,cat:'發音'}));
+  sampleN(vocabPool,5).forEach(q=>chosen.push({...q,cat:'文意字彙'}));
+  sampleN(grammarPool,5).forEach(q=>chosen.push({...q,cat:'文法'}));
+  sampleN(dialoguePool,5).forEach(q=>chosen.push({...q,cat:'對話'}));
+
+  shuffle(chosen).forEach((it,i)=>renderMC(quizEl,it,i+1));
+
+  // 閱讀
+  const reading=readingPool[rnd(readingPool.length)];
+  const rc=document.createElement('div');
+  rc.className='card reading';
+  rc.innerHTML=`<div class='flex'><div class='section-title'>閱讀理解｜${reading.title}</div><span class='ribbon'>文章與題目會變動</span></div><div class='muted' style='line-height:1.7'>${reading.passage}</div>`;
+  quizEl.appendChild(rc);
+
+  sampleN(reading.qs,5).forEach((q,i)=>{
+    renderMC(quizEl,{q:q.q,opts:q.opts,ans:q.ans,cat:'閱讀'},chosen.length+i+1);
+  });
+}
+
+function renderMC(root,item,no){
+  const ci=typeof item.ans==="number"?item.ans:item.opts.findIndex(o=>o===item.ans);
+  const optsS=shuffle(item.opts.map((t,i)=>({t,i})));const cv=optsS.find(x=>x.i===ci)?.t;
+  const c=document.createElement('div');c.className='card question';const qid=crypto.randomUUID();c.dataset.correct=cv;
+  c.innerHTML=`<div class='q-title'>${no}. [${item.cat}] ${item.q} ${item.explain?`<span class='tag'>（作答後顯示解析）</span>`:''}</div><div class='options'></div>`;
+  const box=c.querySelector('.options');
+  optsS.forEach((opt,j)=>{const row=document.createElement('label');row.className='opt';row.innerHTML=`<input type='radio' name='${qid}' value='${opt.t}'> ${String.fromCharCode(65+j)}. ${opt.t}`;box.appendChild(row);});
+  if(item.explain){const exp=document.createElement('div');exp.className='explain muted';exp.style.display='none';exp.textContent='解析：'+item.explain;c.appendChild(exp);} 
+  root.appendChild(c);
+}
+
+function grade(){
+  const cards=[...document.querySelectorAll('.question')];let correct=0;cards.forEach(c=>{const pick=c.querySelector('input:checked');const exp=c.querySelector('.explain');const val=c.dataset.correct;if(pick&&pick.value===val){c.classList.add('correct');correct++;}else{c.classList.add('wrong');}if(exp)exp.style.display='block';c.querySelectorAll('input').forEach(i=>i.disabled=true);const ans=document.createElement('div');ans.className='ans';ans.textContent='正確答案：'+val;c.appendChild(ans);});
+  const total=cards.length;const p=Math.round(correct/total*100);
+  const res=document.getElementById('result');res.style.display='block';res.innerHTML=`<div class='flex' style='justify-content:space-between;align-items:center'><div><div class='section-title'>測驗結果</div><div class='score'>得分：${correct}/${total}（${p}%）</div><div class='small muted'>提示：點「重新出題」會換一組新題。</div></div><button class='secondary' id='again'>再練一次</button></div>`;document.getElementById('again').onclick=()=>{buildQuiz();window.scrollTo({top:0,behavior:'smooth'});};
+}
+
+document.getElementById('btn-submit').onclick=grade;
+document.getElementById('btn-new').onclick=()=>{buildQuiz();window.scrollTo({top:0,behavior:'smooth'});};
+
+buildQuiz();
+</script>
+</body>
+</html>
