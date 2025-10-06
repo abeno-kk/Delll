@@ -1,174 +1,70 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dell の English Study</title>
-    <style>
-        :root {
-            --primary-color: #4a90e2;
-            --accent-color: #f39c12;
-            --bg-color: #f6f8fa;
-            --text-color: #333;
-        }
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            min-height: 100vh;
-            justify-content: center;
-            align-items: center;
-            padding: 20px 10px;
-            box-sizing: border-box;
-        }
-        .container {
-            text-align: center;
-            background-color: #fff;
-            padding: 40px 60px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            max-width: 900px; 
-            width: 100%;
-        }
-        .header-icon {
-            width: 100px; 
-            height: auto;
-            margin-bottom: 15px;
-        }
-        h1 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-            font-size: 2em; 
-        }
-        p {
-            margin-top: 0;
-            margin-bottom: 30px;
-            font-size: 1em;
-            color: #555;
-        }
-        .btn {
-            display: inline-block;
-            padding: 16px 32px;
-            font-size: 1.1em;
-            color: #fff;
-            background-color: var(--primary-color);
-            border: none;
-            border-radius: 6px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .btn:hover {
-            background-color: #357ab7;
-        }
-        /* 單元區塊 */
-        .unit-links {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .unit-card {
-            background-color: #fafafa;
-            border: 1px solid #e2e4e8;
-            border-radius: 8px;
-            padding: 20px;
-            width: 220px; 
-            flex-grow: 1; 
-            flex-basis: 220px; 
-            max-width: 100%;
-            text-align: center;
-            transition: box-shadow 0.2s ease;
-        }
-        .unit-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .unit-title {
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-            font-size: 1.1em;
-        }
-        .unit-desc {
-            font-size: 0.9em;
-            color: #666;
-            margin-bottom: 15px;
-        }
-        .unit-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: var(--accent-color);
-            color: #fff;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 1em;
-        }
-        .unit-link:hover {
-            background-color: #d78a09;
-        }
-
-        /* 手機 RWD */
-        @media (max-width: 600px) {
-            body {
-                align-items: flex-start; 
-                padding: 20px 15px;
-            }
-            .container {
-                padding: 30px 20px; 
-                box-shadow: none;
-            }
-            h1 {
-                font-size: 1.8em;
-            }
-            p {
-                font-size: 0.95em;
-            }
-            .unit-links {
-                flex-direction: column; 
-                gap: 10px;
-            }
-            .unit-card {
-                width: 100%;
-                flex-basis: auto;
-            }
-            .unit-link {
-                width: 80%; 
-                max-width: 200px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dell の English Study</title>
+  <style>
+    :root { --primary-color:#4a90e2; --accent-color:#f39c12; --bg-color:#f6f8fa; --text-color:#333; }
+    body{margin:0;padding:0;font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+         background-color:var(--bg-color);color:var(--text-color);display:flex;min-height:100vh;
+         justify-content:center;align-items:center;padding:20px 10px;box-sizing:border-box;}
+    .container{ text-align:center;background:#fff;padding:40px 60px;border-radius:12px;
+         box-shadow:0 4px 12px rgba(0,0,0,.08); max-width:900px; width:100%;}
+    .header-icon{ width:100px;height:auto;margin-bottom:15px;}
+    h1{ margin:0 0 10px; color:var(--primary-color); font-size:2em;}
+    p{ margin:0 0 30px; color:#555;}
+    .unit-links{ margin-top:20px; display:flex; justify-content:center; gap:15px; flex-wrap:wrap;}
+    .unit-card{ background:#fafafa; border:1px solid #e2e4e8; border-radius:8px; padding:20px;
+                width:220px; flex-grow:1; flex-basis:220px; text-align:center; transition:box-shadow .2s;}
+    .unit-card:hover{ box-shadow:0 4px 12px rgba(0,0,0,.1);}
+    .unit-title{ font-weight:600; margin-bottom:10px; color:var(--primary-color); font-size:1.1em;}
+    .unit-desc{ font-size:.9em; color:#666; margin-bottom:15px;}
+    .unit-link{ display:inline-block; padding:10px 20px; background:var(--accent-color); color:#fff;
+                border-radius:6px; text-decoration:none; font-size:1em;}
+    .unit-link:hover{ background:#d78a09;}
+    @media (max-width:600px){
+      body{ align-items:flex-start; padding:20px 15px;}
+      .container{ padding:30px 20px; box-shadow:none;}
+      h1{ font-size:1.8em;} p{ font-size:.95em;}
+      .unit-links{ flex-direction:column; gap:10px;}
+      .unit-card{ width:100%; flex-basis:auto;}
+      .unit-link{ width:80%; max-width:200px;}
+    }
+  </style>
 </head>
 <body>
-<div class="container">
+  <div class="container">
     <img src="assets/book_icon.png" alt="English study icon" class="header-icon">
     <h1>Dell の English Study</h1>
     <p>歡迎來到英文學習網頁！請選擇以下單元開始練習。</p>
 
     <div class="unit-links">
-        <div class="unit-card">
-            <div class="unit-title">第一課測驗</div>
-            <div class="unit-desc">國一英文第一課單元題庫</div>
-            <a class="unit-link" href="EN_01_V2.html">開始練習</a>
-        </div>
+      <div class="unit-card">
+        <div class="unit-title">第一課練習</div>
+        <div class="unit-desc">國一英文第一課單元題庫</div>
+        <a class="unit-link" href="EN_01_V2.html">開始練習</a>
+      </div>
 
-        <div class="unit-card">
-            <div class="unit-title">第二課測驗</div>
-            <div class="unit-desc">國一英文第二課單元題庫</div>
-            <a class="unit-link" href="EN_02.html">開始練習</a>
-        </div>
+      <div class="unit-card">
+        <div class="unit-title">第二課練習</div>
+        <div class="unit-desc">國一英文第二課單元題庫</div>
+        <a class="unit-link" href="EN_02.html">開始練習</a>
+      </div>
 
-        <!-- ✅ 新增：1–2課 單字練習 -->
-        <div class="unit-card">
-            <div class="unit-title">1–2課 單字練習</div>
-            <div class="unit-desc">第一、二課所有單字隨機練習（每回合 15 題）</div>
-            <a class="unit-link" href="word.html">開始練習</a>
-        </div>
+      <div class="unit-card">
+        <div class="unit-title">1–2課 單字練習</div>
+        <div class="unit-desc">第一、二課所有單字隨機練習（每回合 15 題）</div>
+        <a class="unit-link" href="word.html">開始練習</a>
+      </div>
+
+      <!-- ✅ 新增：第一課總評量 -->
+      <div class="unit-card">
+        <div class="unit-title">第一課「總評量」</div>
+        <div class="unit-desc">發音／字彙／文法／對話／閱讀 各5題（隨機抽題與答案）</div>
+        <a class="unit-link" href="unit_1_quiz_randomized.html">開始測驗</a>
+      </div>
     </div>
-</div>
+  </div>
 </body>
 </html>

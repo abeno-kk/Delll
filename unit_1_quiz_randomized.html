@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>國一英文｜第一課 評量測驗（隨機出題）</title>
+  <style>
+    :root{
+      --primary:#4a90e2;--accent:#00b894;--bg:#f6f8fa;--card:#ffffff;--text:#222;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,"Noto Sans TC","PingFang TC",sans-serif;background:var(--bg);color:var(--text)}
+    header{position:sticky;top:0;background:linear-gradient(90deg,var(--primary),#7ec8ff);color:#fff;padding:16px 20px;z-index:10}
+    h1{font-size:22px;margin:0 0 6px}
+    .wrap{max-width:980px;margin:18px auto;padding:0 14px}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    button{cursor:pointer;border:0;background:var(--primary);color:#fff;padding:10px 14px;border-radius:12px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+    button.secondary{background:#e9eef5;color:#1f3b57}
+    button.flat{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6)}
+    .card{background:var(--card);border-radius:16px;box-shadow:0 10px 30px rgba(14,30,37,.06);padding:18px;margin:14px 0}
+    .question{margin:12px 0}
+    .q-title{font-weight:700;margin:0 0 8px}
+    .options{display:grid;grid-template-columns:repeat(1, minmax(0,1fr));gap:8px}
+    .opt{border:1px solid #e6ecf2;border-radius:12px;padding:10px;display:flex;gap:10px;align-items:center}
+    .opt input{transform:scale(1.15)}
+    .pill{display:inline-block;padding:.2em .65em;border-radius:999px;background:#eef6ff;color:#2b5fb8;font-size:12px;margin-left:6px}
+    .tag{font-size:12px;color:#6b7280;margin-left:6px}
+    .reading{background:#fff9ed;border:1px dashed #f2c97d}
+    .muted{opacity:.75}
+    .correct{background:#e6ffef;border-color:#07c168}
+    .wrong{background:#ffeef0;border-color:#f14668}
+    .ans{font-weight:700;color:#0a7a44}
+    .explain{font-size:13px;color:#425466}
+    footer{padding:30px 0 50px;color:#6b7280;text-align:center}
+    .score{font-size:18px;font-weight:800}
+    .flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .small{font-size:12px}
+    .section-title{font-weight:800;color:#1f3b57;margin-bottom:10px}
+    .ribbon{font-size:12px;background:var(--accent);color:#fff;padding:4px 8px;border-radius:999px}
+    .floating-submit{position:fixed;right:16px;bottom:16px}
+    @media(min-width:720px){.options{grid-template-columns:repeat(2, minmax(0,1fr));}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>國一英文｜第一課 隨機評量測驗</h1>
+    <div class="toolbar">
+      <a class="flat" id="btn-home" href="index.html" style="text-decoration:none;display:inline-block;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.6);color:#fff">← 回首頁</a>
+      <button class="flat" id="btn-new">重新出題</button>
+      <span class="small">每次 25 題（各題型 5 題含閱讀）。題目、選項順序與正解皆隨機變動。</span>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="card" id="intro">
+      <div class="section-title">作答說明 <span class="pill">Unit 1</span></div>
+      <ol class="small">
+        <li>涵蓋題型：發音、文意字彙、文法、對話選擇、閱讀理解。</li>
+        <li>按「送出並看分數」查看對錯與解析。</li>
+        <li>點「重新出題」即可換新題目與答案組合。</li>
+      </ol>
+    </div>
+
+    <div id="quiz"></div>
+    <div class="floating-submit"><button id="btn-submit">送出並看分數</button></div>
+    <div class="card" id="result" style="display:none"></div>
+  </div>
+  <footer class="small">© Unit 1 Randomized Quiz — all topics & variations auto-shuffled.</footer>
+
+<script>
+const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+const sampleN=(a,n)=>shuffle(a).slice(0,Math.min(a.length,n));
+
+// 題庫擴充
+const phonicsPool=[
+ {q:"找出畫線部分發音不同的字：wh<u>a</u>t / n<u>i</u>ght / n<u>e</u>xt / s<u>a</u>d",opts:["night","next","what","sad"],ans:2,explain:"what 的母音不同。"},
+ {q:"找出畫線部分發音不同的字：b<u>i</u>rd / dr<u>a</u>w / g<u>oo</u>dbye / r<u>o</u>pe",opts:["bird","draw","goodbye","rope"],ans:0},
+ {q:"找出畫線部分發音不同的字：d<u>augh</u>ter / h<u>u</u>sband / b<u>a</u>g / r<u>a</u>bbit",opts:["daughter","husband","bag","rabbit"],ans:1},
+ {q:"找出畫線部分發音不同的字：f<u>i</u>sh / s<u>i</u>ster / cl<u>a</u>ss / p<u>i</u>g",opts:["fish","sister","class","pig"],ans:2},
+ {q:"找出畫線部分發音不同的字：gr<u>a</u>ndpa / b<u>a</u>seball / pl<u>a</u>y / h<u>a</u>ppy",opts:["grandpa","baseball","play","happy"],ans:3}
+];
+
+const vocabPool=[
+ {q:"Your mother's brother is your _____ .",opts:["uncle","aunt","cousin","grandpa"],ans:"uncle"},
+ {q:"Emma is my _____ . Her mother is my aunt.",opts:["cousin","classmate","sister","grandma"],ans:"cousin"},
+ {q:"Is our new teacher old? — No, she is _____ . She's twenty-six.",opts:["young","tall","dear","nice"],ans:"young"},
+ {q:"This watch is for you. — Really? _____ you!",opts:["Thank","See","Love","Help"],ans:"Thank"},
+ {q:"Princess Kate is a _____ woman. She is nice, too.",opts:["beautiful","sad","bad","angry"],ans:"beautiful"}
+];
+
+const grammarPool=[
+ {q:"This is _____ (the boy) teacher.",opts:["the boys'","the boy's","boys","boy"],ans:"the boy's"},
+ {q:"Who's _____ (they) mother?",opts:["they","their","them","theirs"],ans:"their"},
+ {q:"Kim and Dennis _____ fine, too.",opts:["are","isn't","is","aren't"],ans:"are"},
+ {q:"A: How old _____ your grandpa? B: He is 62 years old.",opts:["is","are","where","what"],ans:"is"},
+ {q:"A: _____ that girl? B: She's Lana.",opts:["Who's","How's","Is she","What's"],ans:"Who's"}
+];
+
+const dialoguePool=[
+ {q:"A: Hi, Bill. This is my brother, Jeremy. B: _____ .",opts:["Nice to meet you, Jeremy.","Hello, this is Bill.","What's your name?","How are you, Bill?"],ans:0},
+ {q:"A: Who's Johnson? B: _____ .",opts:["Peggy's uncle.","Johnson is tall.","This is my teacher.","He's very nice."],ans:0},
+ {q:"A: Is that girl your sister? B: _____ .",opts:["Yes. She is my sister.","No. She is fourteen.","Yes. Her name is Angel.","No. Sophia is a writer."],ans:0},
+ {q:"A: How old is your grandmother? B: _____ .",opts:["She is very old. She's 95 this year.","I see.","Nice to meet her.","She is fine, thanks."],ans:0},
+ {q:"A: Are you a police officer? B: _____ .",opts:["No, I'm a teacher.","Yes, I am.","I'm fine.","Sure."],ans:1}
+];
+
+const readingPool=[{
+ title:"Jessie 的大家庭",
+ passage:`My name is Jessie. My grandpa, Paul, is a writer, and my grandma, Peggy, is a good cook. They are 77 years old. My dad, Mike, is a police officer, 45. My mom, Mary, is an office worker, 42. My sister, Julia, is a junior high student, and I am an elementary student. My uncle, Keith, is a singer. His wife, Kelly, is a singer, too. Their daughter, Kitty, is a cute one-year-old baby. We are a family of nine.`,
+ qs:[
+  {q:"Who is Kelly?",opts:["Jessie's aunt.","Jessie's sister.","Jessie's cousin.","Jessie's mother."],ans:0},
+  {q:"How old is Mary?",opts:["One.","Forty-two.","Forty-five.","Seventy-seven."],ans:1},
+  {q:"What is Kelly's husband?",opts:["A cook.","A writer.","A singer.","A police officer."],ans:2},
+  {q:"How old can Jessie be?",opts:["One.","Ten.","Forty-two.","Seventy-seven."],ans:1},
+  {q:"Which is true?",opts:["Jessie's mother is Kitty's aunt.","Julia is Peggy's grandma.","Paul is an office worker.","Mike is Keith's cousin."],ans:0}
+ ]
+}];
+
+function buildQuiz(){
+ const quizEl=document.getElementById('quiz');quizEl.innerHTML='';document.getElementById('result').style.display='none';
+ const chosen=[];
+ sampleN(phonicsPool,5).forEach(q=>chosen.push({...q,cat:'發音'}));
+ sampleN(vocabPool,5).forEach(q=>chosen.push({...q,cat:'文意字彙'}));
+ sampleN(grammarPool,5).forEach(q=>chosen.push({...q,cat:'文法'}));
+ sampleN(dialoguePool,5).forEach(q=>chosen.push({...q,cat:'對話'}));
+ const reading=readingPool[0];
+ const rid=crypto.randomUUID();
+ shuffle(chosen).forEach((it,i)=>renderMC(quizEl,it,i+1));
+ const rc=document.createElement('div');
+ rc.className='card reading';
+ rc.innerHTML=`<div class='section-title'>閱讀理解｜${reading.title}</div><div class='muted' style='line-height:1.7'>${reading.passage}</div>`;
+ quizEl.appendChild(rc);
+ reading.qs.forEach((q,i)=>renderMC(quizEl,{q:q.q,opts:q.opts,ans:q.ans,cat:'閱讀'},chosen.length+i+1,rid));
+}
+
+function renderMC(root,item,no,group){
+ const ci=typeof item.ans==="number"?item.ans:item.opts.findIndex(o=>o===item.ans);
+ const optsS=shuffle(item.opts.map((t,i)=>({t,i})));const cv=optsS.find(x=>x.i===ci)?.t;
+ const c=document.createElement('div');c.className='card question';const qid=crypto.randomUUID();c.dataset.correct=cv;c.dataset.group=group||'';
+ c.innerHTML=`<div class='q-title'>${no}. [${item.cat}] ${item.q}</div><div class='options'></div>`;
+ const box=c.querySelector('.options');optsS.forEach((opt,j)=>{const id=`${qid}-${j}`;const row=document.createElement('label');row.className='opt';row.innerHTML=`<input type='radio' name='${qid}' value='${opt.t}'> ${String.fromCharCode(65+j)}. ${opt.t}`;box.appendChild(row);});
+ root.appendChild(c);
+}
+
+function grade(){
+ const cards=[...document.querySelectorAll('.question')];let correct=0;cards.forEach(c=>{const pick=c.querySelector('input:checked');const val=c.dataset.correct;if(pick&&pick.value===val){c.classList.add('correct');correct++;}else c.classList.add('wrong');c.querySelectorAll('input').forEach(i=>i.disabled=true);const ans=document.createElement('div');ans.className='ans';ans.textContent='正確答案：'+val;c.appendChild(ans);});
+ const total=cards.length;const p=Math.round(correct/total*100);
+ const res=document.getElementById('result');res.style.display='block';res.innerHTML=`<div class='section-title'>測驗結果</div><div class='score'>得分：${correct}/${total} (${p}%)</div><button class='secondary' id='again'>再練一次</button>`;document.getElementById('again').onclick=()=>{buildQuiz();window.scrollTo({top:0,behavior:'smooth'});};
+}
+
+document.getElementById('btn-submit').onclick=grade;
+document.getElementById('btn-new').onclick=()=>{buildQuiz();window.scrollTo({top:0,behavior:'smooth'});};
+buildQuiz();
+</script>
+</body>
+</html>
